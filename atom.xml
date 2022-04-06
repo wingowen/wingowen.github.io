@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>WINGO&#39;S BLOG</title>
+  
+  
+  <link href="http://example.com/atom.xml" rel="self"/>
+  
+  <link href="http://example.com/"/>
+  <updated>2022-04-06T09:07:16.059Z</updated>
+  <id>http://example.com/</id>
+  
+  <author>
+    <name>Wingo Wen</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MySQL必知必会</title>
+    <link href="http://example.com/2022/04/06/MySQL%20%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/"/>
+    <id>http://example.com/2022/04/06/MySQL%20%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/</id>
+    <published>2022-04-06T09:07:16.000Z</published>
+    <updated>2022-04-06T09:07:16.059Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://example.com/2022/04/06/HelloWorld/"/>
+    <id>http://example.com/2022/04/06/HelloWorld/</id>
+    <published>2022-04-06T06:42:40.000Z</published>
+    <updated>2022-04-06T06:43:34.659Z</updated>
+    
+    
+    
+    
+    
+    <category term="Hello World" scheme="http://example.com/tags/Hello-World/"/>
+    
+  </entry>
+  
+</feed>
