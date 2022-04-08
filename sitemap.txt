@@ -1,4 +1,7 @@
+http://example.com/2022/04/06/Spark/
+http://example.com/2022/04/07/Docker/
 http://example.com/2022/04/06/MySQL%20%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/
-http://example.com/2022/04/06/HelloWorld/
 http://example.com/
-http://example.com/tags/Hello-World/
+http://example.com/tags/Database/
+http://example.com/tags/Docker/
+http://example.com/tags/Big-Data/
