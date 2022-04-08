@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://example.com/2022/04/06/Spark/</loc>
+    <loc>https://wingowen.github.io/2022/04/06/Spark/</loc>
     
     <lastmod>2022-04-08</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/2022/04/07/Docker/</loc>
+    <loc>https://wingowen.github.io/2022/04/07/Docker/</loc>
     
     <lastmod>2022-04-08</lastmod>
     
@@ -20,7 +20,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/2022/04/06/MySQL%20%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/</loc>
+    <loc>https://wingowen.github.io/2022/04/06/MySQL%20%E5%BF%85%E7%9F%A5%E5%BF%85%E4%BC%9A/</loc>
     
     <lastmod>2022-04-06</lastmod>
     
@@ -30,7 +30,7 @@
   
 
   <url>
-    <loc>http://example.com/</loc>
+    <loc>https://wingowen.github.io/</loc>
     <lastmod>2022-04-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -38,21 +38,21 @@
 
   
   <url>
-    <loc>http://example.com/tags/Database/</loc>
+    <loc>https://wingowen.github.io/tags/Database/</loc>
     <lastmod>2022-04-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://example.com/tags/Docker/</loc>
+    <loc>https://wingowen.github.io/tags/Docker/</loc>
     <lastmod>2022-04-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://example.com/tags/Big-Data/</loc>
+    <loc>https://wingowen.github.io/tags/Big-Data/</loc>
     <lastmod>2022-04-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
