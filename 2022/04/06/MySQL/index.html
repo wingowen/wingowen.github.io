@@ -25,16 +25,17 @@
 <meta property="og:site_name" content="WINGO&#39;S BLOG">
 <meta property="og:description" content="基本使用基本概念： 数据库 database：保存有组织的数据的容器（通常是一个文件或一组文件）。 表 table：某种特定类型数据的结构化清单。 模式 schema：关于数据库和表的布局及特性的信息。 列 column：表中的一个字段。所有表都是由一个或多个列组成的。 数据类型 datatype：所容许的数据的类型。每个表列都有相应的数据类型，它限制（或容许）该列中存储的数据。 行 row：表中">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wingowen.github.io/post_images/MySQL/WHERE_%E5%AD%90%E5%8F%A5%E6%93%8D%E4%BD%9C%E7%AC%A6.png">
 <meta property="og:image" content="https://wingowen.github.io/post_images/MySQL/%E7%A9%BA%E7%99%BD%E5%85%83%E5%AD%97%E7%AC%A6.png">
-<meta property="og:image" content="https://wingowen.github.io/Users/wingo.wen/Document/Blogs/BlogImages/MySQL/%E5%AD%97%E7%AC%A6%E7%B1%BB.png">
-<meta property="og:image" content="https://wingowen.github.io/Users/wingo.wen/Document/Blogs/BlogImages/MySQL/%E9%87%8D%E5%A4%8D%E5%85%83%E5%AD%97%E7%AC%A6.png">
-<meta property="og:image" content="https://wingowen.github.io/Users/wingo.wen/Document/Blogs/BlogImages/MySQL/%E5%AE%9A%E4%BD%8D%E5%85%83%E5%AD%97%E7%AC%A6.png">
+<meta property="og:image" content="https://wingowen.github.io/post_images/MySQL/%E5%AD%97%E7%AC%A6%E7%B1%BB.png">
+<meta property="og:image" content="https://wingowen.github.io/post_images/MySQL/%E9%87%8D%E5%A4%8D%E5%85%83%E5%AD%97%E7%AC%A6.png">
+<meta property="og:image" content="https://wingowen.github.io/post_images/MySQL/%E5%AE%9A%E4%BD%8D%E5%85%83%E5%AD%97%E7%AC%A6.png">
 <meta property="article:published_time" content="2022-04-06T09:07:16.000Z">
-<meta property="article:modified_time" content="2022-04-12T09:20:36.259Z">
+<meta property="article:modified_time" content="2022-04-12T09:24:08.445Z">
 <meta property="article:author" content="Wingo Wen">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://wingowen.github.io/post_images/MySQL/%E7%A9%BA%E7%99%BD%E5%85%83%E5%AD%97%E7%AC%A6.png">
+<meta name="twitter:image" content="https://wingowen.github.io/post_images/MySQL/WHERE_%E5%AD%90%E5%8F%A5%E6%93%8D%E4%BD%9C%E7%AC%A6.png">
   <!-- Canonical links -->
   <link rel="canonical" href="https://wingowen.github.io/2022/04/06/MySQL/index.html">
   
@@ -317,7 +318,7 @@
 
 <p><strong>子句位置：</strong></p>
 <p>在同时使用 ORDER BY 和 WHERE子 句时，应该让 ORDER BY 位于 WHERE 之后，否则将会产生错误。</p>
-<h3 id="WHERE-子句操作符"><a href="#WHERE-子句操作符" class="headerlink" title="WHERE 子句操作符"></a>WHERE 子句操作符</h3><p>![](&#x2F;post_images&#x2F;MySQL&#x2F;WHERE 子句操作符.png)</p>
+<h3 id="WHERE-子句操作符"><a href="#WHERE-子句操作符" class="headerlink" title="WHERE 子句操作符"></a>WHERE 子句操作符</h3><p><img src="/post_images/MySQL/WHERE_%E5%AD%90%E5%8F%A5%E6%93%8D%E4%BD%9C%E7%AC%A6.png"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT [column] FROM [table] between low AND high;</span><br></pre></td></tr></table></figure>
 
 <h3 id="空值检测"><a href="#空值检测" class="headerlink" title="空值检测"></a>空值检测</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT [column] FROM [table] WHERE column IS NULL;</span><br></pre></td></tr></table></figure>
@@ -364,11 +365,11 @@
 <figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x27;abcd&#x27; # 包含 abcd</span><br><span class="line">&#x27;.000&#x27; # . 表示任意字符</span><br><span class="line">&#x27;a|b&#x27; # or</span><br><span class="line">&#x27;[123] abc&#x27; = &#x27;[1|2|3] abc&#x27; # 匹配特定字符 123</span><br><span class="line">&#x27;[a-z]abc&#x27; # 匹配范围任意一个字符</span><br><span class="line">&#x27;\\.&#x27; # 匹配特殊字符</span><br></pre></td></tr></table></figure>
 
 <p><img src="/post_images/MySQL/%E7%A9%BA%E7%99%BD%E5%85%83%E5%AD%97%E7%AC%A6.png"></p>
-<p><img src="/Users/wingo.wen/Document/Blogs/BlogImages/MySQL/%E5%AD%97%E7%AC%A6%E7%B1%BB.png" alt="image-20220410231627018"></p>
-<p><img src="/Users/wingo.wen/Document/Blogs/BlogImages/MySQL/%E9%87%8D%E5%A4%8D%E5%85%83%E5%AD%97%E7%AC%A6.png" alt="image-20220410231754872"></p>
+<p><img src="/post_images/MySQL/%E5%AD%97%E7%AC%A6%E7%B1%BB.png"></p>
+<p><img src="/post_images/MySQL/%E9%87%8D%E5%A4%8D%E5%85%83%E5%AD%97%E7%AC%A6.png"></p>
 <figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x27;\\([0-9] sticks?\\)&#x27; # s? 表示 s 可选</span><br><span class="line">result</span><br><span class="line">(1 stick)</span><br><span class="line">(2 sticks)</span><br><span class="line"></span><br><span class="line">&#x27;[[:digit:]&#123;4&#125;]&#x27; # 匹配最少四个任意数字</span><br></pre></td></tr></table></figure>
 
-<p><img src="/Users/wingo.wen/Document/Blogs/BlogImages/MySQL/%E5%AE%9A%E4%BD%8D%E5%85%83%E5%AD%97%E7%AC%A6.png" alt="image-20220410233416564"></p>
+<p><img src="/post_images/MySQL/%E5%AE%9A%E4%BD%8D%E5%85%83%E5%AD%97%E7%AC%A6.png"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x27;^[0-9\\.]&#x27; # 以数字或 . 开头的字符</span><br></pre></td></tr></table></figure>
 
 <p>可以用带文字串的 REGEXP 来测试表达式。</p>
