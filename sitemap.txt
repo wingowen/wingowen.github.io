@@ -1,8 +1,13 @@
+https://wingowen.github.io/2022/04/21/%E8%80%83%E7%A0%94/
 https://wingowen.github.io/2022/04/06/MySQL/
+https://wingowen.github.io/2022/04/21/Python/
+https://wingowen.github.io/2022/04/06/BigData/
+https://wingowen.github.io/2022/04/15/Kubernetes/
 https://wingowen.github.io/2022/04/07/Docker/
-https://wingowen.github.io/2022/04/06/Big%20Data/
 https://wingowen.github.io/
 https://wingowen.github.io/tags/Docker/
 https://wingowen.github.io/tags/Spark/
 https://wingowen.github.io/tags/Yarn/
 https://wingowen.github.io/tags/MySQL/
+https://wingowen.github.io/tags/Python/
+https://wingowen.github.io/tags/%E8%80%83%E7%A0%94/
