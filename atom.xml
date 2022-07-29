@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>WINGO&#39;S BLOG</title>
+  
+  
+  <link href="https://wingowen.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://wingowen.github.io/"/>
+  <updated>2022-07-29T10:13:08.337Z</updated>
+  <id>https://wingowen.github.io/</id>
+  
+  <author>
+    <name>Wingo Wen</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>考研</title>
+    <link href="https://wingowen.github.io/2022/04/21/%E8%80%83%E7%A0%94/"/>
+    <id>https://wingowen.github.io/2022/04/21/%E8%80%83%E7%A0%94/</id>
+    <published>2022-04-21T06:19:23.000Z</published>
+    <updated>2022-07-29T10:13:08.337Z</updated>
+    
+    <content type="html"><![CDATA[<p>报考专业 <a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/4/114/085410">深大 - 人工智能与金融科技</a></p><p>初试科目</p><ul><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/101">101 思想政治理论</a></p></li><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/201">201 英语一</a></p></li><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/301">301 数学一</a></p></li><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/408">408 计算机学科专业基础综合</a></p></li></ul><p>复试科目 <a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/FSX8">FSX8 机器学习</a></p><p>计算机考研 408 包括（150）</p><ul><li>数据结构 45</li><li>计算机组成原理 45</li><li>操作系统 35</li><li>计算机网络 25</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;报考专业 &lt;a href=&quot;http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/4/114/085410&quot;&gt;深大 - 人工智能与金融科技&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;初试科目&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;a hr</summary>
+      
+    
+    
+    
+    <category term="考研" scheme="https://wingowen.github.io/categories/%E8%80%83%E7%A0%94/"/>
+    
+    
+    <category term="考研" scheme="https://wingowen.github.io/tags/%E8%80%83%E7%A0%94/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>分类</title>
+    <link href="https://wingowen.github.io/2022/04/06/categories/"/>
+    <id>https://wingowen.github.io/2022/04/06/categories/</id>
+    <published>2022-04-06T05:46:11.311Z</published>
+    <updated>2022-04-06T05:46:11.311Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+</feed>
