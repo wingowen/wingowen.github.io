@@ -6,7 +6,7 @@
   <link href="https://wingowen.github.io/atom.xml" rel="self"/>
   
   <link href="https://wingowen.github.io/"/>
-  <updated>2022-08-01T03:15:02.902Z</updated>
+  <updated>2022-08-01T03:18:03.341Z</updated>
   <id>https://wingowen.github.io/</id>
   
   <author>
@@ -15,6 +15,32 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>WEFE-TEE</title>
+    <link href="https://wingowen.github.io/2022/08/01/WEFE-TEE/"/>
+    <id>https://wingowen.github.io/2022/08/01/WEFE-TEE/</id>
+    <published>2022-08-01T03:17:02.000Z</published>
+    <updated>2022-08-01T03:18:03.341Z</updated>
+    
+    <content type="html"><![CDATA[<p>WEFE 项目的 TEE 实现探索。</p><!--> more <-->]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;WEFE 项目的 TEE 实现探索。&lt;/p&gt;
+&lt;!--&gt; more &lt;--&gt;
+</summary>
+      
+    
+    
+    
+    <category term="WEFE" scheme="https://wingowen.github.io/categories/WEFE/"/>
+    
+    
+    <category term="TEE" scheme="https://wingowen.github.io/tags/TEE/"/>
+    
+  </entry>
   
   <entry>
     <title>决策树算法</title>
@@ -111,17 +137,12 @@
     <link href="https://wingowen.github.io/2022/04/21/%E8%80%83%E7%A0%94/"/>
     <id>https://wingowen.github.io/2022/04/21/%E8%80%83%E7%A0%94/</id>
     <published>2022-04-21T06:19:23.000Z</published>
-    <updated>2022-08-01T03:14:39.913Z</updated>
+    <updated>2022-08-01T03:18:34.809Z</updated>
     
-    <content type="html"><![CDATA[<p>考研院校信息整理汇总。</p><!--> more <--><p>报考专业 <a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/4/114/085410">深大 - 人工智能与金融科技</a></p><p>初试科目</p><ul><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/101">101 思想政治理论</a></p></li><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/201">201 英语一</a></p></li><li><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/301">301 数学一</a></li><li><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/408">408 计算机学科专业基础综合</a></li></ul><p>复试科目 <a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/FSX8">FSX8 机器学习</a></p><p>计算机考研 408 包括（150）</p><ul><li>数据结构 45</li><li>计算机组成原理 45</li><li>操作系统 35</li><li>计算机网络 25</li></ul>]]></content>
+    <content type="html"><![CDATA[<p>考研院校信息整理汇总。</p><span id="more"></span><p>报考专业 <a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/4/114/085410">深大 - 人工智能与金融科技</a></p><p>初试科目</p><ul><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/101">101 思想政治理论</a></p></li><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/201">201 英语一</a></p></li><li><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/301">301 数学一</a></li><li><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/408">408 计算机学科专业基础综合</a></li></ul><p>复试科目 <a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/FSX8">FSX8 机器学习</a></p><p>计算机考研 408 包括（150）</p><ul><li>数据结构 45</li><li>计算机组成原理 45</li><li>操作系统 35</li><li>计算机网络 25</li></ul>]]></content>
     
     
-      
-      
-    <summary type="html">&lt;p&gt;考研院校信息整理汇总。&lt;/p&gt;
-&lt;!--&gt; more &lt;--&gt;
-&lt;p&gt;报考专业 &lt;a href=&quot;http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/4/114/085410&quot;&gt;深大 - 人工智能与金融科技&lt;/a</summary>
-      
+    <summary type="html">&lt;p&gt;考研院校信息整理汇总。&lt;/p&gt;</summary>
     
     
     
