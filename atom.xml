@@ -6,7 +6,7 @@
   <link href="https://wingowen.github.io/atom.xml" rel="self"/>
   
   <link href="https://wingowen.github.io/"/>
-  <updated>2022-07-31T15:05:24.768Z</updated>
+  <updated>2022-08-01T03:15:02.902Z</updated>
   <id>https://wingowen.github.io/</id>
   
   <author>
@@ -21,18 +21,12 @@
     <link href="https://wingowen.github.io/2022/07/31/%E5%86%B3%E7%AD%96%E6%A0%91%E7%AE%97%E6%B3%95/"/>
     <id>https://wingowen.github.io/2022/07/31/%E5%86%B3%E7%AD%96%E6%A0%91%E7%AE%97%E6%B3%95/</id>
     <published>2022-07-31T02:58:15.000Z</published>
-    <updated>2022-07-31T15:05:24.768Z</updated>
+    <updated>2022-08-01T03:15:02.902Z</updated>
     
-    <content type="html"><![CDATA[<span id="more"></span><h1 id="决策树的基本概念"><a href="#决策树的基本概念" class="headerlink" title="决策树的基本概念"></a>决策树的基本概念</h1><p>决策树节点：</p><ul><li>叶节点表示一份类别或者一个值；</li><li>非叶节点表示一个属性划分。</li></ul><p>决策树的有向边代表了属性划分的不同取值：</p><ul><li>当属性是离散时，可将属性的每一个取值用一条边连接到子结点；</li><li>当属性是连续时，需要特殊处理。</li></ul><p>决策树是一种描述实例进行分类的树形结构。</p><p>对于某个样本，决策树模型将从根结点开始，对样本的某个属性进行测试，根据结果将其划分到子结点中，递归进行，直至将其划分到叶结点的类中。这个过程产生了从根结点到叶结点的一条路径，对应了一个测试序列。</p><p><img src="/IMAGE/决策树算法/决策树的学习过程.png" alt="img"></p><p>决策树学习的目的是为了产生一根泛化能力强的决策树，其基本流程遵循了分而治之策略。</p><p>决策树的学习过程本质上是从训练数据中寻找一组分类规则。</p><p>决策树学习也可以看做是由训练数据集估计条件概率模型。</p>]]></content>
+    <content type="html"><![CDATA[<p>基本概念。</p><span id="more"></span><h1 id="决策树的基本概念"><a href="#决策树的基本概念" class="headerlink" title="决策树的基本概念"></a>决策树的基本概念</h1><p>决策树节点：</p><ul><li>叶节点表示一份类别或者一个值；</li><li>非叶节点表示一个属性划分。</li></ul><p>决策树的有向边代表了属性划分的不同取值：</p><ul><li>当属性是离散时，可将属性的每一个取值用一条边连接到子结点；</li><li>当属性是连续时，需要特殊处理。</li></ul><p>决策树是一种描述实例进行分类的树形结构。</p><p>对于某个样本，决策树模型将从根结点开始，对样本的某个属性进行测试，根据结果将其划分到子结点中，递归进行，直至将其划分到叶结点的类中。这个过程产生了从根结点到叶结点的一条路径，对应了一个测试序列。</p><p><img src="/IMAGE/决策树算法/决策树的学习过程.png" alt="img"></p><p>决策树学习的目的是为了产生一根泛化能力强的决策树，其基本流程遵循了分而治之策略。</p><p>决策树的学习过程本质上是从训练数据中寻找一组分类规则。</p><p>决策树学习也可以看做是由训练数据集估计条件概率模型。</p>]]></content>
     
     
-      
-      
-    <summary type="html">&lt;span id=&quot;more&quot;&gt;&lt;/span&gt;
-&lt;h1 id=&quot;决策树的基本概念&quot;&gt;&lt;a href=&quot;#决策树的基本概念&quot; class=&quot;headerlink&quot; title=&quot;决策树的基本概念&quot;&gt;&lt;/a&gt;决策树的基本概念&lt;/h1&gt;&lt;p&gt;决策树节点：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;叶节</summary>
-      
+    <summary type="html">&lt;p&gt;基本概念。&lt;/p&gt;</summary>
     
     
     
@@ -48,7 +42,7 @@
     <link href="https://wingowen.github.io/2022/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/"/>
     <id>https://wingowen.github.io/2022/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</id>
     <published>2022-07-30T07:15:43.000Z</published>
-    <updated>2022-07-31T02:48:58.604Z</updated>
+    <updated>2022-08-01T03:13:29.473Z</updated>
     
     <content type="html"><![CDATA[<p>北大计算机组成课程。</p><p>计算机基本结构：冯诺依曼结构，计算机执行指令的过程。</p><span id="more"></span>]]></content>
     
@@ -58,10 +52,10 @@
     
     
     
-    <category term="计算机" scheme="https://wingowen.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
+    <category term="考研" scheme="https://wingowen.github.io/categories/%E8%80%83%E7%A0%94/"/>
     
     
-    <category term="考研" scheme="https://wingowen.github.io/tags/%E8%80%83%E7%A0%94/"/>
+    <category term="计算机科学" scheme="https://wingowen.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/"/>
     
   </entry>
   
@@ -117,17 +111,16 @@
     <link href="https://wingowen.github.io/2022/04/21/%E8%80%83%E7%A0%94/"/>
     <id>https://wingowen.github.io/2022/04/21/%E8%80%83%E7%A0%94/</id>
     <published>2022-04-21T06:19:23.000Z</published>
-    <updated>2022-07-29T10:13:08.337Z</updated>
+    <updated>2022-08-01T03:14:39.913Z</updated>
     
-    <content type="html"><![CDATA[<p>报考专业 <a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/4/114/085410">深大 - 人工智能与金融科技</a></p><p>初试科目</p><ul><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/101">101 思想政治理论</a></p></li><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/201">201 英语一</a></p></li><li><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/301">301 数学一</a></li><li><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/408">408 计算机学科专业基础综合</a></li></ul><p>复试科目 <a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/FSX8">FSX8 机器学习</a></p><p>计算机考研 408 包括（150）</p><ul><li>数据结构 45</li><li>计算机组成原理 45</li><li>操作系统 35</li><li>计算机网络 25</li></ul>]]></content>
+    <content type="html"><![CDATA[<p>考研院校信息整理汇总。</p><!--> more <--><p>报考专业 <a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/4/114/085410">深大 - 人工智能与金融科技</a></p><p>初试科目</p><ul><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/101">101 思想政治理论</a></p></li><li><p><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/201">201 英语一</a></p></li><li><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/301">301 数学一</a></li><li><a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/408">408 计算机学科专业基础综合</a></li></ul><p>复试科目 <a href="http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/2/FSX8">FSX8 机器学习</a></p><p>计算机考研 408 包括（150）</p><ul><li>数据结构 45</li><li>计算机组成原理 45</li><li>操作系统 35</li><li>计算机网络 25</li></ul>]]></content>
     
     
       
       
-    <summary type="html">&lt;p&gt;报考专业 &lt;a href=&quot;http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/4/114/085410&quot;&gt;深大 - 人工智能与金融科技&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;初试科目&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a hr</summary>
+    <summary type="html">&lt;p&gt;考研院校信息整理汇总。&lt;/p&gt;
+&lt;!--&gt; more &lt;--&gt;
+&lt;p&gt;报考专业 &lt;a href=&quot;http://ehall.szu.edu.cn/gsapp/sys/zsjzapp/index.do#/2022/4/114/085410&quot;&gt;深大 - 人工智能与金融科技&lt;/a</summary>
       
     
     
