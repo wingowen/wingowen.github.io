@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>特征选择 | WINGO BLOG</title>
+  <meta name="description" content="特征选择也称特征子集选择或属性选择。从已有的 M 个特征中选择 N 个特征使得系统的特定指标最优化，是从原始特征中选择出一些最有效特征以降低数据集维度的过程，是提高学习算法性能的一个重要手段，也是模式识别中关键的数据预处理步骤。对于一个学习算法来说，好的学习样本是训练模型的关键。 过滤式选择先对数据集进行特征选择，然后再训练分类器，特征选择过程与后续训练无关。这相当于先用特征选择过程对初始特征进行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="特征选择">
+<meta property="og:url" content="https://wingowen.github.io/2022/08/13/%E7%AE%97%E6%B3%95/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/index.html">
+<meta property="og:site_name" content="WINGO&#39;S BLOG">
+<meta property="og:description" content="特征选择也称特征子集选择或属性选择。从已有的 M 个特征中选择 N 个特征使得系统的特定指标最优化，是从原始特征中选择出一些最有效特征以降低数据集维度的过程，是提高学习算法性能的一个重要手段，也是模式识别中关键的数据预处理步骤。对于一个学习算法来说，好的学习样本是训练模型的关键。 过滤式选择先对数据集进行特征选择，然后再训练分类器，特征选择过程与后续训练无关。这相当于先用特征选择过程对初始特征进行">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-08-13T14:41:12.000Z">
+<meta property="article:modified_time" content="2022-08-14T07:55:01.216Z">
+<meta property="article:author" content="Wingo Wen">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wingowen.github.io/2022/08/13/%E7%AE%97%E6%B3%95/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/index.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    <link href="//cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.css" rel="stylesheet">
+  
+  
+  
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="WINGO'S BLOG" type="application/atom+xml">
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">WINGO.WEN</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">生活艺术家</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>得失从缘 心无增减</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8/">日常</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%80%83%E7%A0%94/">考研</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%8B%B1%E8%AF%AD/">英语</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 14px;">机器学习</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/" style="font-size: 13px;">网站收集</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13px;">考研</a> <a href="/tags/%E8%8B%B1%E8%AF%AD%E5%8D%95%E8%AF%8D/" style="font-size: 13px;">英语单词</a> <a href="/tags/%E8%8B%B1%E8%AF%AD%E6%BC%94%E8%AE%B2/" style="font-size: 13px;">英语演讲</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 13.5px;">计算机科学</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E5%BC%8F%E9%80%89%E6%8B%A9"><span class="toc-number">1.</span> <span class="toc-text">过滤式选择</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Relief-%E9%80%89%E6%8B%A9%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">Relief 选择法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FInsher-%E9%80%89%E6%8B%A9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">FInsher 选择法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8C%85%E8%A3%B9%E5%BC%8F%E9%80%89%E6%8B%A9"><span class="toc-number">2.</span> <span class="toc-text">包裹式选择</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E9%80%89%E6%8B%A9"><span class="toc-number">3.</span> <span class="toc-text">嵌入式选择</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-算法/特征选择" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      特征选择
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2022/08/13/%E7%AE%97%E6%B3%95/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/" class="article-date">
+	  <time datetime="2022-08-13T14:41:12.000Z" itemprop="datePublished">2022-08-13</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2022/08/13/%E7%AE%97%E6%B3%95/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>特征选择也称特征子集选择或属性选择。从已有的 M 个特征中选择 N 个特征使得系统的特定指标最优化，是从原始特征中选择出一些最有效特征以降低数据集维度的过程，是提高学习算法性能的一个重要手段，也是模式识别中关键的数据预处理步骤。对于一个学习算法来说，好的学习样本是训练模型的关键。</p>
+<h1 id="过滤式选择"><a href="#过滤式选择" class="headerlink" title="过滤式选择"></a>过滤式选择</h1><p>先对数据集进行特征选择，然后再训练分类器，特征选择过程与后续训练无关。这相当于先用特征选择过程对初始特征进行过滤，再用过滤后的特征来训练模型。</p>
+<h2 id="Relief-选择法"><a href="#Relief-选择法" class="headerlink" title="Relief 选择法"></a>Relief 选择法</h2><p>Relief Relevant Features，该方法设计了一个相关统计量来度量特征的重要性，并且其是一个向量，其每个分量分别对应一个初始特征，而特征子集的重要性则是由子集中每个特征所对应的相关统计量分量之和来决定。最终只需要确定一个阈值 r，然后选择比 r 大的相关统计量分量所对应的特征即可。也可以指定选取相关统计量分量最大的前 k 个特征。</p>
+<h2 id="FInsher-选择法"><a href="#FInsher-选择法" class="headerlink" title="FInsher 选择法"></a>FInsher 选择法</h2><p>计算数据集中每个类别样本的类内特征方差与类间特征方差。<br>类内特征方差越小，类间特征方差越大，越有利于后续的分类训练，即该特征需要保留，反之该特征需要滤除。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">#导入包</span><br><span class="line">import pandas as pd</span><br><span class="line">import numpy as np</span><br><span class="line"></span><br><span class="line">#创建示例样本</span><br><span class="line">sample = [[1,1,5],[10,0,1],[2,5,6]]</span><br><span class="line">label = [1, 0, 1]</span><br><span class="line">print(&quot;sample:&quot;,sample)</span><br><span class="line">print(&quot;label:&quot;,label)</span><br><span class="line"></span><br><span class="line">#判断样本长度与类标长度是否匹配</span><br><span class="line">if len(sample) != len(label):</span><br><span class="line">    print(&#x27;Sample does not match label&#x27;)</span><br><span class="line">    exit()</span><br><span class="line"></span><br><span class="line">#创建并保存计算过程中的变量</span><br><span class="line">df1 = pd.DataFrame(sample)</span><br><span class="line">df2 = pd.DataFrame(label, columns=[&#x27;label&#x27;])</span><br><span class="line">data = pd.concat([df1, df2], axis=1)  # 合并成为一个dataframe</span><br><span class="line">print(&quot;data:\n&quot;,data,&#x27;\n&#x27;)</span><br><span class="line">data0 = data[data.label == 0]#对标签分类，分成包含0和1的两个dataframe</span><br><span class="line">data1 = data[data.label == 1]</span><br><span class="line">n = len(label)#标签长度</span><br><span class="line">n1 = sum(label)#1类标签的个数</span><br><span class="line">n0 = n - n1#0类标签的个数</span><br><span class="line">lst = []#用于返回的列表</span><br><span class="line">features_list = list(data.columns)[:-1]</span><br><span class="line">print(&quot;特征维数:&quot;)</span><br><span class="line">print(features_list)</span><br><span class="line"></span><br><span class="line">#fisher score计算</span><br><span class="line">for feature in features_list:</span><br><span class="line">    print(&#x27;\nfeature&#x27;,feature,&#x27;:&#x27;)</span><br><span class="line">    # 算关于类标0</span><br><span class="line">    m0_feature_mean = data0[feature].mean()  # 0 类标签在第 m 维上的均值</span><br><span class="line">    print(&quot;m0_feature_mean&quot;,m0_feature_mean)</span><br><span class="line">    m0_SW=sum((data0[feature] -m0_feature_mean )**2) # 0类在第 m 维上的类内方差</span><br><span class="line">    print(&quot;m0_SW&quot;,m0_SW)</span><br><span class="line">    # 算关于类标1</span><br><span class="line">    m1_feature_mean = data1[feature].mean()  # 1 类标签在第 m 维上的均值</span><br><span class="line">    print(&quot;m1_feature_mean&quot;,m1_feature_mean)</span><br><span class="line">    m1_SW=sum((data1[feature] -m1_feature_mean )**2)# 1 类标签在第 m 维上的类内方差</span><br><span class="line">    print(&quot;m1_SW&quot;,m1_SW)</span><br><span class="line"></span><br><span class="line">    # 算关于 data</span><br><span class="line">    m_all_feature_mean = data[feature].mean()  # 所有类标签在第 m 维上的均值</span><br><span class="line">    print(&quot;m_all_feature_mean&quot;,m_all_feature_mean)</span><br><span class="line">    m0_SB = n0 / n * (m0_feature_mean - m_all_feature_mean) ** 2  # 0 类标签在第 m 维上的类间方差</span><br><span class="line">    print(&quot;m0_SB&quot;,m0_SB)</span><br><span class="line">    m1_SB = n1 / n * (m1_feature_mean - m_all_feature_mean) ** 2  # 1 类标签在第 m 维上的类间方差</span><br><span class="line">    print(&quot;m1_SB&quot;,m1_SB)</span><br><span class="line"></span><br><span class="line">    m_SB = m1_SB + m0_SB   # 计算SB</span><br><span class="line">    print(&quot;m_SB&quot;,m_SB)</span><br><span class="line"></span><br><span class="line">    m_SW = (m0_SW + m1_SW) / n   # 计算 SW</span><br><span class="line">    print(&quot;m_SW&quot;,m_SW)</span><br><span class="line"></span><br><span class="line">    if m_SW == 0:</span><br><span class="line">        # 0/0类型也是返回nan</span><br><span class="line">        m_fisher_score = np.nan</span><br><span class="line">    else:</span><br><span class="line">        # 计算Fisher score</span><br><span class="line">        m_fisher_score = m_SB / m_SW  #计算第m维特征的Fisher score</span><br><span class="line">    #Fisher score值添加进列表</span><br><span class="line">    print(&quot;m_fisher_score&quot;,m_fisher_score)</span><br><span class="line">    lst.append(m_fisher_score)</span><br></pre></td></tr></table></figure>
+<h1 id="包裹式选择"><a href="#包裹式选择" class="headerlink" title="包裹式选择"></a>包裹式选择</h1><p>包裹式特征选择直接将最终要使用的学习器的性能作为特征子集的评价准则，包裹式特征选择的目的就是为给定的学习器选择最有利于其性能而量身定做的特征子集。</p>
+<p>一般而言，由于包裹式特征选择方法直接针对给定学习器进行优化，因此从最终学习器性能来看，比过滤式特征选择更好，但由于在特征选择过程中要多次训练学习器，因此包裹式特征选择的计算开销比过滤式特征选择大得多。</p>
+<p>LVW 是一个经典的包裹式特征选择方法，它在拉斯维加斯方法框架下使用随机策略进行子集搜索，以最终分类器误差作为特征子集评价标准。</p>
+<p>除了 LVW 包裹式特征选择之外，RFE(递归特征消除)也是一种常见的包裹式特征选择方法，RFE特征选择使用模型准确率来判断哪些特征（或特征组合）对预测结果贡献较大，并且递归地去除贡献小的特征。</p>
+<p>除了 RFE 之外，还有一种选择算法称为 RFECV，其是以 RFE 为基础进行改进得到的。</p>
+<p>RFECV 通过交叉验证的方式执行 RFE，以此来选择最佳数量的特征，即不手动设置保留的特征数量。对于一个数量为 d 的 feature 的集合，他的所有的子集的个数是 2 的 d 次方减 1 (包含空集)。指定一个外部的学习算法，比如 SVM 之类。通过该算法计算所有子集的validation error。选择 error 最小的那个子集作为所挑选的特征。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">#导入包</span><br><span class="line">from sklearn.feature_selection import RFE,RFECV</span><br><span class="line">from sklearn.svm import LinearSVC</span><br><span class="line">from sklearn.datasets import load_iris</span><br><span class="line">from sklearn import model_selection</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">class RFE(BaseEstimator, MetyuanaEstimatorMixin, SelectorMixin):</span><br><span class="line">    参数：</span><br><span class="line">    BaseEstimator: 基模型</span><br><span class="line">    n_features_to_select：目标特征数量</span><br><span class="line">    return：经过选择后的特征</span><br><span class="line"></span><br><span class="line">    比较经过特征选择和未经特征选择的数据集，对 LinearSVC 的预测性能的区别</span><br><span class="line">&#x27;&#x27;&#x27;</span><br><span class="line">### 加载数据</span><br><span class="line">iris = load_iris()</span><br><span class="line">X, y = iris.data, iris.target</span><br><span class="line">### 特征提取</span><br><span class="line">estimator = LinearSVC()</span><br><span class="line">selector = RFE(estimator=estimator, n_features_to_select=2)</span><br><span class="line">X_t = selector.fit_transform(X, y)  #对样本进行特征选择，最终保留n_features_to_select个特征。</span><br><span class="line">print(&quot;\n特征选择结果显示:&quot;)</span><br><span class="line">print(&quot;原数据样本X：&quot;,X[1])</span><br><span class="line">print(&quot;特征选择后样本X_t：&quot;,X_t[1])</span><br><span class="line"></span><br><span class="line">#### 切分测试集与验证集</span><br><span class="line">X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y,</span><br><span class="line">                                            test_size=0.25, random_state=0, stratify=y)</span><br><span class="line">X_train_t, X_test_t, y_train_t, y_test_t = model_selection.train_test_split(X_t, y,</span><br><span class="line">                                            test_size=0.25, random_state=0,</span><br><span class="line">                                            stratify=y)</span><br><span class="line">print(&quot;测试集与验证集切分完成&quot;)</span><br><span class="line"></span><br><span class="line">### 测试与验证</span><br><span class="line">clf = LinearSVC()</span><br><span class="line">clf_t = LinearSVC()</span><br><span class="line">clf.fit(X_train, y_train)</span><br><span class="line">print(&quot;\n原始数据集: test score=%s&quot; % (clf.score(X_test, y_test)))</span><br><span class="line">clf_t.fit(X_train_t, y_train_t)</span><br><span class="line">print(&quot;特征选择后的数据集: test score=%s&quot; % (clf_t.score(X_test_t, y_test_t)))</span><br></pre></td></tr></table></figure>
+<h1 id="嵌入式选择"><a href="#嵌入式选择" class="headerlink" title="嵌入式选择"></a>嵌入式选择</h1><p>嵌入式特征选择是将特征选择过程与学习器训练过程融合为一体，两者在同一个优化过程中完成，即在学习器训练过程中自动地进行了特征选择。</p>
+<p><strong>正则化嵌入式选择</strong></p>
+<p>$L1$ 范数与 $L2$ 范数都有利于降低过拟合，但前者还会带来一个额外的好处，即 $L1$ 范数比 $L2$ 范数更容易获得稀疏解，即它求得的 $w$ 会有更少的非零分量。</p>
+<p>其中，基于 $L1$ 正则化的学习方法是一种嵌入式特征选择方法，其特征选择过程与学习器训练过程融为一体，同时完成。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">#导入包</span><br><span class="line">from sklearn.svm import LinearSVC</span><br><span class="line">from sklearn.datasets import load_iris</span><br><span class="line">from sklearn.feature_selection import SelectFromModel</span><br><span class="line">from sklearn import model_selection</span><br><span class="line"></span><br><span class="line">#导入数据集并打印示例</span><br><span class="line">iris = load_iris()</span><br><span class="line">X, y = iris.data, iris.target</span><br><span class="line">print(&quot;原始数据特征维数：&quot;,len(X[1]))  # (150, 4)</span><br><span class="line">print(&quot;原始数据样本：&quot;,X[1])</span><br><span class="line"></span><br><span class="line">#特征选择</span><br><span class="line">lsvc = LinearSVC(C=0.01, penalty=&quot;l1&quot;, dual=False).fit(X, y)  #设置分类器</span><br><span class="line">model = SelectFromModel(lsvc, prefit=True)  #设置模型为特征选择</span><br><span class="line">X_t = model.transform(X)  #获取经过筛选的数据</span><br><span class="line">print(&quot;特征选择数据特征维数&quot;,len(X_t[1]))  #(150, 3)</span><br><span class="line">print(&quot;特征选择后数据样本&quot;,X_t[1])</span><br><span class="line"></span><br><span class="line">#### 切分测试集与验证集</span><br><span class="line">X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y,</span><br><span class="line">                                                                    test_size=0.25, random_state=0, stratify=y)</span><br><span class="line">X_train_t, X_test_t, y_train_t, y_test_t = model_selection.train_test_split(X_t, y,</span><br><span class="line">                                                                            test_size=0.25, random_state=0,stratify=y)</span><br><span class="line">print(&quot;测试集与验证集切分完成&quot;)</span><br><span class="line"></span><br><span class="line">### 测试与验证</span><br><span class="line">clf = LinearSVC()</span><br><span class="line">clf_t = LinearSVC()</span><br><span class="line">clf.fit(X_train, y_train)</span><br><span class="line">clf_t.fit(X_train_t, y_train_t)</span><br><span class="line">print(&quot;\n原始数据集: test score=%s&quot; % (clf.score(X_test, y_test)))</span><br><span class="line">print(&quot;特征选择后的数据集: test score=%s&quot; % (clf_t.score(X_test_t, y_test_t)))</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wingowen.github.io/2022/08/13/%E7%AE%97%E6%B3%95/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/" title="特征选择" target="_blank" rel="external">https://wingowen.github.io/2022/08/13/算法/特征选择/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">WINGO.WEN</span><small class="ml-1x">生活艺术家</small></a></h3>
+        <div>一个疯子。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2022/08/14/%E7%AE%97%E6%B3%95/%E9%99%8D%E7%BB%B4/" title="降维"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2022/08/12/%E7%AE%97%E6%B3%95/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E4%B8%8E%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/" title="线性回归与逻辑回归"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>
