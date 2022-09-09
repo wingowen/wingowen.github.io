@@ -2,7 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://wingowen.github.io/2022/08/02/%E8%80%83%E7%A0%94/%E8%8B%B1%E8%AF%AD%E5%8D%95%E8%AF%8D/</loc>
+    <loc>https://wingowen.github.io/2022/08/01/%E7%BC%96%E7%A8%8B/Python-%E7%BC%96%E7%A8%8B/</loc>
+    
+    <lastmod>2022-09-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://wingowen.github.io/2022/07/29/%E7%AE%97%E6%B3%95/%E8%B4%9D%E5%8F%B6%E6%96%AF%E7%AE%97%E6%B3%95/</loc>
     
     <lastmod>2022-09-09</lastmod>
     
@@ -13,7 +22,16 @@
   <url>
     <loc>https://wingowen.github.io/2022/07/30/%E8%80%83%E7%A0%94/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/</loc>
     
-    <lastmod>2022-09-06</lastmod>
+    <lastmod>2022-09-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://wingowen.github.io/2022/08/02/%E8%80%83%E7%A0%94/%E8%8B%B1%E8%AF%AD%E5%8D%95%E8%AF%8D/</loc>
+    
+    <lastmod>2022-09-09</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -83,15 +101,6 @@
   </url>
   
   <url>
-    <loc>https://wingowen.github.io/2022/08/01/%E7%BC%96%E7%A8%8B/Python-%E7%BC%96%E7%A8%8B/</loc>
-    
-    <lastmod>2022-08-17</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://wingowen.github.io/2022/08/12/%E7%AE%97%E6%B3%95/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E4%B8%8E%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/</loc>
     
     <lastmod>2022-08-13</lastmod>
@@ -113,15 +122,6 @@
     <loc>https://wingowen.github.io/2022/04/21/%E8%80%83%E7%A0%94/%E8%80%83%E7%A0%94/</loc>
     
     <lastmod>2022-08-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://wingowen.github.io/2022/07/29/%E7%AE%97%E6%B3%95/%E8%B4%9D%E5%8F%B6%E6%96%AF%E7%AE%97%E6%B3%95/</loc>
-    
-    <lastmod>2022-08-02</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
