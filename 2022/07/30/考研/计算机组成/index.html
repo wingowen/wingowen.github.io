@@ -38,8 +38,10 @@
 <meta property="og:image" content="https://wingowen.github.io/IMAGE/计算机组成/存储器分类.png">
 <meta property="og:image" content="https://wingowen.github.io/IMAGE/计算机组成/存储器速度、容量和价位的关系.png">
 <meta property="og:image" content="https://wingowen.github.io/IMAGE/计算机组成/层次交换.png">
+<meta property="og:image" content="https://wingowen.github.io/Users/wingo.wen/Document/Blog/source/IMAGE/计算机组成/主存的基本组成.png">
+<meta property="og:image" content="https://wingowen.github.io/Users/wingo.wen/Document/Blog/source/IMAGE/计算机组成/主存和%20CPU%20的联系.png">
 <meta property="article:published_time" content="2022-07-30T07:15:43.000Z">
-<meta property="article:modified_time" content="2022-09-05T06:08:13.509Z">
+<meta property="article:modified_time" content="2022-09-06T15:14:32.406Z">
 <meta property="article:author" content="Wingo Wen">
 <meta property="article:tag" content="计算机科学">
 <meta name="twitter:card" content="summary">
@@ -215,7 +217,7 @@
   <div class="slimContent">
     <nav id="toc" class="article-toc">
       <h3 class="toc-title">文章目录</h3>
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">计算机系统概论</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">计算机系统层次结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90"><span class="toc-number">1.2.</span> <span class="toc-text">计算机的基本组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.3.</span> <span class="toc-text">计算机的工作步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BA%BF"><span class="toc-number">2.</span> <span class="toc-text">系统总线</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E5%88%86%E7%B1%BB"><span class="toc-number">2.1.</span> <span class="toc-text">总线分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E7%89%B9%E6%80%A7%E5%8F%8A%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">2.2.</span> <span class="toc-text">总线特性及性能指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="toc-number">2.3.</span> <span class="toc-text">总线结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E6%8E%A7%E5%88%B6"><span class="toc-number">2.4.</span> <span class="toc-text">总线控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E4%B8%AD%E6%8E%A7%E5%88%B6%E4%BC%98%E5%85%88%E4%BB%B2%E8%A3%81%E6%96%B9%E5%BC%8F"><span class="toc-number">2.4.1.</span> <span class="toc-text">集中控制优先仲裁方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%8E%A7%E5%88%B6"><span class="toc-number">2.4.2.</span> <span class="toc-text">通信控制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8"><span class="toc-number">3.</span> <span class="toc-text">存储器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E5%88%86%E7%B1%BB"><span class="toc-number">3.1.</span> <span class="toc-text">存储器分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="toc-number">3.2.</span> <span class="toc-text">层次结构</span></a></li></ol></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E6%A6%82%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">计算机系统概论</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">计算机系统层次结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%84%E6%88%90"><span class="toc-number">1.2.</span> <span class="toc-text">计算机的基本组成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.3.</span> <span class="toc-text">计算机的工作步骤</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%80%BB%E7%BA%BF"><span class="toc-number">2.</span> <span class="toc-text">系统总线</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E5%88%86%E7%B1%BB"><span class="toc-number">2.1.</span> <span class="toc-text">总线分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E7%89%B9%E6%80%A7%E5%8F%8A%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">2.2.</span> <span class="toc-text">总线特性及性能指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E7%BB%93%E6%9E%84"><span class="toc-number">2.3.</span> <span class="toc-text">总线结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E6%8E%A7%E5%88%B6"><span class="toc-number">2.4.</span> <span class="toc-text">总线控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E4%B8%AD%E6%8E%A7%E5%88%B6%E4%BC%98%E5%85%88%E4%BB%B2%E8%A3%81%E6%96%B9%E5%BC%8F"><span class="toc-number">2.4.1.</span> <span class="toc-text">集中控制优先仲裁方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E4%BF%A1%E6%8E%A7%E5%88%B6"><span class="toc-number">2.4.2.</span> <span class="toc-text">通信控制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8"><span class="toc-number">3.</span> <span class="toc-text">存储器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">3.1.</span> <span class="toc-text">概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%99%A8%E5%88%86%E7%B1%BB"><span class="toc-number">3.1.1.</span> <span class="toc-text">存储器分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%82%E6%AC%A1%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.2.</span> <span class="toc-text">层次结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E5%AD%98%E5%82%A8%E5%99%A8"><span class="toc-number">3.2.</span> <span class="toc-text">主存储器</span></a></li></ol></li></ol>
     </nav>
   </div>
 </aside>
@@ -371,7 +373,7 @@
 <p>增设了一条等待响应信号线，采用插入等待周期的措施来协调通信双方的配合问题。</p>
 <p><strong>分离式通信</strong></p>
 <p>将一个传输周期（总线周期）分解为两个子周期，两个传输子周期都只有单方面的信息流，每个模块都变成了主模块。</p>
-<h1 id="存储器"><a href="#存储器" class="headerlink" title="存储器"></a>存储器</h1><h2 id="存储器分类"><a href="#存储器分类" class="headerlink" title="存储器分类"></a>存储器分类</h2><p><img src="/IMAGE/计算机组成/存储器分类.png" alt="image-20220904220629761"></p>
+<h1 id="存储器"><a href="#存储器" class="headerlink" title="存储器"></a>存储器</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h3 id="存储器分类"><a href="#存储器分类" class="headerlink" title="存储器分类"></a>存储器分类</h3><p><img src="/IMAGE/计算机组成/存储器分类.png" alt="image-20220904220629761"></p>
 <p>a) 按存储介质分类。</p>
 <p><strong>半导体存储器</strong></p>
 <p>由半导体器件组成，用超大规模集成电路工艺制成芯片，体积小、功耗低、存取时间短。当电源消失时，所存信息也随即像丢失，是一种易失性存储器。</p>
@@ -405,7 +407,7 @@
 <p>速度慢、容量大、每位价格低。</p>
 <p><strong>缓冲存储器</strong></p>
 <p>用在两个速度不同的部件之中。</p>
-<h2 id="层次结构"><a href="#层次结构" class="headerlink" title="层次结构"></a>层次结构</h2><p><img src="/IMAGE/计算机组成/存储器速度、容量和价位的关系.png" alt="image-20220904220938783"></p>
+<h3 id="层次结构"><a href="#层次结构" class="headerlink" title="层次结构"></a>层次结构</h3><p><img src="/IMAGE/计算机组成/存储器速度、容量和价位的关系.png" alt="image-20220904220938783"></p>
 <p>由上至下，位价越来越低，速度越来越慢，容量越来越大。</p>
 <p>寄存器中的数直接在 CPU 内部参与运算。</p>
 <p>主存用来存放将要参与运行的程序和数据，其速度与 CPU 速度差距较大，为使它们匹配，在主存与 CPU 之间插入了一种比主存速度更快、容量跟更小的高速缓冲存储器 Cache。</p>
@@ -415,6 +417,17 @@
 <p><img src="/IMAGE/计算机组成/层次交换.png" alt="image-20220904225701286"></p>
 <p>缓存 - 主存层次主要解决 CPU 与主存速度不匹配的问题。</p>
 <p>主存 - 辅存层次主要解决存储系统的容量问题。形成了虚拟存储系统，在这个系统中，程序员变成的地址范围与虚拟存储器的地址空间相对应。</p>
+<p>程序员编程时，可用的地址空间远远大于主存空间，使程序员以为自己占有一个容量极大的主存（虚拟存储器）。其逻辑地址转变为物理地址的工作由计算机系统的硬件和操作系统自动完成的，对程序员是透明的。</p>
+<p>当虚地址的内容在主存时，机器便可立即使用；若虚地址的内容不在主存，则必须先将此虚地址内容传递到主存的合适单元后再为机器所用。</p>
+<h2 id="主存储器"><a href="#主存储器" class="headerlink" title="主存储器"></a>主存储器</h2><p>主存的基本组成。</p>
+<p><img src="/Users/wingo.wen/Document/Blog/source/IMAGE/计算机组成/主存的基本组成.png" alt="image-20220906220311036"></p>
+<p>根据 MAR 储存器地址寄存器中的地址访问某个存储单元时，还需要经过地址译码、驱动等电路，才能找到所需要访问的单元。</p>
+<p>读出时，需经过读出放大器，才能将被选中单元的存储字送到 MDR 主存数据寄存器。</p>
+<p>写入时，MDR 中的数据也必须经过写入电路才能真正写入到被选中的单元中。</p>
+<p><img src="/Users/wingo.wen/Document/Blog/source/IMAGE/计算机组成/主存和 CPU 的联系.png" alt="image-20220906221437792"></p>
+<p>现代计算机的主存都由半导体集成电路构成，驱动器、译码器和读写电路均制作在存储芯片中，而 MAR 和 MDR 制作在 CPU 芯片中。存储芯片和 CPU 芯片可通过总线连接。</p>
+<p>当要从存储器读出来某一信息字时，首先由 CPU 将该字的地址送到 MAR，经地址总线送至主存，然后发出读命令，主存接到读命令后将该单元内容读至数据总线上。</p>
+<p>若要向主存存入一个信息字时，首先 CPU 将该字所在主存单元的地址经 MAR 送到地址总线，并将信息字送入 MDR，然后向主存发出写命令，主存接到写命令后，便将数据线上的信息写入到对应地址线指出的主存单元中。</p>
 
       
     </div>
