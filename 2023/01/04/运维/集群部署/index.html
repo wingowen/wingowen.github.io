@@ -17,20 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>WINGO BLOG</title>
-  <meta name="description" content="Spark on Yarn 部署此文档以三台机器为例部署一个 Spark on Yarn 集群。 假设三台机器的 hostname 以及 ip 如下： 1234# hostname ipnode0 10.11.0.2node1 10.11.0.3node2 10.11.0.4 以下操作如无特殊说明默认在 node0 机器上操作。 SSH 免密登陆配置 12345678910111213yum in">
+  <title>集群部署 | WINGO BLOG</title>
+  <meta name="description" content="Spark on Yarn">
 <meta property="og:type" content="article">
-<meta property="og:title" content="WINGO&#39;S BLOG">
-<meta property="og:url" content="https://wingowen.github.io/2023/01/04/%E8%BF%90%E7%BB%B4/SparkOnYarn%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:title" content="集群部署">
+<meta property="og:url" content="https://wingowen.github.io/2023/01/04/%E8%BF%90%E7%BB%B4/%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/index.html">
 <meta property="og:site_name" content="WINGO&#39;S BLOG">
-<meta property="og:description" content="Spark on Yarn 部署此文档以三台机器为例部署一个 Spark on Yarn 集群。 假设三台机器的 hostname 以及 ip 如下： 1234# hostname ipnode0 10.11.0.2node1 10.11.0.3node2 10.11.0.4 以下操作如无特殊说明默认在 node0 机器上操作。 SSH 免密登陆配置 12345678910111213yum in">
+<meta property="og:description" content="Spark on Yarn">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-01-03T23:47:02.000Z">
-<meta property="article:modified_time" content="2023-01-03T23:47:02.000Z">
+<meta property="article:published_time" content="2023-01-04T09:02:46.000Z">
+<meta property="article:modified_time" content="2023-01-04T09:03:08.678Z">
 <meta property="article:author" content="Wingo Wen">
+<meta property="article:tag" content="Spark on Yarn">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://wingowen.github.io/2023/01/04/%E8%BF%90%E7%BB%B4/SparkOnYarn%E9%83%A8%E7%BD%B2/index.html">
+  <link rel="canonical" href="https://wingowen.github.io/2023/01/04/%E8%BF%90%E7%BB%B4/%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/index.html">
   
   
     <link rel="icon" href="/favicon.png" type="image/x-icon">
@@ -166,7 +167,7 @@
   <div class="widget">
     <h3 class="widget-title">分类</h3>
     <div class="widget-body">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8/">日常</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%80%83%E7%A0%94/">考研</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">2</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8/">日常</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%80%83%E7%A0%94/">考研</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">4</span></li></ul>
     </div>
   </div>
 
@@ -176,7 +177,7 @@
   <div class="widget">
     <h3 class="widget-title">标签云</h3>
     <div class="widget-body tagcloud">
-      <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 14px;">机器学习</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/" style="font-size: 13px;">网站收集</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/" style="font-size: 13px;">网络相关</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13px;">考研</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 13.5px;">计算机科学</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
+      <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/Spark-on-Yarn/" style="font-size: 13px;">Spark on Yarn</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 14px;">机器学习</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/" style="font-size: 13px;">网站收集</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/" style="font-size: 13px;">网络相关</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/" style="font-size: 13.5px;">计算机科学</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
     </div>
   </div>
 
@@ -185,7 +186,7 @@
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -196,31 +197,59 @@
 
   
   
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spark-on-Yarn-%E9%83%A8%E7%BD%B2"><span class="toc-number">1.</span> <span class="toc-text">Spark on Yarn 部署</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
 <main class="main" role="main">
   <div class="content">
-  <article id="post-运维/SparkOnYarn部署" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-运维/集群部署" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      集群部署
+    </h1>
+  
+
       
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2023/01/04/%E8%BF%90%E7%BB%B4/SparkOnYarn%E9%83%A8%E7%BD%B2/" class="article-date">
-	  <time datetime="2023-01-03T23:47:02.000Z" itemprop="datePublished">2023-01-04</time>
+	<a href="/2023/01/04/%E8%BF%90%E7%BB%B4/%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" class="article-date">
+	  <time datetime="2023-01-04T09:02:46.000Z" itemprop="datePublished">2023-01-04</time>
 	</a>
 </span>
         
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
+  </span>
+
         
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Spark-on-Yarn/" rel="tag">Spark on Yarn</a>
+  </span>
+
 
         
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/01/04/%E8%BF%90%E7%BB%B4/SparkOnYarn%E9%83%A8%E7%BD%B2/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/01/04/%E8%BF%90%E7%BB%B4/%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/#comments" class="article-comment-link">评论</a></span>
         
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h1 id="Spark-on-Yarn-部署"><a href="#Spark-on-Yarn-部署" class="headerlink" title="Spark on Yarn 部署"></a>Spark on Yarn 部署</h1><p>此文档以三台机器为例部署一个 Spark on Yarn 集群。</p>
+        <p>Spark on Yarn<br><span id="more"></span></p>
+<h1 id="Spark-on-Yarn-部署"><a href="#Spark-on-Yarn-部署" class="headerlink" title="Spark on Yarn 部署"></a>Spark on Yarn 部署</h1><p>此文档以三台机器为例部署一个 Spark on Yarn 集群。</p>
 <p>假设三台机器的 hostname 以及 ip 如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># hostname ip</span><br><span class="line">node0 10.11.0.2</span><br><span class="line">node1 10.11.0.3</span><br><span class="line">node2 10.11.0.4</span><br></pre></td></tr></table></figure>
 <p>以下操作如无特殊说明默认在 node0 机器上操作。</p>
@@ -265,7 +294,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://wingowen.github.io/2023/01/04/%E8%BF%90%E7%BB%B4/SparkOnYarn%E9%83%A8%E7%BD%B2/" title="" target="_blank" rel="external">https://wingowen.github.io/2023/01/04/运维/SparkOnYarn部署/</a>
+      <a href="https://wingowen.github.io/2023/01/04/%E8%BF%90%E7%BB%B4/%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" title="集群部署" target="_blank" rel="external">https://wingowen.github.io/2023/01/04/运维/集群部署/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -309,11 +338,23 @@
   
   <ul class="pager pull-left">
     
+    <li class="prev">
+      <a href="/2023/01/04/%E8%BF%90%E7%BB%B4/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" title="常用命令"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
     
     <li class="next">
       <a href="/2022/09/01/%E8%BF%90%E7%BB%B4/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/" title="网络相关"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
     
   </ul>
   
