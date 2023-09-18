@@ -201,7 +201,7 @@
   <div class="slimContent">
     <nav id="toc" class="article-toc">
       <h3 class="toc-title">文章目录</h3>
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%8F%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">协程</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%8F%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text"> 协程</span></a></li></ol>
     </nav>
   </div>
 </aside>
@@ -250,7 +250,8 @@
       
         <p>协程。</p>
 <span id="more"></span>
-<h1 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h1><p>操作系统在线程等待 IO 的时候，会阻塞当前线程，切换到其它线程，这样在当前线程等待 IO 的过程中，其它线程可以继续执行。当系统线程较少的时候没有什么问题，但是当线程数量非常多的时候，却产生了问题。一是系统线程会占用非常多的内存空间，二是过多的线程切换会占用大量的系统时间。</p>
+<h1 id="协程"><a class="markdownIt-Anchor" href="#协程"></a> 协程</h1>
+<p>操作系统在线程等待 IO 的时候，会阻塞当前线程，切换到其它线程，这样在当前线程等待 IO 的过程中，其它线程可以继续执行。当系统线程较少的时候没有什么问题，但是当线程数量非常多的时候，却产生了问题。一是系统线程会占用非常多的内存空间，二是过多的线程切换会占用大量的系统时间。</p>
 <p>协程刚好可以解决上述 2 个问题。协程运行在线程之上，当一个协程执行完成后，可以选择主动让出，让另一个协程运行在当前线程之上。协程并没有增加线程数量，只是在线程的基础之上通过分时复用的方式运行多个协程，而且协程的切换在用户态完成，切换的代价比线程从用户态到内核态的代价小很多。</p>
 <p>协程只有在等待 IO 的过程中才能重复利用线程。</p>
 <p>假设协程运行在线程之上，并且协程调用了一个阻塞 IO 操作，这时候会发生什么？实际上操作系统并不知道协程的存在，它只知道线程，因此在协程调用阻塞 IO 操作的时候，操作系统会让线程进入阻塞状态，当前的协程和其它绑定在该线程之上的协程都会陷入阻塞而得不到调度，这往往是不能接受的。</p>
