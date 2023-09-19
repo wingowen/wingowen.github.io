@@ -25,23 +25,23 @@
 <meta property="og:site_name" content="WINGO&#39;S BLOG">
 <meta property="og:description" content="12import numpy as npimport pandas as pd 12data &#x3D; &amp;#123;&quot;grammer&quot;:[&quot;Python&quot;,&quot;C&quot;,&quot;Java&quot;,&quot;GO&quot;,&quot;R&quot;,&quot;SQL&quot;,&quot;PHP&quot;,&quot;Python&amp;">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_34_1.png">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_35_1.png">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_61_1.png">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_62_2.png">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_63_1.png">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_64_1.png">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_69_1.png">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_76_2.png">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_78_2.png">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_80_2.png">
-<meta property="og:image" content="https://wingowen.github.io/pandas_files/pandas_83_1.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_34_1.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_35_1.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_61_1.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_62_2.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_63_1.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_64_1.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_69_1.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_76_2.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_78_2.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_80_2.png">
+<meta property="og:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_83_1.png">
 <meta property="article:published_time" content="2023-09-19T07:11:03.000Z">
-<meta property="article:modified_time" content="2023-09-19T07:24:53.797Z">
+<meta property="article:modified_time" content="2023-09-19T07:34:31.939Z">
 <meta property="article:author" content="Wingo Wen">
 <meta property="article:tag" content="Pandas">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://wingowen.github.io/pandas_files/pandas_34_1.png">
+<meta name="twitter:image" content="https://wingowen.github.io/img/pandas_files/img/pandas_34_1.png">
   <!-- Canonical links -->
   <link rel="canonical" href="https://wingowen.github.io/2023/09/19/%E7%BC%96%E7%A8%8B/Pandas-%E7%BB%83%E4%B9%A0/index.html">
   
@@ -995,11 +995,11 @@ Name: 32, dtype: object
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df.salary.plot(kind=<span class="string">&#x27;hist&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>&lt;AxesSubplot:ylabel='Frequency'&gt;
 </code></pre>
-<p><img src="/pandas_files/pandas_34_1.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_34_1.png" alt="png" /></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># KED Kernel Density Estimation</span></span><br><span class="line">df.salary.plot(kind=<span class="string">&#x27;kde&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>&lt;AxesSubplot:ylabel='Density'&gt;
 </code></pre>
-<p><img src="/pandas_files/pandas_35_1.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_35_1.png" alt="png" /></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">del</span> df[<span class="string">&#x27;categories&#x27;</span>]</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df</span><br></pre></td></tr></table></figure>
 <div>
@@ -1779,7 +1779,7 @@ dtype: int64
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># df = df.set_index(&#x27;日期&#x27;)</span></span><br><span class="line">df[<span class="string">&#x27;收盘价(元)&#x27;</span>].plot(kind=<span class="string">&#x27;line&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>&lt;AxesSubplot:&gt;
 </code></pre>
-<p><img src="/pandas_files/pandas_61_1.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_61_1.png" alt="png" /></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[[<span class="string">&#x27;收盘价(元)&#x27;</span>, <span class="string">&#x27;开盘价(元)&#x27;</span>]].plot(kind=<span class="string">&#x27;line&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>&lt;AxesSubplot:&gt;
 
@@ -1806,15 +1806,15 @@ dtype: int64
 /Users/wingo.wen/opt/anaconda3/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:201: RuntimeWarning: Glyph 24320 missing from current font.
   font.set_text(s, 0, flags=flags)
 </code></pre>
-<p><img src="/pandas_files/pandas_62_2.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_62_2.png" alt="png" /></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">&#x27;涨跌幅(%)&#x27;</span>].plot(kind=<span class="string">&#x27;hist&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>&lt;AxesSubplot:ylabel='Frequency'&gt;
 </code></pre>
-<p><img src="/pandas_files/pandas_63_1.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_63_1.png" alt="png" /></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">&#x27;涨跌幅(%)&#x27;</span>].plot(kind=<span class="string">&#x27;hist&#x27;</span>, bins=<span class="number">30</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>&lt;AxesSubplot:ylabel='Frequency'&gt;
 </code></pre>
-<p><img src="/pandas_files/pandas_64_1.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_64_1.png" alt="png" /></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">temp = pd.DataFrame(columns = data.columns.to_list())</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(data)):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(data.iloc[i,<span class="number">13</span>]) != <span class="built_in">float</span>:</span><br><span class="line">        temp = temp.append(data.loc[i])</span><br><span class="line">temp.head(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 <div>
 <style scoped>
@@ -1889,7 +1889,7 @@ dtype: int64
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">&#x27;换手率(%)&#x27;</span>].plot(kind=<span class="string">&#x27;kde&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>&lt;AxesSubplot:ylabel='Density'&gt;
 </code></pre>
-<p><img src="/pandas_files/pandas_69_1.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_69_1.png" alt="png" /></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">&#x27;收盘价(元)&#x27;</span>].diff()</span><br></pre></td></tr></table></figure>
 <pre><code>0         NaN
 1      0.1413
@@ -1977,7 +1977,7 @@ Name: 收盘价(元), Length: 327, dtype: float64
 /Users/wingo.wen/opt/anaconda3/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:201: RuntimeWarning: Glyph 26399 missing from current font.
   font.set_text(s, 0, flags=flags)
 </code></pre>
-<p><img src="/pandas_files/pandas_76_2.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_76_2.png" alt="png" /></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df[<span class="string">&#x27;收盘价(元)&#x27;</span>].resample(rule=<span class="string">&#x27;W&#x27;</span>).<span class="built_in">max</span>()</span><br></pre></td></tr></table></figure>
 <pre><code>日期
 2016-01-10    15.9855
@@ -2007,7 +2007,7 @@ Freq: W-SUN, Name: 收盘价(元), Length: 71, dtype: float64
 /Users/wingo.wen/opt/anaconda3/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:201: RuntimeWarning: Glyph 26399 missing from current font.
   font.set_text(s, 0, flags=flags)
 </code></pre>
-<p><img src="/pandas_files/pandas_78_2.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_78_2.png" alt="png" /></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data[<span class="string">&#x27;开盘价(元)&#x27;</span>].expanding(min_periods=<span class="number">1</span>).mean()</span><br></pre></td></tr></table></figure>
 <pre><code>0      16.144400
 1      15.804400
@@ -2052,13 +2052,13 @@ Name: 开盘价(元), Length: 327, dtype: float64
 /Users/wingo.wen/opt/anaconda3/lib/python3.8/site-packages/matplotlib/backends/backend_agg.py:201: RuntimeWarning: Glyph 20803 missing from current font.
   font.set_text(s, 0, flags=flags)
 </code></pre>
-<p><img src="/pandas_files/pandas_80_2.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_80_2.png" alt="png" /></p>
 <h1 id="pandas-numpy"><a class="markdownIt-Anchor" href="#pandas-numpy"></a> pandas &amp; numpy</h1>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 随机</span></span><br><span class="line">df1 = pd.DataFrame(np.random.randint(<span class="number">0</span>, <span class="number">100</span>, <span class="number">20</span>))</span><br><span class="line"><span class="comment"># 等步长</span></span><br><span class="line">df2 = pd.DataFrame(np.arange(<span class="number">0</span>, <span class="number">100</span>, <span class="number">5</span>))</span><br><span class="line"><span class="comment"># 正态分布</span></span><br><span class="line">df3 = pd.DataFrame(np.random.normal(<span class="number">0</span>, <span class="number">1</span>, <span class="number">20</span>))</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df3.plot(kind=<span class="string">&#x27;hist&#x27;</span>)</span><br></pre></td></tr></table></figure>
 <pre><code>&lt;AxesSubplot:ylabel='Frequency'&gt;
 </code></pre>
-<p><img src="/pandas_files/pandas_83_1.png" alt="png" /></p>
+<p><img src="/img/pandas_files/img/pandas_83_1.png" alt="png" /></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = pd.concat([df1,df2,df3],ignore_index=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df = pd.concat([df1,df2,df3], axis=<span class="number">1</span>, ignore_index=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">df</span><br></pre></td></tr></table></figure>
@@ -2671,7 +2671,7 @@ Name: col2, dtype: float64
 <pre><code>&lt;ipython-input-97-d0c96ec6289a&gt;:1: SettingWithCopyWarning: 
 A value is trying to be set on a copy of a slice from a DataFrame
 
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+See the caveats in the documentation: https://img/pandas.pydata.org/img/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
   df.col1[df['col1'] &gt; 50]= '高'
 </code></pre>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">np.linalg.norm(df[<span class="string">&#x27;col2&#x27;</span>]-df[<span class="string">&#x27;col3&#x27;</span>])</span><br></pre></td></tr></table></figure>
