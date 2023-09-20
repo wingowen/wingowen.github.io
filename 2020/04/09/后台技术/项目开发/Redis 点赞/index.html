@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Redis 点赞 | WINGO BLOG</title>
+  <meta name="description" content="Redis 实现点赞功能。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis 点赞">
+<meta property="og:url" content="https://wingowen.github.io/2020/04/09/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/Redis%20%E7%82%B9%E8%B5%9E/index.html">
+<meta property="og:site_name" content="WINGO&#39;S BLOG">
+<meta property="og:description" content="Redis 实现点赞功能。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Redis/RedisDeskTop.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Redis/Test01.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Redis/RedisDeskTop01.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Redis/Test02.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Redis/RedisDeskTop02.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Redis/Test03.png">
+<meta property="article:published_time" content="2020-04-09T06:29:14.000Z">
+<meta property="article:modified_time" content="2023-09-20T08:02:15.812Z">
+<meta property="article:author" content="Wingo Wen">
+<meta property="article:tag" content="demo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wingowen.github.io/img/2020/04/Redis/RedisDeskTop.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wingowen.github.io/2020/04/09/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/Redis%20%E7%82%B9%E8%B5%9E/index.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="WINGO'S BLOG" type="application/atom+xml">
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">WINGO.WEN</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>得失从缘 心无增减</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">5</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Flume/" style="font-size: 13px;">Flume</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/HBase/" style="font-size: 13px;">HBase</a> <a href="/tags/Hadoop/" style="font-size: 13px;">Hadoop</a> <a href="/tags/Hive/" style="font-size: 13.25px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Java/" style="font-size: 13px;">Java</a> <a href="/tags/Kafka/" style="font-size: 13px;">Kafka</a> <a href="/tags/Kudu/" style="font-size: 13px;">Kudu</a> <a href="/tags/Linux/" style="font-size: 13px;">Linux</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.25px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/MySQL/" style="font-size: 13px;">MySQL</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/demo/" style="font-size: 13.5px;">demo</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/peewee/" style="font-size: 13px;">peewee</a> <a href="/tags/sklearn/" style="font-size: 13px;">sklearn</a> <a href="/tags/%E7%88%AC%E8%99%AB/" style="font-size: 13px;">爬虫</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.75px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.5px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 13px;">设计模式</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">9</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text"> 环境搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#redis-%E9%85%8D%E7%BD%AE"><span class="toc-number">1.1.</span> <span class="toc-text"> Redis 配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#properties"><span class="toc-number">1.2.</span> <span class="toc-text"> properties</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="toc-number">1.3.</span> <span class="toc-text"> 单元测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%82%B9%E8%B5%9E%E7%B1%BB%E5%9E%8B%E6%9E%9A%E4%B8%BE%E7%B1%BB"><span class="toc-number">1.4.</span> <span class="toc-text"> 点赞类型枚举类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%82%B9%E8%B5%9E%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="toc-number">1.5.</span> <span class="toc-text"> 点赞工具类</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-2"><span class="toc-number">1.6.</span> <span class="toc-text"> 单元测试</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text"> 简单实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.1.</span> <span class="toc-text"> 自定义接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.2.</span> <span class="toc-text"> 接口实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-3"><span class="toc-number">2.3.</span> <span class="toc-text"> 单元测试</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E6%9D%82%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text"> 复杂实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.1.</span> <span class="toc-text"> 方案设计</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E6%B7%BB%E5%8A%A0"><span class="toc-number">3.2.</span> <span class="toc-text"> 类型添加</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8E%A5%E5%8F%A3-2"><span class="toc-number">3.3.</span> <span class="toc-text"> 自定义接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0-2"><span class="toc-number">3.4.</span> <span class="toc-text"> 接口实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95-4"><span class="toc-number">3.5.</span> <span class="toc-text"> 单元测试</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-后台技术/项目开发/Redis 点赞" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Redis 点赞
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/04/09/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/Redis%20%E7%82%B9%E8%B5%9E/" class="article-date">
+	  <time datetime="2020-04-09T06:29:14.000Z" itemprop="datePublished">2020-04-09</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/demo/" rel="tag">demo</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/04/09/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/Redis%20%E7%82%B9%E8%B5%9E/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>Redis 实现点赞功能。</p>
+<span id="more"></span>
+<h3 id="环境搭建"><a class="markdownIt-Anchor" href="#环境搭建"></a> 环境搭建</h3>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Redis --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- Jackson --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-databind<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.fasterxml.jackson.core<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jackson-annotations<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- spring-json依赖 --&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="redis-配置"><a class="markdownIt-Anchor" href="#redis-配置"></a> Redis 配置</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wingo.springbootredis01.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.JsonAutoDetect;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.annotation.PropertyAccessor;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.connection.RedisConnectionFactory;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.RedisTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.serializer.StringRedisSerializer;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> Wingo</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020-04-11 12:13</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RedisConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> StringRedisSerializer <span class="title function_">stringRedisSerializer</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">StringRedisSerializer</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> ObjectMapper <span class="title function_">objectMapper</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">ObjectMapper</span> <span class="variable">objectMapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">        <span class="comment">// 支持任意对象的 json 序列化和反序列化</span></span><br><span class="line">        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);</span><br><span class="line">        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);</span><br><span class="line">        <span class="keyword">return</span> objectMapper;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Jackson2JsonRedisSerializer <span class="title function_">jackson2JsonRedisSerializer</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Jackson2JsonRedisSerializer</span> <span class="variable">jackson2JsonRedisSerializer</span></span><br><span class="line">                <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Jackson2JsonRedisSerializer</span>&lt;&gt;(Object.class);</span><br><span class="line">        jackson2JsonRedisSerializer.setObjectMapper(objectMapper());</span><br><span class="line">        <span class="keyword">return</span> jackson2JsonRedisSerializer;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> RedisTemplate <span class="title function_">redisTemplate</span><span class="params">(<span class="meta">@Autowired</span> RedisConnectionFactory redisConnectionFactory)</span>&#123;</span><br><span class="line">        RedisTemplate&lt;String,Object&gt; redisTemplate= <span class="keyword">new</span> <span class="title class_">RedisTemplate</span>&lt;&gt;();</span><br><span class="line">        redisTemplate.setConnectionFactory(redisConnectionFactory);</span><br><span class="line">        <span class="comment">// 设置了默认的序列化器</span></span><br><span class="line">        redisTemplate.setDefaultSerializer(jackson2JsonRedisSerializer());</span><br><span class="line">        <span class="comment">// 开启事务支持</span></span><br><span class="line">        redisTemplate.setEnableTransactionSupport(<span class="literal">true</span>);</span><br><span class="line">        <span class="keyword">return</span> redisTemplate;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="properties"><a class="markdownIt-Anchor" href="#properties"></a> properties</h4>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Redis数据库索引(默认为θ)</span></span><br><span class="line"><span class="attr">spring.redis.database</span>=<span class="string">0</span></span><br><span class="line"><span class="comment"># Redis服务器地址</span></span><br><span class="line"><span class="attr">spring.redis.host</span>=<span class="string">192.168.31.100</span></span><br><span class="line"><span class="comment"># Redis服务器连接端口</span></span><br><span class="line"><span class="attr">spring.redis.port</span>=<span class="string">6379</span></span><br><span class="line"><span class="comment"># Redis服务器连接密码(默认为空)</span></span><br><span class="line"><span class="attr">spring.redis.password</span>=<span class="string"></span></span><br><span class="line"><span class="comment"># 连接池最大连接数(使用负值表示没有限制)</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.max-active</span>=<span class="string">10</span></span><br><span class="line"><span class="comment"># 连接池最大阻塞等待时间(使用负值表示没有限制)</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.max-wait</span>=<span class="string">-1</span></span><br><span class="line"><span class="comment"># 连接池中的最大空闲连接</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.max-idle</span>=<span class="string">5</span></span><br><span class="line"><span class="comment"># 连接池中的最小空闲连接</span></span><br><span class="line"><span class="attr">spring.redis.jedis.pool.min-idle</span>=<span class="string">0</span></span><br><span class="line"><span class="comment"># 连接超时时间(毫秒)</span></span><br><span class="line"><span class="attr">spring.redis.timeout</span>=<span class="string">1000</span></span><br></pre></td></tr></table></figure>
+<h4 id="单元测试"><a class="markdownIt-Anchor" href="#单元测试"></a> 单元测试</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith(SpringRunner.class)</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SpringBootRedis01ApplicationTests</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">simpleAdd</span><span class="params">()</span> &#123;</span><br><span class="line">        redisTemplate.opsForValue().set(<span class="string">&quot;test01&quot;</span>,<span class="string">&quot;这是一个测试01&quot;</span>);</span><br><span class="line">        log.info(redisTemplate.opsForValue().get(<span class="string">&quot;test01&quot;</span>).toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Redis 客户端存储正常，控制台正常输出，项目环境搭建完成。</p>
+</blockquote>
+<p><img src="/img/2020/04/Redis/RedisDeskTop.png" alt="" /></p>
+<h4 id="点赞类型枚举类"><a class="markdownIt-Anchor" href="#点赞类型枚举类"></a> 点赞类型枚举类</h4>
+<blockquote>
+<p>LIKED ARTICLE 文章点赞；<br />
+LIKED ⅥDEO 视频点赞；</p>
+</blockquote>
+<p>代码实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">MyType</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** LIKED_ARTICLE */</span></span><br><span class="line">    LIKED_ARTICLE (<span class="string">&quot;文章点赞&quot;</span>),</span><br><span class="line">    <span class="comment">/** LIKED_VIDEO */</span></span><br><span class="line">    LIKED_VIDEO (<span class="string">&quot;视频点赞&quot;</span>),</span><br><span class="line">    <span class="comment">/** LIKED_VIDEO */</span></span><br><span class="line">    UNKONW_TYPE (<span class="string">&quot;未知类型&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String myType;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构造器类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> myType</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    MyType(String myType) &#123;</span><br><span class="line">        <span class="built_in">this</span>.myType = myType;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="点赞工具类"><a class="markdownIt-Anchor" href="#点赞工具类"></a> 点赞工具类</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LikedUtil</span> &#123;</span><br><span class="line">    <span class="comment">/** 生成 Key */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getKey</span><span class="params">(MyType myType, String subjectId)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> myType + <span class="string">&quot;:&quot;</span> + subjectId;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getReportKey</span><span class="params">(MyType myType)</span> &#123;</span><br><span class="line">        MyType type;</span><br><span class="line">        <span class="keyword">switch</span> (myType) &#123;</span><br><span class="line">            <span class="keyword">case</span> LIKED_ARTICLE:</span><br><span class="line">                type = MyType.LIKED_ARTICLE;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> LIKED_VIDEO:</span><br><span class="line">                type = MyType.LIKED_VIDEO;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                type = MyType.UNKONW_TYPE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> type + <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="单元测试-2"><a class="markdownIt-Anchor" href="#单元测试-2"></a> 单元测试</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">keyTest</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">MyType</span> <span class="variable">type</span> <span class="operator">=</span> MyType.LIKED_ARTICLE;</span><br><span class="line">    <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> LikedUtil.getKey(type, “<span class="number">1</span>”);</span><br><span class="line">    log.info(result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>自定义的 Key 格式：类型 + 类型实体的 id</p>
+</blockquote>
+<p><img src="/img/2020/04/Redis/Test01.png" alt="" /></p>
+<h3 id="简单实现"><a class="markdownIt-Anchor" href="#简单实现"></a> 简单实现</h3>
+<p>该方案 Redis 数据库只存储点赞主体和被点赞主体的ID信息，数据类型采用 Hash 类型。</p>
+<blockquote>
+<p>key ：LIKED_TYPE + subject_id，即使用文章的 id 作为 key 。<br />
+field ：<br />
+post_id 点赞人的id ；<br />
+value 固定值 1 ：表示一个点赞主体对被点赞主体点了一次赞。</p>
+</blockquote>
+<h4 id="自定义接口"><a class="markdownIt-Anchor" href="#自定义接口"></a> 自定义接口</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> Wingo</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020-04-11 14:41</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">LikedSimpleService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 点赞 / 取消点赞功能</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> myType 点赞的类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subjectId 被点赞的主体的 id</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> postId 点赞主体的 id</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">liked</span><span class="params">(MyType myType, String subjectId, String postId)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 得到主体的总点赞数</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> myType 点赞的类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subjectId 被点赞的主体的 id</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 总点赞数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    Long <span class="title function_">count</span><span class="params">(MyType myType, String subjectId)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="接口实现"><a class="markdownIt-Anchor" href="#接口实现"></a> 接口实现</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> Wingo</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020-04-11 15:09</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LikedSimpleServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">LikedSimpleService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> StringRedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">liked</span><span class="params">(MyType myType, String subjectId, String postId)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> LikedUtil.getKey(myType, subjectId);</span><br><span class="line">        <span class="comment">// 判断用户是否已经点赞，如果点过赞，取消点赞，如果没有点过点赞</span></span><br><span class="line">        <span class="type">Boolean</span> <span class="variable">liked</span> <span class="operator">=</span> redisTemplate.opsForHash().hasKey(key, postId);</span><br><span class="line">        <span class="keyword">if</span> (Boolean.TRUE.equals(liked)) &#123;</span><br><span class="line">            <span class="comment">// 取消点赞</span></span><br><span class="line">            redisTemplate.opsForHash().delete(key, postId);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 点赞</span></span><br><span class="line">            redisTemplate.opsForHash().put(key, postId, <span class="string">&quot;1&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">count</span><span class="params">(MyType myType, String subjectId)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> LikedUtil.getKey(myType, subjectId);</span><br><span class="line">        <span class="keyword">return</span> redisTemplate.opsForHash().size(key);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="单元测试-3"><a class="markdownIt-Anchor" href="#单元测试-3"></a> 单元测试</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith(SpringRunner.class)</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SpringBootRedis01ApplicationTests</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> LikedSimpleService likedSimpleService;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RedisTemplate redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">keyTest</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">MyType</span> <span class="variable">myType</span> <span class="operator">=</span> MyType.LIKED_ARTICLE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">1</span>; j &lt;= <span class="number">100</span>; j++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= j; i++) &#123;</span><br><span class="line">                likedSimpleService.liked(myType, j+<span class="string">&quot;&quot;</span>, i+<span class="string">&quot;&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">countTest</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">MyType</span> <span class="variable">myType</span> <span class="operator">=</span> MyType.LIKED_ARTICLE;</span><br><span class="line">        <span class="type">int</span> <span class="variable">num</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(num &lt;= <span class="number">10</span>)&#123;</span><br><span class="line">            <span class="type">int</span> <span class="variable">subjectId</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>().nextInt(<span class="number">100</span>) + <span class="number">1</span>;</span><br><span class="line">            <span class="type">long</span> <span class="variable">count</span> <span class="operator">=</span> likedSimpleService.count(myType, Integer.toString(subjectId));</span><br><span class="line">            log.info(<span class="string">&quot;ID 为&quot;</span> + subjectId + <span class="string">&quot;的文章点赞数为&quot;</span> + count);</span><br><span class="line">            num++;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>初始化 100 篇文章的点赞信息，并且 id = num 的文章其点赞数为 num</p>
+</blockquote>
+<p><img src="/img/2020/04/Redis/RedisDeskTop01.png" alt="" /></p>
+<p><img src="/img/2020/04/Redis/Test02.png" alt="" /></p>
+<h3 id="复杂实现"><a class="markdownIt-Anchor" href="#复杂实现"></a> 复杂实现</h3>
+<blockquote>
+<p>前面的简单实现只缓存了 ID 的数据，而实际的应用场景中常常还需要更多的信息，比如文章标题、文章内容简介、用户昵称、用户头像、点赞排行等信息。根据需求继续完善项目。</p>
+</blockquote>
+<h4 id="方案设计"><a class="markdownIt-Anchor" href="#方案设计"></a> 方案设计</h4>
+<blockquote>
+<p>点赞数量统计：Hash<br />
+key ：LIKED_TYPE + subject_id。<br />
+field ：<br />
+post_id；<br />
+value { json } 点赞的人的信息。</p>
+<p>点赞排名统计： zSet<br />
+key ：LIKED_TYPE_TOP。<br />
+field ：<br />
+value { json } 被点赞主体的内容；<br />
+score 记录被点赞主体的总赞数。</p>
+</blockquote>
+<h4 id="类型添加"><a class="markdownIt-Anchor" href="#类型添加"></a> 类型添加</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">MyType</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** LIKED_ARTICLE */</span></span><br><span class="line">    LIKED_ARTICLE (<span class="string">&quot;文章点赞&quot;</span>),</span><br><span class="line">    <span class="comment">/** LIKED_VIDEO */</span></span><br><span class="line">    LIKED_VIDEO (<span class="string">&quot;视频点赞&quot;</span>),</span><br><span class="line">    <span class="comment">/** LIKED_ARTICLE_TOP */</span></span><br><span class="line">    LIKED_ARTICLE_TOP (<span class="string">&quot;文章点赞排行&quot;</span>),</span><br><span class="line">    <span class="comment">/** LIKED_VIDEO_TOP */</span></span><br><span class="line">    LIKED_VIDEO_TOP (<span class="string">&quot;视频点赞排行&quot;</span>),</span><br><span class="line">    <span class="comment">/** LIKED_VIDEO */</span></span><br><span class="line">    UNKONW_TYPE (<span class="string">&quot;未知类型&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String myType;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构造器类</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> myType</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    MyType(String myType) &#123;</span><br><span class="line">        <span class="built_in">this</span>.myType = myType;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getMyType</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.myType;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LikedUtil</span> &#123;</span><br><span class="line"></span><br><span class="line">    LikedUtil()&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Utility class&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/** 生成 Key */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getKey</span><span class="params">(MyType myType, String subjectId)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> myType + <span class="string">&quot;:&quot;</span> + subjectId;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 生成排行榜 Key */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String <span class="title function_">getTopKey</span><span class="params">(MyType myType)</span> &#123;</span><br><span class="line">        MyType type;</span><br><span class="line">        <span class="keyword">switch</span> (myType) &#123;</span><br><span class="line">            <span class="keyword">case</span> LIKED_ARTICLE:</span><br><span class="line">                type = MyType.LIKED_ARTICLE_TOP;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">case</span> LIKED_VIDEO:</span><br><span class="line">                type = MyType.LIKED_VIDEO_TOP;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                type = MyType.UNKONW_TYPE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> type.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Article</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer articleId;</span><br><span class="line">    <span class="keyword">private</span> String title;</span><br><span class="line">    <span class="keyword">private</span> String summary;</span><br><span class="line">    <span class="keyword">private</span> String img;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer userId;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="keyword">private</span> String avatar;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="自定义接口-2"><a class="markdownIt-Anchor" href="#自定义接口-2"></a> 自定义接口</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> Wingo</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020-04-12 12:45</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">LikedService</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 点赞/取消点赞</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> type     类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subjectId 被点赞主体 ID</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> postId    点赞主体 ID</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> postUser  点赞主体的概要信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subject   被点赞主体概要信息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">liked</span><span class="params">(MyType type, String subjectId, String postId, Object subject, Object postUser)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取主体点赞数量</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> type 类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subjectId 被点赞主体 ID</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 点赞数量</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    Long <span class="title function_">count</span><span class="params">(MyType type, String subjectId)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取点赞主体的详情列表</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> type 类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> subjectId 被点赞主体 ID</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 点赞主体的详情列表</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    List&lt;Object&gt; <span class="title function_">getPostUserSet</span><span class="params">(MyType type, String subjectId)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 排行查询</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> type 业务类型</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> top 前 top 名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 排行列表</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    Set&lt;Object&gt; <span class="title function_">getSubjectTopN</span><span class="params">(MyType type, Long top)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="接口实现-2"><a class="markdownIt-Anchor" href="#接口实现-2"></a> 接口实现</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.wingo.springbootredis01.service.impl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.wingo.springbootredis01.constant.Common;</span><br><span class="line"><span class="keyword">import</span> com.wingo.springbootredis01.constant.MyType;</span><br><span class="line"><span class="keyword">import</span> com.wingo.springbootredis01.service.LikedService;</span><br><span class="line"><span class="keyword">import</span> com.wingo.springbootredis01.util.LikedUtil;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.data.redis.core.RedisTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span> Wingo</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span> 2020-04-12 12:50</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">LikedServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">LikedService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RedisTemplate&lt;String,Object&gt; redisTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">liked</span><span class="params">(MyType type, String subjectId, String postId, Object subject, Object postUser)</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> LikedUtil.getKey(type, subjectId);</span><br><span class="line">        <span class="type">Boolean</span> <span class="variable">liked</span> <span class="operator">=</span> redisTemplate.opsForHash().hasKey(key, postId);</span><br><span class="line">        <span class="keyword">if</span> (Boolean.TRUE.equals(liked)) &#123;</span><br><span class="line">            <span class="comment">// 取消赞</span></span><br><span class="line">            redisTemplate.opsForHash().delete(key, postId);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 点赞</span></span><br><span class="line">            redisTemplate.opsForHash().put(key, postId, postUser);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">reportKey</span> <span class="operator">=</span> LikedUtil.getTopKey(type);</span><br><span class="line">        <span class="keyword">if</span> (Boolean.TRUE.equals(liked)) &#123;</span><br><span class="line">            redisTemplate.opsForZSet().incrementScore(reportKey, subject, Common.DECLINE);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="type">Double</span> <span class="variable">score</span> <span class="operator">=</span> redisTemplate.opsForZSet().score(reportKey, subject);</span><br><span class="line">            <span class="keyword">if</span> (score == <span class="literal">null</span>) &#123;</span><br><span class="line">                redisTemplate.opsForZSet().add(reportKey, subject, Common.INCREASE);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                redisTemplate.opsForZSet().incrementScore(reportKey, subject, Common.INCREASE);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Long <span class="title function_">count</span><span class="params">(MyType type, String subjectId)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> LikedUtil.getKey(type, subjectId);</span><br><span class="line">        <span class="keyword">return</span> redisTemplate.opsForHash().size(key);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Object&gt; <span class="title function_">getPostUserSet</span><span class="params">(MyType type, String subjectId)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> LikedUtil.getKey(type, subjectId);</span><br><span class="line">        <span class="keyword">return</span> redisTemplate.opsForHash().values(key);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Set&lt;Object&gt; <span class="title function_">getSubjectTopN</span><span class="params">(MyType type, Long top)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> LikedUtil.getTopKey(type);</span><br><span class="line">        <span class="keyword">return</span> redisTemplate.opsForZSet().reverseRange(key, <span class="number">0</span>, top);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="单元测试-4"><a class="markdownIt-Anchor" href="#单元测试-4"></a> 单元测试</h4>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">keyTest</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">MyType</span> <span class="variable">myType</span> <span class="operator">=</span> MyType.LIKED_ARTICLE;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">1</span>; j &lt;= <span class="number">100</span>; j++) &#123;</span><br><span class="line">        Article article= <span class="keyword">new</span> <span class="title class_">Article</span>();</span><br><span class="line">        article.setArticleId(j);</span><br><span class="line">        article.setTitle(<span class="string">&quot;文章标题&quot;</span>+j);</span><br><span class="line">        article.setImg(<span class="string">&quot;文章图片&quot;</span>+j);</span><br><span class="line">        article.setSummary(<span class="string">&quot;文章摘要&quot;</span>+j);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt;= j; i++) &#123;</span><br><span class="line">            <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">            user.setUserId (i);</span><br><span class="line">            user.setUsername(<span class="string">&quot;user&quot;</span>+ i);</span><br><span class="line">            user.setAvatar(<span class="string">&quot;avatar&quot;</span>+ i);</span><br><span class="line">            likedService.liked(myType, j+<span class="string">&quot;&quot;</span>, i+<span class="string">&quot;&quot;</span>, article, user);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">countTest</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">MyType</span> <span class="variable">myType</span> <span class="operator">=</span> MyType.LIKED_ARTICLE;</span><br><span class="line">    log.info(likedService.getSubjectTopN(myType, (<span class="type">long</span>) <span class="number">10</span>).toString());</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/img/2020/04/Redis/RedisDeskTop02.png" alt="" /></p>
+<p>用户信息被写入缓存。</p>
+<p><img src="/img/2020/04/Redis/Test03.png" alt="" /></p>
+<p>取得排名前十的文章信息。</p>
+
+      
+    </div>
+    <!-- <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wingowen.github.io/2020/04/09/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/%E9%A1%B9%E7%9B%AE%E5%BC%80%E5%8F%91/Redis%20%E7%82%B9%E8%B5%9E/" title="Redis 点赞" target="_blank" rel="external">https://wingowen.github.io/2020/04/09/后台技术/项目开发/Redis 点赞/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">WINGO.WEN</span><small class="ml-1x"></small></a></h3>
+        <div>一个疯子。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div> -->
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/04/17/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Dubbo%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/" title="Dubbo"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/04/01/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Spring%20Boot/Spring%20Boot%20%E4%BB%BB%E5%8A%A1/" title="Spring Boot 任务"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	<!-- Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>. -->
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>
