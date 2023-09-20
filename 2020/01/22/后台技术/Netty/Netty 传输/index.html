@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Netty 传输 | WINGO BLOG</title>
+  <meta name="description" content="流经网络的数据总是具有相同的类型：字节。这些字节是如何流动的主要取决于我们所说的网络传输（一个帮助我们抽象底层数据传输机制的概念）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty 传输">
+<meta property="og:url" content="https://wingowen.github.io/2020/01/22/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E4%BC%A0%E8%BE%93/index.html">
+<meta property="og:site_name" content="WINGO&#39;S BLOG">
+<meta property="og:description" content="流经网络的数据总是具有相同的类型：字节。这些字节是如何流动的主要取决于我们所说的网络传输（一个帮助我们抽象底层数据传输机制的概念）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/01/Netty/ChannelInterface.PNG">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/01/Netty/ChannelMethod.PNG">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/01/Netty/ChannelSelectionKey.PNG">
+<meta property="og:image" content="d:%5COneDrive%5CTypora%5C%E5%9B%BE%E7%89%87%5C1579834708283.png">
+<meta property="article:published_time" content="2020-01-22T11:03:21.000Z">
+<meta property="article:modified_time" content="2023-09-20T07:00:03.842Z">
+<meta property="article:author" content="Wingo Wen">
+<meta property="article:tag" content="Netty">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wingowen.github.io/img/2020/01/Netty/ChannelInterface.PNG">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wingowen.github.io/2020/01/22/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E4%BC%A0%E8%BE%93/index.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="WINGO'S BLOG" type="application/atom+xml">
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">WINGO.WEN</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>得失从缘 心无增减</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8/">日常</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Hexo/" style="font-size: 13px;">Hexo</a> <a href="/tags/Hive/" style="font-size: 13px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Java/" style="font-size: 13px;">Java</a> <a href="/tags/Kudu/" style="font-size: 13px;">Kudu</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.25px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 13.75px;">机器学习</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/" style="font-size: 13px;">网站收集</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/" style="font-size: 13px;">网络相关</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.5px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-后台技术/Netty/Netty 传输" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Netty 传输
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/01/22/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E4%BC%A0%E8%BE%93/" class="article-date">
+	  <time datetime="2020-01-22T11:03:21.000Z" itemprop="datePublished">2020-01-22</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Netty/" rel="tag">Netty</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/01/22/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E4%BC%A0%E8%BE%93/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>流经网络的数据总是具有相同的类型：字节。这些字节是如何流动的主要取决于我们所说的网络传输（一个帮助我们抽象底层数据传输机制的概念）</p>
+<span id="more"></span>
+<h3 id="案例研究jdk-vs-netty"><a class="markdownIt-Anchor" href="#案例研究jdk-vs-netty"></a> 案例研究：JDK VS. Netty</h3>
+<h3 id="原生-jdk"><a class="markdownIt-Anchor" href="#原生-jdk"></a> 原生 JDK</h3>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JDK 的阻塞网络编程</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PlainOioServer</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">serve</span><span class="params">(<span class="type">int</span> port)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">		<span class="keyword">final</span> <span class="type">ServerSocket</span> <span class="variable">socket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerSocket</span>(port);</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">for</span> (;;) &#123;</span><br><span class="line">					<span class="keyword">final</span> <span class="type">Socket</span> <span class="variable">clientSocket</span> <span class="operator">=</span> socket.accept();</span><br><span class="line">					System.out.println(<span class="string">&quot;Accepted connection from &quot;</span> + clientSocket);</span><br><span class="line">					<span class="keyword">new</span> <span class="title class_">Thread</span>(	<span class="comment">//	创建一个新的线程来处理该连接</span></span><br><span class="line">						<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">							<span class="meta">@Override</span></span><br><span class="line">							<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">								OutputStream out;</span><br><span class="line">								<span class="keyword">try</span> &#123;</span><br><span class="line">                                        out = clientSocket.getOutputStream();</span><br><span class="line">                                    	<span class="comment">// 将消息写给已连接的客户端</span></span><br><span class="line">                                        out.write(<span class="string">&quot;Hi!\r\n&quot;</span>.getBytes(Charset.forName(<span class="string">&quot;UTF-8&quot;</span>)));</span><br><span class="line">                                        out.flush();</span><br><span class="line">                                        clientSocket.close();</span><br><span class="line">                                    &#125;<span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                                        e.printStackTrace();</span><br><span class="line">                                    &#125;<span class="keyword">finally</span> &#123;</span><br><span class="line">                                        <span class="keyword">try</span> &#123;</span><br><span class="line">                                            clientSocket.close();</span><br><span class="line">                                        &#125;<span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">                                            <span class="comment">// ignore on close</span></span><br><span class="line">                                        &#125; </span><br><span class="line">							&#125; </span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;).start();	<span class="comment">// 启动线程</span></span><br><span class="line">                &#125; </span><br><span class="line">            &#125;<span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            	e.printStackTrace();</span><br><span class="line">            &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>随着应用程序的用户越来越多，阻塞 I/O 并不能很好地伸缩到支撑成千上万地并发连入连接。此时异步 I/O 可以解决这个问题，但异步 I/O 的 API 是完全不同的，因此不得不重写此应用程序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// JDK 非阻塞网络处理</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PlainNioServer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">serve</span><span class="params">(<span class="type">int</span> port)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">ServerSocketChannel</span> <span class="variable">serverChannel</span> <span class="operator">=</span> ServerSocketChannel.open();</span><br><span class="line">        serverChannel.configureBlocking(<span class="literal">false</span>);</span><br><span class="line">        <span class="type">ServerSocket</span> <span class="variable">ssocket</span> <span class="operator">=</span> serverChannel.socket();</span><br><span class="line">        <span class="type">InetSocketAddress</span> <span class="variable">address</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(port);</span><br><span class="line">        ssocket.bind(address);</span><br><span class="line">        <span class="comment">// 打开 Selector 来处理 Channel</span></span><br><span class="line">        <span class="type">Selector</span> <span class="variable">selector</span> <span class="operator">=</span> Selector.open();</span><br><span class="line">        <span class="comment">// 将 ServerChannel 注册到 Selector 以便接受连接（报个名）</span></span><br><span class="line">        serverChannel.register(selector, SelectionKey.OP_ACCEPT);</span><br><span class="line">        <span class="keyword">final</span> <span class="type">ByteBuffer</span> <span class="variable">msg</span> <span class="operator">=</span> ByteBuffer.wrap(<span class="string">&quot;Hi!\r\n&quot;</span>.getBytes());</span><br><span class="line">        <span class="keyword">for</span> (;;) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// 等待 select() 需要处理的新事件，阻塞将一直持续到下一个传入事件</span></span><br><span class="line">                selector.select();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">                ex.printStackTrace();</span><br><span class="line">                <span class="comment">// handle exception</span></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 获取所有接收事件的标识 SelectionKey()</span></span><br><span class="line">            Set&lt;SelectionKey&gt; readyKeys = selector.selectedKeys();</span><br><span class="line">            Iterator&lt;SelectionKey&gt; iterator = readyKeys.iterator();</span><br><span class="line">            <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">                <span class="comment">// 取出标识，以便标识所对应的事件进行业务操作</span></span><br><span class="line">                <span class="type">SelectionKey</span> <span class="variable">key</span> <span class="operator">=</span> iterator.next();</span><br><span class="line">                <span class="comment">// 此事件已经取出处理，将其标识符移除</span></span><br><span class="line">                iterator.remove();</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="comment">// 检查事件类型</span></span><br><span class="line">                    <span class="keyword">if</span> (key.isAcceptable()) &#123;</span><br><span class="line">                        <span class="type">ServerSocketChannel</span> <span class="variable">server</span> <span class="operator">=</span> (ServerSocketChannel)key.channel();</span><br><span class="line">                        <span class="comment">// 接受客户端</span></span><br><span class="line">                        <span class="type">SocketChannel</span> <span class="variable">client</span> <span class="operator">=</span> server.accept();</span><br><span class="line">                        client.configureBlocking(<span class="literal">false</span>);</span><br><span class="line">                        <span class="comment">// 将客户端注册到选择器</span></span><br><span class="line">                        client.register(selector, SelectionKey.OP_WRITE | SelectionKey.OP_READ, msg.duplicate());</span><br><span class="line">                        System.out.println(<span class="string">&quot;Accepted connection from &quot;</span> + client);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 检查事件类型</span></span><br><span class="line">                    <span class="keyword">if</span> (key.isWritable()) &#123;</span><br><span class="line">                        <span class="type">SocketChannel</span> <span class="variable">client</span> <span class="operator">=</span> (SocketChannel)key.channel();</span><br><span class="line">                        <span class="type">ByteBuffer</span> <span class="variable">buffer</span> <span class="operator">=</span>(ByteBuffer)key.attachment();</span><br><span class="line">                        <span class="keyword">while</span> (buffer.hasRemaining()) &#123;</span><br><span class="line">                            <span class="comment">// 将数据写到已连接的客户端</span></span><br><span class="line">                            <span class="keyword">if</span> (client.write(buffer) == <span class="number">0</span>) &#123;</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            &#125; </span><br><span class="line">                        &#125;</span><br><span class="line">                        client.close();</span><br><span class="line">                    &#125; </span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">                    key.cancel();</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        key.channel().close();</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (IOException cex) &#123;</span><br><span class="line">                        <span class="comment">// ignore on close</span></span><br><span class="line">                    &#125; </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;	<span class="comment">// while</span></span><br><span class="line">        &#125;	<span class="comment">// for</span></span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="netty-框架"><a class="markdownIt-Anchor" href="#netty-框架"></a> Netty 框架</h3>
+<p>因为 Netty 为每种传输的实现都暴露了相同的 API，阻塞与非阻塞网络传输的实现都依赖于 interface Channel、 ChannelPipeline 和 ChannelHandler。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 Netty 的网络处理</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NettyOioServer</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">server</span><span class="params">(<span class="type">int</span> port)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">ByteBuf</span> <span class="variable">buf</span> <span class="operator">=</span> Unpooled.unreleasableBuffer(</span><br><span class="line">            Unpooled.copiedBuffer(<span class="string">&quot;Hi!\r\n&quot;</span>, Charset.forName(<span class="string">&quot;UTF-8&quot;</span>))</span><br><span class="line">        );</span><br><span class="line">        <span class="comment">// 阻塞模式</span></span><br><span class="line">        <span class="type">EventLoopGroup</span> <span class="variable">group</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OioEventLoopGroup</span>();</span><br><span class="line">        <span class="comment">// 非阻塞模式</span></span><br><span class="line">        <span class="comment">// EventLoopGroup group = new OioEventLoopGroup();</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">ServerBootstrap</span> <span class="variable">b</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerBootstrap</span>();</span><br><span class="line">            b.group(group)</span><br><span class="line">                <span class="comment">//	非阻塞模式</span></span><br><span class="line">                <span class="comment">//	.channel(NioServerSocketChannel.class)</span></span><br><span class="line">                .channel(OioServerSocketChannel.class)</span><br><span class="line">                .localAddress(<span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(port))</span><br><span class="line">                <span class="comment">// 每个连接的通道都需要调用此初始化方法</span></span><br><span class="line">                .childHandler(</span><br><span class="line">                    <span class="keyword">new</span> <span class="title class_">ChannelInitializer</span>&lt;SocketChannel&gt;() &#123;</span><br><span class="line">                        <span class="meta">@Override</span></span><br><span class="line">                        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">initChannel</span><span class="params">(SocketChannel ch)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                            ch.pipeline().addLast(</span><br><span class="line">                                <span class="comment">// 拦截和处理事件</span></span><br><span class="line">                                <span class="keyword">new</span> <span class="title class_">ChannelInboundHandlerAdapter</span>() &#123;</span><br><span class="line">                                    <span class="meta">@Override</span></span><br><span class="line">                                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span><span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                                        ctx.writeAndFlush(buf.duplicate())</span><br><span class="line">                                            <span class="comment">// 监听，以便在消息写完后关闭连接</span></span><br><span class="line">                                            .addListener(ChannelFutureListener.CLOSE);</span><br><span class="line">                                    &#125; </span><br><span class="line">                                &#125;</span><br><span class="line">                            );</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">            );</span><br><span class="line">            <span class="type">ChannelFuture</span> <span class="variable">f</span> <span class="operator">=</span> b.bind().sync();</span><br><span class="line">            f.channel().closeFuture().sync();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            group.shutdownGracefully().sync();</span><br><span class="line">        &#125; </span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="传输-api"><a class="markdownIt-Anchor" href="#传输-api"></a> 传输 API</h3>
+<p>传输 API 的核心是 interface Channel，它被用于所有的 I/O 操作</p>
+<p><img src="/img/2020/01/Netty/ChannelInterface.PNG" alt="" /></p>
+<p>每个 Channel 都将会被分配一个 ChannelPipeline 和 ChannelConfig。ChannelConfig 包含了该 Channel 的所有配置设置，并且支持热更新。</p>
+<p>由于 Channel 是独一无二的，为了保证顺序将 Channel 声明为 java.lang. Comparable 的一个子接口。</p>
+<p>ChannelPipeline 持有所有将应用于入站和出站数据以及事件的 ChannelHandler 实例，这些 ChannelHandler 实现了应用程序用于处理状态变化以及数据处理的逻辑。你也可以根据需要通过添加或者移除ChannelHandler实例来修改 ChannelPipeline。通过利用Netty的这项能力可以构建出高度灵活的应用程序。</p>
+<p><img src="/img/2020/01/Netty/ChannelMethod.PNG" alt="" /></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 写出到 Channel</span></span><br><span class="line"><span class="type">Channel</span> <span class="variable">channel</span> <span class="operator">=</span> ...;</span><br><span class="line"><span class="comment">// 创建持有要写数据的 ByteBuf</span></span><br><span class="line"><span class="type">ByteBuf</span> <span class="variable">buf</span> <span class="operator">=</span> Unpooled.copiedBuffer(<span class="string">&quot;your data&quot;</span>, CharsetUtil.UTF_8);</span><br><span class="line"><span class="comment">// 写数据并且冲刷它</span></span><br><span class="line"><span class="type">ChannelFuture</span> <span class="variable">cf</span> <span class="operator">=</span> channel.writeAndFlush(buf);</span><br><span class="line"><span class="comment">// 添加监听器以便在操作完成后接收到通知</span></span><br><span class="line">cf.addListener(</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">ChannelFutureListener</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">operationComplete</span><span class="params">(ChannelFuture future)</span> &#123;</span><br><span class="line">            <span class="comment">// 操作完成并且没有发生错误</span></span><br><span class="line">            <span class="keyword">if</span> (future.isSuccess()) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;Write successful&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                System.err.println(<span class="string">&quot;Write error&quot;</span>);</span><br><span class="line">                future.cause().printStackTrace();</span><br><span class="line">            &#125; </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>Netty 的 Channel 实现是线程安全的，因此你可以存储一个到 Channel 的引用，并且每当你需要向远程节点写数据时，都可以使用它，即使当时许多线程都在使用它。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 从多个线程使用同一个 Channel</span></span><br><span class="line"><span class="keyword">final</span> <span class="type">Channel</span> <span class="variable">channel</span> <span class="operator">=</span> ...;</span><br><span class="line"><span class="keyword">final</span> <span class="type">ByteBuf</span> <span class="variable">buf</span> <span class="operator">=</span> Unpooled.copiedBuffer(<span class="string">&quot;your data&quot;</span>,CharsetUtil.UTF_8).retain();</span><br><span class="line"><span class="comment">// 创建将数据写到 Channel 的 Runnable</span></span><br><span class="line"><span class="type">Runnable</span> <span class="variable">writer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">        channel.writeAndFlush(buf.duplicate());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 获取到线程池 Executor 的引用</span></span><br><span class="line"><span class="type">Executor</span> <span class="variable">executor</span> <span class="operator">=</span> Executors.newCachedThreadPool();</span><br><span class="line"><span class="comment">// write in one thread</span></span><br><span class="line">executor.execute(writer);</span><br><span class="line"><span class="comment">// write in another thread</span></span><br><span class="line">executor.execute(writer);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="内置的传输"><a class="markdownIt-Anchor" href="#内置的传输"></a> 内置的传输</h3>
+<p>Netty 内置了一些可开箱即用的传输。因为并不是它们所有的传输都支持每一种协议，所以你必须选择一个和你的应用程序所使用的协议相容的传输。</p>
+<h4 id="nio"><a class="markdownIt-Anchor" href="#nio"></a> NIO</h4>
+<p>NIO 提供了一个所有 I/O 操作的全异步的实现，利用了 JDK1.4 时便可用的基于选择器的 API。 <u>选择器背后的基本概念是充当一个注册表</u>，在那里你将可以请求在 Channel 的状态发生变化时得到通知。</p>
+<p>class java.nio.channels.SelectionKey 定义了一组应用程序正在请求通知的状态变化集。</p>
+<p><img src="/img/2020/01/Netty/ChannelSelectionKey.PNG" alt="" /></p>
+<p>选择器选择并处理状态的变化</p>
+<p><img src="D:%5COneDrive%5CTypora%5C%E5%9B%BE%E7%89%87%5C1579834708283.png" alt="" /></p>
+<blockquote>
+<p>零拷贝（zero-copy）：它使你可以快速高效地将数据从文件系统移动到网络接口，而不需要将其从内核空间复制到用户空间，其在像 FTP 或者 HTTP 这样的协议中可以显著地提升性能。</p>
+</blockquote>
+<h4 id="epoll"><a class="markdownIt-Anchor" href="#epoll"></a> Epoll</h4>
+<p>用于 Linux 的本地非阻塞传输，Linux JDK NIO API 使用了这些 epoll 调用。</p>
+<h4 id="oio"><a class="markdownIt-Anchor" href="#oio"></a> OIO</h4>
+<p>Netty 的 OIO 传输实现代表了一种折中：它可以通过常规的传输 API 使用，但是由于它是建立在 <a target="_blank" rel="noopener" href="http://java.net">java.net</a> 包的阻塞实现之上的，所以它不是异步的。但是，它仍然非常适合于某些用途。</p>
+<h4 id="local-传输"><a class="markdownIt-Anchor" href="#local-传输"></a> Local 传输</h4>
+<p>用于在同一个 JVM 中运行的客户端和服务器程序之间的异步通信。</p>
+<h4 id="embedded-传输"><a class="markdownIt-Anchor" href="#embedded-传输"></a> Embedded 传输</h4>
+<p>Netty 提供了一种额外的传输，使得你可以将一组 ChannelHandler 作为帮助器类嵌入到其他的 ChannelHandler 内部。通过这种方式，你将可以扩展一个 ChannelHandler 的功能，而又不需要修改其内部代码。</p>
+
+      
+    </div>
+    <!-- <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wingowen.github.io/2020/01/22/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E4%BC%A0%E8%BE%93/" title="Netty 传输" target="_blank" rel="external">https://wingowen.github.io/2020/01/22/后台技术/Netty/Netty 传输/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">WINGO.WEN</span><small class="ml-1x"></small></a></h3>
+        <div>一个疯子。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div> -->
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/01/24/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20ByteBuf/" title="Netty ByteBuf"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/01/22/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E7%BB%84%E4%BB%B6%E5%92%8C%E8%AE%BE%E8%AE%A1/" title="Netty 组件和设计"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	<!-- Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>. -->
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>

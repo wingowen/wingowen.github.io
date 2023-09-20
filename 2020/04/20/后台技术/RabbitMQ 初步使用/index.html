@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>RabbitMQ 初步使用 | WINGO BLOG</title>
+  <meta name="description" content="RabbitMQ 的简单介绍及项目使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ 初步使用">
+<meta property="og:url" content="https://wingowen.github.io/2020/04/20/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/RabbitMQ%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="WINGO&#39;S BLOG">
+<meta property="og:description" content="RabbitMQ 的简单介绍及项目使用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/RabbitMQ01.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/RabbitMQ02.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/Test01.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/RabbitMQ03.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/RabbitMQ04.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/Test02.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/RabbitMQ05.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/Test03.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/RabbitMQ06.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/Test05.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/Test04.png">
+<meta property="article:published_time" content="2020-04-20T06:02:25.000Z">
+<meta property="article:modified_time" content="2023-09-20T07:00:03.774Z">
+<meta property="article:author" content="Wingo Wen">
+<meta property="article:tag" content="MQ">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wingowen.github.io/img/2020/04/RabbitMQ/RabbitMQ01.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wingowen.github.io/2020/04/20/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/RabbitMQ%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/index.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="WINGO'S BLOG" type="application/atom+xml">
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">WINGO.WEN</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>得失从缘 心无增减</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8/">日常</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Hexo/" style="font-size: 13px;">Hexo</a> <a href="/tags/Hive/" style="font-size: 13px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Java/" style="font-size: 13px;">Java</a> <a href="/tags/Kudu/" style="font-size: 13px;">Kudu</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.25px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 13.75px;">机器学习</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/" style="font-size: 13px;">网站收集</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/" style="font-size: 13px;">网络相关</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.5px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-后台技术/RabbitMQ 初步使用" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      RabbitMQ 初步使用
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/04/20/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/RabbitMQ%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/" class="article-date">
+	  <time datetime="2020-04-20T06:02:25.000Z" itemprop="datePublished">2020-04-20</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/MQ/" rel="tag">MQ</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/04/20/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/RabbitMQ%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>RabbitMQ 的简单介绍及项目使用。</p>
+<span id="more"></span>
+<p>在虚拟机中基于 Docker 安装  RabbitMQ 镜像，启动镜像并暴露其端口。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p 5672:5672 -p 15672:15672 --hostname my_rabbitmq --name rabbitmq rabbitmq:management</span><br></pre></td></tr></table></figure>
+<p>访问 [虚拟机 IP]:15672 进入 RabbitMQ 的控制台页面，默认账号密码皆为 guest。</p>
+<p><img src="/img/2020/04/RabbitMQ/RabbitMQ01.png" alt="" /></p>
+<h3 id="基本概念"><a class="markdownIt-Anchor" href="#基本概念"></a> 基本概念</h3>
+<blockquote>
+<p>高级消息队列协议，即 Advanced Message Queuing Protocol（AMQP）是面向消息中间件提供的开放的应用层协议，其设计目标是对于消息的排序、路由（包括点对点和订阅-发布）、保持可靠性、保证安全性。</p>
+<p>RabbitMQ 实现了 AMQP。</p>
+</blockquote>
+<p>RabbitMQ 的基本使用流程：</p>
+<blockquote>
+<p>客户端连接到消息队列服务器，打开一个 channel；<br />
+客户端声明一个 exchange，并设置相关属性；<br />
+客户端声明一个 queue，并设置相关属性；<br />
+客户端使用 routing key，在 exchange 和 queue 之间建立好绑定关系；<br />
+客户端投递消息到 exchange。</p>
+</blockquote>
+<p><img src="/img/2020/04/RabbitMQ/RabbitMQ02.png" alt="" /></p>
+<p><strong>Broker</strong>：简单来说就是消息队列服务器实体。<br />
+<strong>Exchange</strong>：消息交换机，它指定消息按什么规则，路由到哪个队列。<br />
+<strong>Queue</strong>：消息队列载体，每个消息都会被投入到一个或多个队列。<br />
+<strong>Binding</strong>：绑定，它的作用就是把 exchange 和 queue 按照路由规则绑定起来。<br />
+<strong>Routing Key</strong>：路由关键字，exchange 根据这个关键字进行消息投递。<br />
+<strong>vhost</strong>：虚拟主机，一个 broker 里可以开设多个 vhost，用作不同用户的权限分离。<br />
+<strong>producer</strong>：消息生产者，就是投递消息的程序。<br />
+<strong>consumer</strong>：消息消费者，就是接受消息的程序。<br />
+<strong>channel</strong>：消息通道，在客户端的每个连接里，可建立多个 channel，每个 channel 代表一个会话任务。</p>
+<h3 id="简单示例"><a class="markdownIt-Anchor" href="#简单示例"></a> 简单示例</h3>
+<blockquote>
+<p>编写一个基本的 consumer 以及 provider 进行消息的接受与投递。</p>
+</blockquote>
+<h4 id="simple-consumer"><a class="markdownIt-Anchor" href="#simple-consumer"></a> simple-consumer</h4>
+<blockquote>
+<p>编写一个简单的消费者连接到 RabbitMQ，并且初始化所需的 Exchange、Queue、Routing Key、Binding 等。</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.rabbitmq.addresses</span>=<span class="string">192.168.31.100:5672</span></span><br><span class="line"><span class="attr">spring.rabbitmq.username</span>=<span class="string">guest</span></span><br><span class="line"><span class="attr">spring.rabbitmq.password</span>=<span class="string">guest</span></span><br><span class="line"><span class="attr">spring.rabbitmq.virtual-host</span>=<span class="string">/</span></span><br><span class="line"><span class="attr">spring.rabbitmq.connection-timeout</span>=<span class="string">15000</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring.rabbitmq.listener.simple.acknowledge-mode</span>=<span class="string">manual</span></span><br><span class="line"><span class="attr">spring.rabbitmq.listener.simple.concurrency</span>=<span class="string">5</span></span><br><span class="line"><span class="attr">spring.rabbitmq.listener.simple.max-concurrency</span>=<span class="string">10</span></span><br></pre></td></tr></table></figure>
+<h5 id="receiver"><a class="markdownIt-Anchor" href="#receiver"></a> Receiver</h5>
+<blockquote>
+<p>通过 <code>@RabbitListener</code>进行初始化并绑定：可在配置文件中编写后通过<code>$&#123;xxx.xxx...&#125;</code>进行取值。</p>
+<p>！！！注意！！！此处的 Order 类依赖于 provider 模块的 Order 类。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabbitReceiver</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RabbitListener(</span></span><br><span class="line"><span class="meta">            bindings = @QueueBinding(</span></span><br><span class="line"><span class="meta">                    value = @Queue(value = &quot;queue-1&quot;, durable=&quot;true&quot;),</span></span><br><span class="line"><span class="meta">                    exchange = @Exchange(value = &quot;exchange-1&quot;, durable = &quot;true&quot;,</span></span><br><span class="line"><span class="meta">                                         type = &quot;topic&quot;, ignoreDeclarationExceptions = &quot;true&quot;),</span></span><br><span class="line"><span class="meta">                    key = &quot;springboot.*&quot;</span></span><br><span class="line"><span class="meta">            )</span></span><br><span class="line"><span class="meta">    )</span></span><br><span class="line">	<span class="meta">@RabbitHandler</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onOrderMessage</span><span class="params">(<span class="meta">@Payload</span> Order order,</span></span><br><span class="line"><span class="params">                               Channel channel,</span></span><br><span class="line"><span class="params">                               <span class="meta">@Headers</span> Map&lt;String, Object&gt; headers)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        System.err.println(<span class="string">&quot;--------------------------------------&quot;</span>);</span><br><span class="line">        System.err.println(<span class="string">&quot;消费端 Order: &quot;</span> + order.getId());</span><br><span class="line">        <span class="type">Long</span> <span class="variable">deliveryTag</span> <span class="operator">=</span> (Long)headers.get(AmqpHeaders.DELIVERY_TAG);</span><br><span class="line">        <span class="comment">//手工ACK</span></span><br><span class="line">        channel.basicAck(deliveryTag, <span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>运行项目。</p>
+</blockquote>
+<p><img src="/img/2020/04/RabbitMQ/Test01.png" alt="" /></p>
+<blockquote>
+<p>提示：连接成功。打开 RabbitMQ 控制台。</p>
+</blockquote>
+<p><img src="/img/2020/04/RabbitMQ/RabbitMQ03.png" alt="" /></p>
+<blockquote>
+<p>可以看到有一条来自本地端口 9371 的连接。</p>
+</blockquote>
+<img src="/img/2020/04/RabbitMQ/RabbitMQ04.png" style="zoom: 67%;" />
+<blockquote>
+<p>查看 Exchange 可以看到客户端所绑定的规则已经被自动初始化（当然也可以选择手工绑定）</p>
+</blockquote>
+<h4 id="simple-provider"><a class="markdownIt-Anchor" href="#simple-provider"></a> simple-provider</h4>
+<blockquote>
+<p>编写一个简单的提供者连接到 RabbitMQ，并发送消息到对应的队列中。</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.rabbitmq.addresses</span>=<span class="string">192.168.31.100:5672</span></span><br><span class="line"><span class="attr">spring.rabbitmq.username</span>=<span class="string">guest</span></span><br><span class="line"><span class="attr">spring.rabbitmq.password</span>=<span class="string">guest</span></span><br><span class="line"><span class="attr">spring.rabbitmq.virtual-host</span>=<span class="string">/</span></span><br><span class="line"><span class="attr">spring.rabbitmq.connection-timeout</span>=<span class="string">15000</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># 启用回调</span></span><br><span class="line"><span class="attr">spring.rabbitmq.publisher-confirm-type</span>=<span class="string">correlated</span></span><br><span class="line"><span class="attr">spring.rabbitmq.publisher-returns</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">spring.rabbitmq.template.mandatory</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>新建一个实体对象用于发送。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Order</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">3603050220195298978L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="sender"><a class="markdownIt-Anchor" href="#sender"></a> Sender</h5>
+<blockquote>
+<p>编写发送方法，并自定义回调形式。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RabbitSender</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RabbitTemplate rabbitTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 回调函数: confirm 确认</span></span><br><span class="line">    <span class="keyword">final</span> RabbitTemplate.<span class="type">ConfirmCallback</span> <span class="variable">confirmCallback</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RabbitTemplate</span>.ConfirmCallback() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">confirm</span><span class="params">(CorrelationData correlationData, <span class="type">boolean</span> ack, String cause)</span> &#123;</span><br><span class="line">            System.err.println(<span class="string">&quot;correlationData: &quot;</span> + correlationData);</span><br><span class="line">            System.err.println(<span class="string">&quot;ack: &quot;</span> + ack);</span><br><span class="line">            <span class="keyword">if</span>(!ack)&#123;</span><br><span class="line">                System.err.println(<span class="string">&quot;异常处理....&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 回调函数: return 返回</span></span><br><span class="line">    <span class="keyword">final</span> RabbitTemplate.<span class="type">ReturnCallback</span> <span class="variable">returnCallback</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RabbitTemplate</span>.ReturnCallback() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">returnedMessage</span><span class="params">(org.springframework.amqp.core.Message message, <span class="type">int</span> replyCode, String replyText,</span></span><br><span class="line"><span class="params">                                    String exchange, String routingKey)</span> &#123;</span><br><span class="line">            System.err.println(<span class="string">&quot;return exchange: &quot;</span> + exchange + <span class="string">&quot;, routingKey: &quot;</span></span><br><span class="line">                    + routingKey + <span class="string">&quot;, replyCode: &quot;</span> + replyCode + <span class="string">&quot;, replyText: &quot;</span> + replyText);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送消息方法调用: 构建自定义对象消息</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendOrder</span><span class="params">(Order order)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        rabbitTemplate.setConfirmCallback(confirmCallback);</span><br><span class="line">        rabbitTemplate.setReturnCallback(returnCallback);</span><br><span class="line">        <span class="comment">// id + 时间戳 全局唯一</span></span><br><span class="line">        <span class="type">CorrelationData</span> <span class="variable">correlationData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>(<span class="string">&quot;987654321&quot;</span>);</span><br><span class="line">        rabbitTemplate.convertAndSend(<span class="string">&quot;exchange-1&quot;</span>, <span class="string">&quot;springboot.order&quot;</span>, order, correlationData);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编写测试方法进行测试。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith(SpringRunner.class)</span></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SimpleProviderApplicationTests</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RabbitSender rabbitSender;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testSender</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">Order</span> <span class="variable">order</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Order</span>(<span class="string">&quot;001&quot;</span>, <span class="string">&quot;第一个订单&quot;</span>);</span><br><span class="line">        rabbitSender.sendOrder(order);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>控制台打印了了自定义回调的确认信息。</p>
+</blockquote>
+<p><img src="/img/2020/04/RabbitMQ/Test02.png" alt="" /></p>
+<blockquote>
+<p>RabbitMQ 控制台可以查看到发送的消息的详细信息。</p>
+</blockquote>
+<p><img src="/img/2020/04/RabbitMQ/RabbitMQ05.png" alt="" /></p>
+<blockquote>
+<p>启动消费者后，消费者监听到队列中有消息并了进行消费。</p>
+</blockquote>
+<p><img src="/img/2020/04/RabbitMQ/Test03.png" alt="" /></p>
+<h3 id="可靠交付"><a class="markdownIt-Anchor" href="#可靠交付"></a> 可靠交付</h3>
+<blockquote>
+<p>可靠交付即将 RabbitMQ 处理订单的状态持久化到数据库中，并根据此状态表对不同状态的交付任务进行处理：</p>
+<p>1）在达到规定的最大重试次数之前，定时任务在规定的时间间隔自动进行任务的重新交付；<br />
+2）任务达到了最大的重试次数后，为避免浪费资源将其状态更新为失败，之后人工处理。</p>
+</blockquote>
+<img src="/img/2020/04/RabbitMQ/RabbitMQ06.png" style="zoom:50%;" />
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 表 my_order 订单结构</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `my_order` (</span><br><span class="line">    `id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>, <span class="comment">-- 订单 ID</span></span><br><span class="line">    `name` <span class="type">varchar</span>(<span class="number">128</span>), <span class="comment">-- 订单名称 其他业务熟悉忽略</span></span><br><span class="line">    `message_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>, <span class="comment">-- 消息唯一 ID</span></span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 表 log 消息记录结构</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> `log` (</span><br><span class="line">    `message_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>, <span class="comment">-- 消息唯一 ID</span></span><br><span class="line">    `message` <span class="type">varchar</span>(<span class="number">4000</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>, <span class="comment">-- 消息内容</span></span><br><span class="line">    `try_count` <span class="type">int</span>(<span class="number">4</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span>, <span class="comment">-- 重试次数</span></span><br><span class="line">    `status` <span class="type">varchar</span>(<span class="number">10</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>, <span class="comment">-- 消息投递状态：0 投递中 1 投递成功 2 投递失败</span></span><br><span class="line">    `next_retry` <span class="type">timestamp</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0000-00-00 00:00:00&#x27;</span>,  <span class="comment">-- 下一次重试时间</span></span><br><span class="line">    `create_time` <span class="type">timestamp</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0000-00-00 00:00:00&#x27;</span>, <span class="comment">-- 创建时间</span></span><br><span class="line">    `update_time` <span class="type">timestamp</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0000-00-00 00:00:00&#x27;</span>, <span class="comment">-- 更新时间</span></span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (`message_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
+<h4 id="项目依赖"><a class="markdownIt-Anchor" href="#项目依赖"></a> 项目依赖</h4>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- RabbitMQ --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-amqp<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- mybatis-plus --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- mysql驱动 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 启动器中默认的版本较高 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.47<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 常用工具类 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>fastjson<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.26<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.commons<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-lang3<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-io<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-io<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Lombok --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.18.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 配置数据源</span></span><br><span class="line"><span class="attr">spring.datasource.username</span>=<span class="string">root</span></span><br><span class="line"><span class="attr">spring.datasource.password</span>=<span class="string">123456</span></span><br><span class="line"><span class="attr">spring.datasource.url</span>=<span class="string">jdbc:mysql://localhost:3306/rabbitmq_test?useSSL=false</span></span><br><span class="line"><span class="attr">spring.datasource.driver-class-name</span>=<span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line"><span class="comment"># 打印 SQL 语句</span></span><br><span class="line"><span class="comment">#mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl</span></span><br><span class="line"><span class="attr">mybatis-plus.mapper-locations</span>=<span class="string">classpath:/mapper/*.xml</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">## RabbitMQ</span></span><br><span class="line"><span class="attr">spring.rabbitmq.addresses</span>=<span class="string">192.168.31.100:5672</span></span><br><span class="line"><span class="attr">spring.rabbitmq.username</span>=<span class="string">guest</span></span><br><span class="line"><span class="attr">spring.rabbitmq.password</span>=<span class="string">guest</span></span><br><span class="line"><span class="attr">spring.rabbitmq.virtual-host</span>=<span class="string">/</span></span><br><span class="line"><span class="attr">spring.rabbitmq.connection-timeout</span>=<span class="string">15000</span></span><br><span class="line"><span class="comment"># 回调配置</span></span><br><span class="line"><span class="attr">spring.rabbitmq.publisher-confirm-type</span>=<span class="string">correlated</span></span><br><span class="line"><span class="attr">spring.rabbitmq.publisher-returns</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">spring.rabbitmq.template.mandatory</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>新建一个 rabbitmq-entity 模块，编写传输实体类。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Order</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">2584584237793643231L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> String messageId;</span><br><span class="line">    </span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>新建一个 stable-provider 模块，编写可靠的交付者。</p>
+</blockquote>
+<p><img src="/img/2020/04/RabbitMQ/Test05.png" alt="" /></p>
+<blockquote>
+<p>编写状态的实体类，以及常量类</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Log</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">8716210355448974538L</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> String messageId;</span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Integer</span> <span class="variable">tryCount</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> String status;</span><br><span class="line">    <span class="keyword">private</span> Date nextRetry;</span><br><span class="line">    <span class="keyword">private</span> Date createTime;</span><br><span class="line">    <span class="keyword">private</span> Date updateTime;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Constant</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="title function_">Constant</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Utility class&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/** 订单状态 0 表示待发送 */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ORDER_SENDING</span> <span class="operator">=</span> <span class="string">&quot;0&quot;</span>;</span><br><span class="line">        <span class="comment">/** 订单状态 1 表示发送成功 */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ORDER_SEND_SUCCESS</span> <span class="operator">=</span> <span class="string">&quot;1&quot;</span>;</span><br><span class="line">        <span class="comment">/** 订单状态 2 表示发送失败 */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">ORDER_SEND_FAILURE</span> <span class="operator">=</span> <span class="string">&quot;2&quot;</span>;</span><br><span class="line">        <span class="comment">/** 订单超时时间，即一分钟后订单进行交付重试 */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Integer</span> <span class="variable">ORDER_TIMEOUT</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="comment">/** 订单最大重试次数 */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Integer</span> <span class="variable">ORDER_RETRY_MAX_TIMES</span> <span class="operator">=</span> <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编写 Mapper。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">LogMapper</span> <span class="keyword">extends</span> <span class="title class_">BaseMapper</span>&lt;Log&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 更新最终消息发送结果 成功 or 失败</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> messageId 消息的唯一 ID</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> status 订单状态</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> updateTime 订单状态更新时间</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">changeBrokerMessageLogStatus</span><span class="params">(<span class="meta">@Param(&quot;messageId&quot;)</span> String messageId</span></span><br><span class="line"><span class="params">            , <span class="meta">@Param(&quot;status&quot;)</span> String status</span></span><br><span class="line"><span class="params">            , <span class="meta">@Param(&quot;updateTime&quot;)</span> Date updateTime</span></span><br><span class="line"><span class="params">    )</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 查询消息状态为 0 且已经超时的消息集合</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 符合条件的订单集合</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    List&lt;Log&gt; <span class="title function_">query4StatusAndTimeoutMessage</span><span class="params">()</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> messageId 消息的唯一 ID</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> date 时间</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">update4ReSend</span><span class="params">(<span class="meta">@Param(&quot;messageId&quot;)</span> String messageId, <span class="meta">@Param(&quot;updateTime&quot;)</span> Date date)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Order 为 SQL 关键字，并且只有一个插入方法，故完全使用自定义方法不继承</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">OrderMapper</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> order 订单</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(Order order)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span> <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.wingo.stableprovider.mapper.LogMapper&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 通用查询映射结果 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;BaseResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;com.wingo.stableprovider.entity.Log&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">&quot;message_id&quot;</span> <span class="attr">property</span>=<span class="string">&quot;messageId&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;message&quot;</span> <span class="attr">property</span>=<span class="string">&quot;message&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;try_count&quot;</span> <span class="attr">property</span>=<span class="string">&quot;tryCount&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;INTEGER&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;status&quot;</span> <span class="attr">property</span>=<span class="string">&quot;status&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;next_retry&quot;</span> <span class="attr">property</span>=<span class="string">&quot;nextRetry&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;TIMESTAMP&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;create_time&quot;</span> <span class="attr">property</span>=<span class="string">&quot;createTime&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;TIMESTAMP&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;update_time&quot;</span> <span class="attr">property</span>=<span class="string">&quot;updateTime&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;TIMESTAMP&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 通用查询结果列 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">sql</span> <span class="attr">id</span>=<span class="string">&quot;Base_Column_List&quot;</span>&gt;</span></span><br><span class="line">        message_id, message, try_count, status, next_retry, create_time, update_time</span><br><span class="line">    <span class="tag">&lt;/<span class="name">sql</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">&quot;changeBrokerMessageLogStatus&quot;</span> &gt;</span></span><br><span class="line">        UPDATE</span><br><span class="line">        	log</span><br><span class="line">        SET</span><br><span class="line">        	status = #&#123;status&#125;,</span><br><span class="line">        	update_time = #&#123;updateTime&#125;</span><br><span class="line">        WHERE</span><br><span class="line">        	message_id = #&#123;messageId&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;query4StatusAndTimeoutMessage&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;BaseResultMap&quot;</span>&gt;</span></span><br><span class="line">        SELECT</span><br><span class="line">        	<span class="tag">&lt;<span class="name">include</span> <span class="attr">refid</span>=<span class="string">&quot;Base_Column_List&quot;</span> /&gt;</span></span><br><span class="line">        FROM</span><br><span class="line">        	log</span><br><span class="line">        WHERE</span><br><span class="line">        	status = &#x27;0&#x27;</span><br><span class="line">        AND</span><br><span class="line">        	next_retry &lt;![CDATA[ &lt;= ]]&gt; sysdate()</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">update</span> <span class="attr">id</span>=<span class="string">&quot;update4ReSend&quot;</span> &gt;</span></span><br><span class="line">    	UPDATE</span><br><span class="line">        	log</span><br><span class="line">    	SET</span><br><span class="line">        	try_count = try_count + 1,</span><br><span class="line">        	update_time = #&#123;updateTime&#125;</span><br><span class="line">    	WHERE</span><br><span class="line">        	message_id = #&#123;messageId&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">update</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span> <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.wingo.stableprovider.mapper.OrderMapper&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 通用查询映射结果 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;BaseResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;com.wingo.entity.Order&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;name&quot;</span> <span class="attr">property</span>=<span class="string">&quot;name&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;message_id&quot;</span> <span class="attr">property</span>=<span class="string">&quot;messageId&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 通用查询结果列 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">sql</span> <span class="attr">id</span>=<span class="string">&quot;Base_Column_List&quot;</span>&gt;</span></span><br><span class="line">        id, name, message_id</span><br><span class="line">    <span class="tag">&lt;/<span class="name">sql</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insert&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;com.wingo.entity.Order&quot;</span> &gt;</span></span><br><span class="line">        INSERT INTO</span><br><span class="line">            my_order (id, name, message_id)</span><br><span class="line">        VALUES</span><br><span class="line">            (#&#123;id&#125;, #&#123;name&#125;, #&#123;messageId&#125;)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">insert</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编写一个服务用于向数据库初始化订单数据以及消息状态信息。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> OrderMapper orderMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> LogMapper logMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> OrderSender orderSender;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">createOrder</span><span class="params">(Order order)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 数据库插入订单信息</span></span><br><span class="line">        orderMapper.insert(order);</span><br><span class="line">        <span class="comment">// 初始化日志信息</span></span><br><span class="line">        <span class="type">Log</span> <span class="variable">log</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Log</span>();</span><br><span class="line">        <span class="type">Date</span> <span class="variable">orderTime</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">        log.setMessageId(order.getMessageId());</span><br><span class="line">        <span class="comment">// 将订单转为 JSON 字符串在重新发送时使用</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">jOrder</span> <span class="operator">=</span> JSON.toJSONString(order);</span><br><span class="line">        log.setMessage(jOrder);</span><br><span class="line">        log.setStatus(<span class="string">&quot;0&quot;</span>);</span><br><span class="line">        log.setNextRetry(DateUtils.addMinutes(orderTime, Constant.ORDER_TIMEOUT));</span><br><span class="line">        log.setCreateTime(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">        log.setUpdateTime(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">        <span class="comment">// 数据库插入日志信息</span></span><br><span class="line">        logMapper.insert(log);</span><br><span class="line">        <span class="comment">// order message sender</span></span><br><span class="line">        orderSender.sendOrder(order);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="sender-2"><a class="markdownIt-Anchor" href="#sender-2"></a> Sender</h4>
+<blockquote>
+<p>编写 RabbitMQ 的交付类。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderSender</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RabbitTemplate rabbitTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> LogMapper logMapper;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 回调函数: confirm 确认</span></span><br><span class="line">    <span class="keyword">final</span> RabbitTemplate.<span class="type">ConfirmCallback</span> <span class="variable">confirmCallback</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RabbitTemplate</span>.ConfirmCallback() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">confirm</span><span class="params">(CorrelationData correlationData, <span class="type">boolean</span> ack, String cause)</span> &#123;</span><br><span class="line">            System.err.println(<span class="string">&quot;correlationData: &quot;</span> + correlationData);</span><br><span class="line">            <span class="type">String</span> <span class="variable">messageId</span> <span class="operator">=</span> correlationData.getId();</span><br><span class="line">            <span class="keyword">if</span>(ack)&#123;</span><br><span class="line">                <span class="comment">// 如果 confirm 返回成功，则对 Order 表中对应的订单状态进行更新</span></span><br><span class="line">                logMapper.changeBrokerMessageLogStatus(messageId, Constant.ORDER_SEND_SUCCESS, <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 失败则进行具体的后续操作：重试或者补偿等手段</span></span><br><span class="line">                System.err.println(<span class="string">&quot;异常处理...&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送消息方法调用: 构建自定义对象消息</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sendOrder</span><span class="params">(Order order)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">// 设置自定义回调方法</span></span><br><span class="line">        rabbitTemplate.setConfirmCallback(confirmCallback);</span><br><span class="line">        <span class="comment">// 消息唯一 ID</span></span><br><span class="line">        <span class="type">CorrelationData</span> <span class="variable">correlationData</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CorrelationData</span>(order.getMessageId());</span><br><span class="line">        rabbitTemplate.convertAndSend(<span class="string">&quot;order-exchange&quot;</span>, <span class="string">&quot;order.stable&quot;</span>, order, correlationData);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="task"><a class="markdownIt-Anchor" href="#task"></a> Task</h4>
+<blockquote>
+<p>编写定时任务，定期对数据库中的任务状态进行读取，对重试满足条件的交付任务进行重新发送。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RetryMessage</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> OrderSender orderSender;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> LogMapper logMapper;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 3 秒后执行，之后每 10 秒执行一次</span></span><br><span class="line">    <span class="meta">@Scheduled(initialDelay = 3000, fixedDelay = 10000)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">reSend</span><span class="params">()</span>&#123;</span><br><span class="line">        System.err.println(<span class="string">&quot;---------------定时任务开始---------------&quot;</span>);</span><br><span class="line">        <span class="comment">// 取数据库中所有的状态为 0 并且已经超时的订单</span></span><br><span class="line">        List&lt;Log&gt; list = logMapper.query4StatusAndTimeoutMessage();</span><br><span class="line">        <span class="keyword">if</span>(list.isEmpty())&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;无交付失败订单&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        list.forEach(messageLog -&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span>(messageLog.getTryCount() &gt;= Constant.ORDER_RETRY_MAX_TIMES)&#123;</span><br><span class="line">                <span class="comment">// 如果重试次数超过规定的最大次数则表示交付失败</span></span><br><span class="line">                logMapper.changeBrokerMessageLogStatus(messageLog.getMessageId(), Constant.ORDER_SEND_FAILURE, <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">                System.out.println(<span class="string">&quot;有新的交付失败订单&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">// 增加重试次数</span></span><br><span class="line">                logMapper.update4ReSend(messageLog.getMessageId(), <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">                <span class="type">Order</span> <span class="variable">reSendOrder</span> <span class="operator">=</span> JSON.parseObject(messageLog.getMessage(), Order.class);</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    orderSender.sendOrder(reSendOrder);</span><br><span class="line">                    System.out.println(<span class="string">&quot;重试订单交付&quot;</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                    System.err.println(<span class="string">&quot;-----------异常处理-----------&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;); <span class="comment">// forEach 结束</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>主类上还需要加上几个注解。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@MapperScan(&quot;com.wingo.stableprovider.mapper&quot;)</span></span><br><span class="line"><span class="meta">@EnableScheduling</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>交付失败时的控制台打印信息。</p>
+</blockquote>
+<p><img src="/img/2020/04/RabbitMQ/Test04.png" alt="" /></p>
+<h3 id="序列化错误"><a class="markdownIt-Anchor" href="#序列化错误"></a> 序列化错误</h3>
+<p>场景：</p>
+<blockquote>
+<p>consumer 和 provider 模块各自有一个可序列化的 entity.Order 类；</p>
+<p>序列化与反序列化时，两个 Order 虽然代码相同，但底层序列化后的标记不同，虚拟机不会认为它们是同一个对象，出现反序列化错误。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Caused by: org.springframework.messaging.converter.MessageConversionException: Cannot convert from </span><br></pre></td></tr></table></figure>
+<p>解决方案：</p>
+<blockquote>
+<p>1）consumer 和 provider 引用同一个 entity.Order 类；</p>
+<p>2）利用 jackson 工具进行转化，传递 Json 串。</p>
+</blockquote>
+
+      
+    </div>
+    <!-- <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wingowen.github.io/2020/04/20/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/RabbitMQ%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/" title="RabbitMQ 初步使用" target="_blank" rel="external">https://wingowen.github.io/2020/04/20/后台技术/RabbitMQ 初步使用/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">WINGO.WEN</span><small class="ml-1x"></small></a></h3>
+        <div>一个疯子。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div> -->
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/05/20/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Spring%20%E5%AE%9E%E6%88%98%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" title="Spring 实战学习笔记"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/04/17/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Dubbo%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/" title="Dubbo"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	<!-- Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>. -->
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>

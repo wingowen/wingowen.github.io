@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Netty 入门简介 | WINGO BLOG</title>
+  <meta name="description" content="Java IO 无论是 C 语言，还是 Java，在进行网络编程的开发时都较为不友好。早期的 Java API（ java.net ）只支持由本地系统套接字库提供所谓的阻塞函数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty 入门简介">
+<meta property="og:url" content="https://wingowen.github.io/2020/01/21/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B/index.html">
+<meta property="og:site_name" content="WINGO&#39;S BLOG">
+<meta property="og:description" content="Java IO 无论是 C 语言，还是 Java，在进行网络编程的开发时都较为不友好。早期的 Java API（ java.net ）只支持由本地系统套接字库提供所谓的阻塞函数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/01/Netty/UseIO.PNG">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/01/Netty/UseSelectorNIO.PNG">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/01/Netty/ChannelHandlerLink.PNG">
+<meta property="article:published_time" content="2020-01-21T01:37:11.000Z">
+<meta property="article:modified_time" content="2023-09-20T07:00:03.842Z">
+<meta property="article:author" content="Wingo Wen">
+<meta property="article:tag" content="Netty">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wingowen.github.io/img/2020/01/Netty/UseIO.PNG">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wingowen.github.io/2020/01/21/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B/index.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="WINGO'S BLOG" type="application/atom+xml">
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">WINGO.WEN</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>得失从缘 心无增减</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8/">日常</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Hexo/" style="font-size: 13px;">Hexo</a> <a href="/tags/Hive/" style="font-size: 13px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Java/" style="font-size: 13px;">Java</a> <a href="/tags/Kudu/" style="font-size: 13px;">Kudu</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.25px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 13.75px;">机器学习</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/" style="font-size: 13px;">网站收集</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/" style="font-size: 13px;">网络相关</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.5px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-后台技术/Netty/Netty 入门简介" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Netty 入门简介
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/01/21/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B/" class="article-date">
+	  <time datetime="2020-01-21T01:37:11.000Z" itemprop="datePublished">2020-01-21</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Netty/" rel="tag">Netty</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/01/21/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h3 id="java-io"><a class="markdownIt-Anchor" href="#java-io"></a> Java IO</h3>
+<p>无论是 C 语言，还是 Java，在进行网络编程的开发时都较为不友好。早期的 Java API（ <a target="_blank" rel="noopener" href="http://java.net">java.net</a> ）只支持由本地系统套接字库提供所谓的阻塞函数。</p>
+<span id="more"></span>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 阻塞 I/O 示例I/O</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个 ServerSocket 用以监听端口上的连接请求</span></span><br><span class="line"><span class="type">ServerSocket</span> <span class="variable">serverSocket</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServerSocket</span>(portNumber);</span><br><span class="line"><span class="comment">// accept() 方法调用将被阻塞，直到一个连接建立</span></span><br><span class="line"><span class="type">Socket</span> <span class="variable">clientSocket</span> <span class="operator">=</span> serverSocket.accept();</span><br><span class="line"><span class="type">BufferReader</span> <span class="variable">in</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BufferReader</span>(</span><br><span class="line">	<span class="keyword">new</span> <span class="title class_">InputStreamReader</span>(</span><br><span class="line">        clientSocket.getInputStream()</span><br><span class="line">    )</span><br><span class="line">);</span><br><span class="line"><span class="comment">// PrintWriter(OutputStream out, boolean autoFlush) ???</span></span><br><span class="line"><span class="type">PrintWriter</span> <span class="variable">out</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PrintWriter</span>(clientSocket.getOutputStream(), <span class="literal">true</span>);</span><br><span class="line">String request, response;</span><br><span class="line"><span class="keyword">while</span> ((request = in.readLine()) != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">&quot;Done&quot;</span>.equals(request)) &#123;</span><br><span class="line">    	<span class="keyword">break</span>;	<span class="comment">// 客户端发送了 Done 则退出处理循环</span></span><br><span class="line">	&#125;</span><br><span class="line">    <span class="comment">// You can use ProcessRequest to handle your request </span></span><br><span class="line">    response = processRequest(request);</span><br><span class="line">    out.println(response);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码片段将只能同时处理一个连接，要管理多个并发客户端，需要为每个新的客户端 Socket 创建一个新的 Thread。</p>
+<ul>
+<li>
+<p>使用阻塞 I/O处理多个连接：</p>
+<p><img src="/img/2020/01/Netty/UseIO.PNG" alt="" /></p>
+</li>
+</ul>
+<h3 id="java-nio"><a class="markdownIt-Anchor" href="#java-nio"></a> Java NIO</h3>
+<p>class java.nio.channels.Selector 是 Java 的非阻塞 I/O 实现的关键。它使用了<strong>事件通知</strong> API 以确定在一组非阻塞套接字中有哪些已经就绪能够进 行 I/O 相关的操作。因为可以在任何的时间检查任意 的读操作或者写操作的完成状态。</p>
+<ul>
+<li>
+<p>使用 Selector 的非阻塞 I/O</p>
+<p><img src="/img/2020/01/Netty/UseSelectorNIO.PNG" alt="" /></p>
+</li>
+</ul>
+<h3 id="netty-简介"><a class="markdownIt-Anchor" href="#netty-简介"></a> Netty 简介</h3>
+<p>在网络编程领域，Netty 是 Java 的卓越框架。它驾驭了 Java 高 API 的能力，并将其隐藏在一个易于使用的 API 之后。Netty 使你可以专注于自己真正感兴趣的：你的应用程序的独一无二的价值。</p>
+<p>一个既是异步的又是事件驱动的系统会表现出一种特殊的、对我们来说极具价值的行为：它可以以任意的顺序响应在任意的时间点产生的事件。</p>
+<p>完全异步的 I/O：非阻塞网络调用使得我们可以不必等待一个操作的完成。异步方法会立即返回，并且在它完成时，会直接或者在稍后的某个时间点通知用户。</p>
+<p>选择器使得我们能够通过较少的线程便可监视许多连接上的事件。</p>
+<h3 id="netty-的核心组件"><a class="markdownIt-Anchor" href="#netty-的核心组件"></a> Netty 的核心组件</h3>
+<h4 id="channel"><a class="markdownIt-Anchor" href="#channel"></a> Channel</h4>
+<p>Channel 时 Java NIO 的一个基本构造。</p>
+<blockquote>
+<p>它代表一个到实体（如一个硬件设备、一个文件、一个网络套接字或者一个能够执 行一个或者多个不同的I/O操作的程序组件）的开放连接，如读操作和写操作。</p>
+</blockquote>
+<p>在一定程度上可以把 Channel 看作是传入（入站）或者传出（出站）数据的载体。因此，它可以被打开或者被关闭，连接或者断开连接。</p>
+<h4 id="回调"><a class="markdownIt-Anchor" href="#回调"></a> 回调</h4>
+<p>Netty 在内部使用了回调来处理事件；当一个回调被触发时，相关的事件可以被一个 interfaceChannelHandler 的实现处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 被回调触发的 ChannelHandler</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ConnectHandler</span> <span class="keyword">extends</span> <span class="title class_">ChannelInboundHandlerAdapter</span> &#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">    <span class="comment">// 当一个新的连接被建立完成时，此方法将会被调用</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">channelActive</span><span class="params">(ChannelHandlerContext ctx)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">		System.out.println(</span><br><span class="line">            <span class="string">&quot;Client &quot;</span> + ctx.channel().remoteAddress() + <span class="string">&quot; connected&quot;</span></span><br><span class="line">        );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="future"><a class="markdownIt-Anchor" href="#future"></a> Future</h4>
+<p>Future 提供了另一种在操作完成时通知应用程序的方式。这个对象可以看作是一个异步操作的结果的占位符；它将在未来的某个时刻完成，并提供对其结果的访问。</p>
+<p>JDK 预置了 interface java.util.concurrent.Future，但是其所提供的实现，只允许手动检查对应的操作是否已经完成，或者一直阻塞直到它完成。这是非常繁琐的，所以 Netty 提供了它自己的实现：ChannelFuture，用于在执行异步操作的时候使用。</p>
+<p>ChannelFuture提供了几种额外的方法，这些方法使得我们能够注册一个或者多个   ChannelFutureListener 实例。由 ChannelFutureListener 提供的通知机制消除了手动检查对应的操作是否完成的必要。</p>
+<ul>
+<li>监听器的回调方法 operationComplete()：将会在对应的操作完成时被调用。</li>
+<li>监听器可以判断操作是成功地完成了还是出错了（ 检索产生的 Throwable ）。</li>
+</ul>
+<p><u>每个 Netty 的出站 I/O 操作都将返回一个 ChannelFuture</u>；也就是说，它们都不会阻塞。正如我们前面所提到过的一样，Netty 完全是异步和事件驱动的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 异步的建立连接</span></span><br><span class="line"><span class="type">Channel</span> <span class="variable">channel</span> <span class="operator">=</span> ...;</span><br><span class="line"><span class="comment">// Does not block</span></span><br><span class="line"><span class="type">ChannelFuture</span> <span class="variable">future</span> <span class="operator">=</span> channel.connect(</span><br><span class="line">    <span class="comment">// 异步地连接到远程节点</span></span><br><span class="line">	<span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(<span class="string">&quot;192.168.0.1&quot;</span>, <span class="number">25</span>)</span><br><span class="line">);</span><br><span class="line"><span class="comment">//	注册一个 ChannelFutureListener 以便在操作完成时获得通知</span></span><br><span class="line">future.addListener(</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">ChannelFutureListener</span>() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">operationComplete</span><span class="params">(ChannelFuture future)</span> &#123;</span><br><span class="line">            <span class="comment">//	检查操作的状态</span></span><br><span class="line">            <span class="keyword">if</span> (future.isSuccess())&#123;</span><br><span class="line">                <span class="type">ByteBuf</span> <span class="variable">buffer</span> <span class="operator">=</span> Unpooled.copiedBuffer(</span><br><span class="line">                    <span class="string">&quot;Hello&quot;</span>,Charset.defaultCharset()</span><br><span class="line">                );</span><br><span class="line">                <span class="comment">// 将数据异步发送到远程节点</span></span><br><span class="line">                <span class="type">ChannelFuture</span> <span class="variable">wf</span> <span class="operator">=</span> future.channel().writeAndFlush(buffer);</span><br><span class="line">                ....</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="type">Throwable</span> <span class="variable">cause</span> <span class="operator">=</span> future.cause();</span><br><span class="line">                cause.printStackTrace();</span><br><span class="line">            &#125; </span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>回调和 Future 是相互补充的机制；它们相互结合，构成了 Netty 本身的关键构件块之一。</p>
+</blockquote>
+<h4 id="事件和-channelhandler"><a class="markdownIt-Anchor" href="#事件和-channelhandler"></a> 事件和 ChannelHandler</h4>
+<p>Netty 是一个网络编程框架，所以事件是按照它们与入站或出站数据流的相关性进行分类的。</p>
+<ul>
+<li>可能由入站数据或者相关的状态更改而触发的事件：
+<ul>
+<li>连接已被激活或者连接失活；</li>
+<li>数据读取；</li>
+<li>用户事件；</li>
+<li>错误事件。</li>
+</ul>
+</li>
+<li>出站事件是未来将会触发的某个动作的操作结果，这些动作包括：
+<ul>
+<li>打开或者关闭到远程节点的连接；</li>
+<li>将数据写到或者冲刷到套接字。</li>
+</ul>
+</li>
+</ul>
+<p>每个事件都可以被分发给 ChannelHandler 类中的某个用户实现的方法，后面会对此类进行更进一步的说明，目前你可以每个 ChannelHandler 的实例都类似于一种为了响应特定事件而被执行的回调。</p>
+<ul>
+<li>
+<p>流经 ChannelHandler 链的入站事件和出站事件</p>
+<p><img src="/img/2020/01/Netty/ChannelHandlerLink.PNG" alt="" /></p>
+</li>
+</ul>
+<h4 id="各组件的整合"><a class="markdownIt-Anchor" href="#各组件的整合"></a> 各组件的整合</h4>
+<ul>
+<li>
+<p>Future、回调和 ChannelHandler</p>
+<ul>
+<li>
+<p>Netty 的异步编程模型是建立在 Future 和回调的概念之上的，而将事件派发到 ChannelHandler</p>
+<p>的方法则发生在更深的层次上。结合在一起，这些元素就提供了一个处理环境，使你的应用程序逻</p>
+<p>辑可以独立于任何网络操作相关的顾虑而独立地演变。这也是 Netty 的设计方式的一个关键目标。</p>
+</li>
+<li>
+<p>拦截操作以及高速地转换入站数据和出站数据，都只需要你提供回调或者利用操作所返回的</p>
+<p>Future。这使得链接操作变得既简单又高效，并且促进了可重用的通用代码的编写。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>选择器、事件和 EventLoop</p>
+<ul>
+<li>
+<p>Netty 通过触发事件将 Selector 从应用程序中抽象出来，消除了所有本来将需要手动编写</p>
+<p>的派发代码。在内部，将会为每个 Channel 分配一个 EventLoop，用以处理所有事件。</p>
+</li>
+<li>
+<p>EventLoop 本身只由一个线程驱动，其处理了一个 Channel 的所有 I/O 事件，并且在该</p>
+<p>EventLoop 的整个生命周期内都不会改变（ 无需顾虑同步 ）。</p>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <!-- <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wingowen.github.io/2020/01/21/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E5%85%A5%E9%97%A8%E7%AE%80%E4%BB%8B/" title="Netty 入门简介" target="_blank" rel="external">https://wingowen.github.io/2020/01/21/后台技术/Netty/Netty 入门简介/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">WINGO.WEN</span><small class="ml-1x"></small></a></h3>
+        <div>一个疯子。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div> -->
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/01/21/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/" title="一个简单的 Netty 应用程序"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	<!-- Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>. -->
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>

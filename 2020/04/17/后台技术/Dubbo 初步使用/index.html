@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Dubbo | WINGO BLOG</title>
+  <meta name="description" content="Dubbo + Zookeeper 的简单介绍，以及整合使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dubbo">
+<meta property="og:url" content="https://wingowen.github.io/2020/04/17/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Dubbo%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="WINGO&#39;S BLOG">
+<meta property="og:description" content="Dubbo + Zookeeper 的简单介绍，以及整合使用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Dubbo/Develop01.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Dubbo/Develop02.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Dubbo/DubboArchitecture.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Dubbo/ProjectCatalog.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Dubbo/dubbo-admin01.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Dubbo/dubbo-admin02.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Dubbo/dubbo-monitor01.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Dubbo/dubbo-monitor02.png">
+<meta property="og:image" content="https://wingowen.github.io/img/2020/04/Dubbo/Result.png">
+<meta property="article:published_time" content="2020-04-17T01:50:34.000Z">
+<meta property="article:modified_time" content="2023-09-20T07:00:03.774Z">
+<meta property="article:author" content="Wingo Wen">
+<meta property="article:tag" content="Dubbo">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wingowen.github.io/img/2020/04/Dubbo/Develop01.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wingowen.github.io/2020/04/17/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Dubbo%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/index.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="WINGO'S BLOG" type="application/atom+xml">
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">WINGO.WEN</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>得失从缘 心无增减</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8/">日常</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Hexo/" style="font-size: 13px;">Hexo</a> <a href="/tags/Hive/" style="font-size: 13px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Java/" style="font-size: 13px;">Java</a> <a href="/tags/Kudu/" style="font-size: 13px;">Kudu</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.25px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 13.75px;">机器学习</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/" style="font-size: 13px;">网站收集</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/" style="font-size: 13px;">网络相关</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.5px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-后台技术/Dubbo 初步使用" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Dubbo
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/04/17/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Dubbo%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/" class="article-date">
+	  <time datetime="2020-04-17T01:50:34.000Z" itemprop="datePublished">2020-04-17</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Dubbo/" rel="tag">Dubbo</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/04/17/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Dubbo%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>Dubbo + Zookeeper 的简单介绍，以及整合使用。</p>
+<span id="more"></span>
+<h2 id="dubbo-初步使用"><a class="markdownIt-Anchor" href="#dubbo-初步使用"></a> Dubbo 初步使用</h2>
+<h3 id="基础理论"><a class="markdownIt-Anchor" href="#基础理论"></a> 基础理论</h3>
+<p>应用的发展与演变：</p>
+<p><img src="/img/2020/04/Dubbo/Develop01.png" alt="" /></p>
+<p>当网站流量很小时，只需一个应用，将所有功能都部署在一起，以减少部署节点和成本。此时，用于简化增删改查工作量的数据访问框架（ORM）是关键；</p>
+<p>当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用拆成互不相干的几个应用，以提升效率。此时，用于加速前端页面开发的 Web 框架（MVC）是关键；</p>
+<p>当垂直应用越来越多，应用之间交互不可避免，将核心业务抽取出来，作为独立的服务，逐渐形成稳定的服务中心，使前端应用能更快速的响应多变的市场需求。此时，用于提高业务复用及整合的分布式服务框架（RPC）是关键；</p>
+<p>Dubbo 是一款高性能、轻量级的开源 Java RPC 框架，它提供了三大核心能力：面向接口的远程方法调用，智能容错和负载均衡，以及服务自动注册和发现。</p>
+<img src="/img/2020/04/Dubbo/Develop02.png" style="zoom:75%;" />
+<p>当服务越来越多，容量的评估，小服务资源的浪费等问题逐渐显现，此时需增加一个调度中心基于访问压力实时管理集群容量，提高集群利用率。此时，用于提高机器利用率的资源调度和治理中心（SOA）即 Service Oriented Architecture 是关键。</p>
+<h3 id="环境搭建"><a class="markdownIt-Anchor" href="#环境搭建"></a> 环境搭建</h3>
+<h4 id="java"><a class="markdownIt-Anchor" href="#java"></a> Java</h4>
+<p><code>yum search java-1.8</code></p>
+<blockquote>
+<p>！！！注意，需要下载两个 java-1.8.0-openjdk.x86_64 / java-1.8.0-openjdk-devel.x86_64</p>
+</blockquote>
+<p><code>yum install ...</code></p>
+<p><code>whereis java</code>查看 java 路径（/usr/lib/jvm/）</p>
+<p>修改环境变量：<code>vim /etc/profile</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-...</span><br><span class="line">export PATH=$JAVA_HOME/bin:$PATH</span><br><span class="line">export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br></pre></td></tr></table></figure>
+<p><code>javac</code>环境变量是否配置正确</p>
+<h4 id="zookeeper"><a class="markdownIt-Anchor" href="#zookeeper"></a> Zookeeper</h4>
+<p>下载 zookeeper ：<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/">清华大学开源软件镜像站</a></p>
+<p><code>wget [下载连接]</code>下载压缩包</p>
+<p><code>tar -zxvf zookeeper-x.x.x.tar.gz</code> 在 /usr/local/ 下新建 zookeeper 目录进行解压</p>
+<p>修改 zookeeper 配置文件名：zoo_sample.cfg 改为 zoo.cfg</p>
+<p>配置环境变量：vi ~/.bash_profile</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export PATH</span><br><span class="line">export ZOOKEEPER_HOME=/usr/local/zookeeper/zookeeper-3.4.11/</span><br><span class="line">export PATH=$ZOOKEEPER_HOME/bin:$PATH</span><br></pre></td></tr></table></figure>
+<p>常用操作</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zkServer.sh start # 开启 zookeeper</span><br><span class="line">jps # 显示当前所有 java 进程 pid</span><br><span class="line">zkServer.sh stop # 停止 zookeeper</span><br></pre></td></tr></table></figure>
+<h4 id="dubbo-admin"><a class="markdownIt-Anchor" href="#dubbo-admin"></a> dubbo-admin</h4>
+<blockquote>
+<p>netstat -aon|findstr “port-num” 查看占用端口的程序的 PID</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://share.weiyun.com/56OB9g5">Dubbo 官方项目下载</a></p>
+<p>修改 dubbo-admin 项目的配置（！！！zookeeper 的地址修改为自己配置的地址）</p>
+<p>在 pom.xml 目录下：cmd 输入命令<code>mvn clean package</code>对项目进行打包</p>
+<p>打包成功后生成 target 文件夹，target 目录下有一个可执行 jar 包</p>
+<p><code>java -jar [jara_name]</code>运行项目，运行成功后根据配置的路径进行访问</p>
+<h4 id="dubbo-monitor"><a class="markdownIt-Anchor" href="#dubbo-monitor"></a> dubbo-monitor</h4>
+<p>生成的 target 文件中有一个压缩包，解压后的 assembly.bin 目录中运行 start.bat 脚本进行项目运行</p>
+<h3 id="项目架构"><a class="markdownIt-Anchor" href="#项目架构"></a> 项目架构</h3>
+<p>先来看一张官网给的架构图：</p>
+<img src="/img/2020/04/Dubbo/DubboArchitecture.png" style="zoom: 50%;" />
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>角色说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Provider</code></td>
+<td>暴露服务的服务提供方</td>
+</tr>
+<tr>
+<td><code>Consumer</code></td>
+<td>调用远程服务的服务消费方</td>
+</tr>
+<tr>
+<td><code>Registry</code></td>
+<td>服务注册与发现的注册中心</td>
+</tr>
+<tr>
+<td><code>Monitor</code></td>
+<td>统计服务的调用次数和调用时间的监控中心</td>
+</tr>
+<tr>
+<td><code>Container</code></td>
+<td>服务运行容器</td>
+</tr>
+</tbody>
+</table>
+<p>各节点间的调用关系说明：</p>
+<p>​	服务容器负责启动，加载，运行服务提供者。<br />
+​	服务提供者在启动时，向注册中心注册自己提供的服务。<br />
+​	服务消费者在启动时，向注册中心订阅自己所需的服务。<br />
+​	注册中心返回服务提供者地址列表给消费者，如果有变更，注册中心将基于长连接推送变更数据给消费者。<br />
+​	服务消费者，从提供者地址列表中，基于软负载均衡算法，选一台提供者进行调用，如果调用失败，再选另一台调用。<br />
+​	服务消费者和提供者，在内存中累计调用次数和调用时间，定时每分钟发送一次统计数据到监控中心。</p>
+<h3 id="项目创建"><a class="markdownIt-Anchor" href="#项目创建"></a> 项目创建</h3>
+<p>基于对官网给出的架构分析得知我们需要两个角色：服务的提供者；服务的消费者。</p>
+<p>消费者在自身的项目中可以如同调用本地方法一般调用提供者的方法；那么消费者和提供者必须都受到同一套接口的规范，在两个项目中都编写接口显得有些繁琐，所以可以新建一个 Maven 项目专门用于定义接口。</p>
+<p><img src="/img/2020/04/Dubbo/ProjectCatalog.png" alt="" /></p>
+<blockquote>
+<p>最外层套一层壳，添加三个 module，其中外壳项目和提供接口的项目为 Maven 项目即可。</p>
+</blockquote>
+<h4 id="dubbo-api"><a class="markdownIt-Anchor" href="#dubbo-api"></a> dubbo-api</h4>
+<blockquote>
+<p>此项目用于提供接口规范，不需要添加任何依赖。编写一个实体类和一个服务类接口即可。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">5433406871746033298L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Integer userId;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定义接口：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取用户列表的方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 用户的信息列表</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    List&lt;User&gt; <span class="title function_">getUserList</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>要让 dubbo-consumer 以及 dubbo-provider 获取此接口，需要给这两个项目添加 dubbo-api 项目的依赖。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 添加自定义接口依赖 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.wingo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dubbo-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="dubbo-provider"><a class="markdownIt-Anchor" href="#dubbo-provider"></a> dubbo-provider</h4>
+<p>服务提供者编写了接口的具体实现方法，并且要把实现的方法通过 Dubbo 暴露出去。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 添加 Dubbo 依赖 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dubbo-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Spring 以及 Dubbo 都要管理这个类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@com</span>.alibaba.dubbo.config.annotation.Service</span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;User&gt; <span class="title function_">getUserList</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="number">1</span>,<span class="string">&quot;wingo&quot;</span>,<span class="string">&quot;123456&quot;</span>);</span><br><span class="line">        <span class="type">User</span> <span class="variable">user2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(<span class="number">2</span>,<span class="string">&quot;admin&quot;</span>,<span class="string">&quot;654321&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> Arrays.asList(user1, user2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在主类上标注 @EnableDubbo(scanBasePackages = “com.wingo.dubboprovider.service”)，并添加配置。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 此服务的名称</span></span><br><span class="line"><span class="attr">dubbo.application.name</span>=<span class="string">user-service-provider</span></span><br><span class="line"><span class="comment"># 注册中心的协议及地址</span></span><br><span class="line"><span class="attr">dubbo.registry.address</span>=<span class="string">127.0.0.1:2181</span></span><br><span class="line"><span class="attr">dubbo.registry.protocol</span>=<span class="string">zookeeper</span></span><br><span class="line"><span class="comment"># 暴露的协议及端口</span></span><br><span class="line"><span class="attr">dubbo.protocol.name</span>=<span class="string">dubbo</span></span><br><span class="line"><span class="attr">dubbo.protocol.port</span>=<span class="string">20881</span></span><br><span class="line"><span class="comment">## 注册中心获取监控中心的信息</span></span><br><span class="line"><span class="attr">dubbo.monitor.protocol</span>=<span class="string">registry</span></span><br></pre></td></tr></table></figure>
+<p>启动项目，来到 dubbo-admin 的页面查看服务。</p>
+<p><img src="/img/2020/04/Dubbo/dubbo-admin01.png" alt="" /></p>
+<p>在 dubbo-admin 多了一个我们刚刚暴露出来的服务，由名称可以得知其暴露的是一个接口。</p>
+<p><img src="/img/2020/04/Dubbo/dubbo-admin02.png" alt="" /></p>
+<p>点击查看其对应的 IP 地址以及域名，正是本机的 IP 以及自定义的接口 20881。</p>
+<p><img src="/img/2020/04/Dubbo/dubbo-monitor01.png" alt="" /></p>
+<p>dubbo-monitor 中可以看到这个应用的名称正是配置文件中的 user-service-provider。</p>
+<h4 id="dubbo-consumer"><a class="markdownIt-Anchor" href="#dubbo-consumer"></a> dubbo-consumer</h4>
+<p>消费者向 dubbo 请求所需要的服务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Reference</span></span><br><span class="line">    UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/users&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;User&gt; <span class="title function_">userList</span> <span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> userService.getUserList();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">server.port</span>=<span class="string">8082</span></span><br><span class="line"></span><br><span class="line"><span class="attr">dubbo.application.name</span>=<span class="string">dubbo-user-consumer</span></span><br><span class="line"><span class="attr">dubbo.registry.address</span>=<span class="string">zookeeper://127.0.0.1:2181</span></span><br><span class="line"><span class="attr">dubbo.monitor.protocol</span>=<span class="string">registry</span></span><br></pre></td></tr></table></figure>
+<p>启动消费者。</p>
+<p><img src="/img/2020/04/Dubbo/dubbo-monitor02.png" alt="" /></p>
+<p>可以看出，提供者与消费者确实是通过接口通讯的。</p>
+<p><img src="/img/2020/04/Dubbo/Result.png" alt="" /></p>
+<p>成功请求数据。</p>
+<h3 id="dubbo-特性"><a class="markdownIt-Anchor" href="#dubbo-特性"></a> Dubbo 特性</h3>
+<p>介绍一些 Dubbo 的使用特性。</p>
+<h4 id="高可用"><a class="markdownIt-Anchor" href="#高可用"></a> 高可用</h4>
+<p>Zookeeper 宕机与 Dubbo 直连：注册中心全部宕掉后，服务提供者和服务消费者仍能通过本地缓存通讯。</p>
+<h4 id="集群负载均衡"><a class="markdownIt-Anchor" href="#集群负载均衡"></a> 集群负载均衡</h4>
+<p><strong>Random LoadBalance：</strong></p>
+<p>随机，按权重设置随机概率。在一个截面上碰撞的概率高，但调用量越大分布越均匀，而且按概率使用权重后也比较均匀，有利于动态调整提供者权重。</p>
+<p><strong>RoundRobin LoadBalance：</strong></p>
+<p>轮循，按公约后的权重设置轮循比率。存在慢的提供者累积请求的问题，比如：第二台机器很慢，但没挂，当请求调到第二台时就卡在那，久而久之，所有请求都卡在调到第二台上。</p>
+<p><strong>LeastActive LoadBalance：</strong></p>
+<p>最少活跃调用数，相同活跃数的随机，活跃数指调用前后计数差。使慢的提供者收到更少请求，因为越慢的提供者的调用前后计数差会越大。</p>
+<p><strong>ConsistentHash LoadBalance：</strong></p>
+<p>一致性 Hash，相同参数的请求总是发到同一提供者。当某一台提供者挂时，原本发往该提供者的请求，基于虚拟节点，平摊到其它提供者，不会引起剧烈变动。</p>
+<h4 id="服务降级"><a class="markdownIt-Anchor" href="#服务降级"></a> 服务降级</h4>
+<p>当服务器压力剧增的情况下，根据实际业务情况及流量，对一些服务和页面有策略的不处理或换种简单的方式处理，从而释放服务器资源以保证核心交易正常运作或高效运作。</p>
+<p><strong>mock=force:return+null</strong></p>
+<p>表示消费方对该服务的方法调用都直接返回 null 值，不发起远程调用。用来屏蔽不重要服务不可用时对调用方的影响。</p>
+<p><strong>mock=fail:return+null</strong></p>
+<p>表示消费方对该服务的方法调用在失败后，再返回 null 值，不抛异常。用来容忍不重要服务不稳定时对调用方的影响。</p>
+<h4 id="集群容错"><a class="markdownIt-Anchor" href="#集群容错"></a> 集群容错</h4>
+<p>Failfast Cluster：快速失败，只发起一次调用，失败立即报错。通常用于非幂等性的写操作，比如新增记录；</p>
+<p>Failsafe Cluster：失败安全，出现异常时，直接忽略。通常用于写入审计日志等操作；</p>
+<p>Failback Cluster：失败自动恢复，后台记录失败请求，定时重发。通常用于消息通知操作；</p>
+<p>Forking Cluster：并行调用多个服务器，只要一个成功即返回。通常用于实时性要求较高的读操作，但需要浪费更多服务资源。可通过 forks=“2” 来设置最大并行数；</p>
+<p>Broadcast Cluster：广播调用所有提供者，逐个调用，任意一台报错则报错 [2]。通常用于通知所有提供者更新缓存或日志等本地资源信息。</p>
+
+      
+    </div>
+    <!-- <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wingowen.github.io/2020/04/17/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Dubbo%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/" title="Dubbo" target="_blank" rel="external">https://wingowen.github.io/2020/04/17/后台技术/Dubbo 初步使用/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">WINGO.WEN</span><small class="ml-1x"></small></a></h3>
+        <div>一个疯子。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div> -->
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/04/20/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/RabbitMQ%20%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8/" title="RabbitMQ 初步使用"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/04/01/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Spring%20Boot/Spring%20Boot%20%E4%BB%BB%E5%8A%A1/" title="Spring Boot 任务"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	<!-- Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>. -->
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>
