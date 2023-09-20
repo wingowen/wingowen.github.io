@@ -6,7 +6,7 @@
   <link href="https://wingowen.github.io/atom.xml" rel="self"/>
   
   <link href="https://wingowen.github.io/"/>
-  <updated>2023-09-19T07:40:22.864Z</updated>
+  <updated>2023-09-19T10:04:02.371Z</updated>
   <id>https://wingowen.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>大数据组件</title>
+    <link href="https://wingowen.github.io/2023/09/19/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%BB%84%E4%BB%B6/"/>
+    <id>https://wingowen.github.io/2023/09/19/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%BB%84%E4%BB%B6/</id>
+    <published>2023-09-19T09:11:59.000Z</published>
+    <updated>2023-09-19T10:04:02.371Z</updated>
+    
+    <content type="html"><![CDATA[<p>文件系统：HDFS<br />数据库存储：HBase、Kudu<br />查询引擎：Hive、Impala</p><span id="more"></span><h1 id="hive"><a class="markdownIt-Anchor" href="#hive"></a> Hive</h1><ul><li>Hive 存储的是纯逻辑表，即表的元数据</li><li>Hive 本身不存储数据，完全依赖于 HDFS 和 MapReduce，将结构化的数据文件映射为一张张数据库表</li><li>Hive 基于 MapReduce 处理数据，基于行模式处理 OLTP &amp; OLAP</li></ul><h1 id="hase"><a class="markdownIt-Anchor" href="#hase"></a> Hase</h1><ul><li>Google‘s Big Table 的开源实现</li><li>NoSQL 分布式 KV 数据库</li><li>Hbase 存储的是物理表，适合存放非结构化数据</li><li>Hbase 基于列模式处理数据，适合海量数据的随机访问 OLTP</li><li>底层存储引擎是基于 LSM-Tree 数据结构设计的。写入数据时会先写 WAL 日志，再将数据写到写缓存 MemStore中，等写缓存达到一定规模后或满足其他触发条件才会 flush 刷写到磁盘，每一次刷写磁盘都会生成新的 HFile 文件，HBase 会定期执行 compaction 操作以合并 HFile</li><li>读取数据时会依次从 BlockCache、MemStore 以及 HFile 中 seek 数据，再加上一些其他设计比如布隆过滤器、索引等</li><li>Spark 在线数据分析<ul><li>HbaseClient 直接访问 Hbase</li><li>Spark 引入 Hbase Connector 后通过 Spark SQL / DDL 直接操作数据</li></ul></li><li>Hive 在线数据分析<ul><li>建 Hbase 外表然后进行 SQL 查询</li></ul></li><li>离线处理<ul><li>通过 LTS 导出到 HDFS，存储为 Parquet 格式，使用 Spark 进行分析</li><li>通过 LTS 增量订阅 Hbase 数据，写入到 Kafka，使用 Spark Streaming 对 Kafka 进行流式计算</li></ul></li></ul><blockquote><p>WAL（Write-Ahead Logging）是一种数据库系统中常用的日志记录技术，用于确保数据的持久性和一致性。WAL日志是在对数据库进行修改之前，首先将修改操作记录到日志中，然后再将修改应用到数据库文件中。</p></blockquote><h1 id="impala"><a class="markdownIt-Anchor" href="#impala"></a> Impala</h1><ul><li>使用分布式查询引擎（由 Query Planner、Query Coordinator和Query Exec Engine 三部分组成），可以直接从 HDFS 或 Hase 中进行实时交互式 SQL 查询</li></ul><h1 id="kudu"><a class="markdownIt-Anchor" href="#kudu"></a> kudu</h1><ul><li>同时提供低延迟的随机读写和高效的数据分析能力，是一个融合 HDFS 和 HBase 的功能的新组件，</li></ul>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;文件系统：HDFS&lt;br /&gt;
+数据库存储：HBase、Kudu&lt;br /&gt;
+查询引擎：Hive、Impala&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="大数据" scheme="https://wingowen.github.io/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+    
+    
+    <category term="Hive" scheme="https://wingowen.github.io/tags/Hive/"/>
+    
+  </entry>
   
   <entry>
     <title>Pandas 练习</title>
@@ -157,9 +180,9 @@
     <link href="https://wingowen.github.io/2022/08/29/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/"/>
     <id>https://wingowen.github.io/2022/08/29/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/</id>
     <published>2022-08-29T08:57:30.000Z</published>
-    <updated>2023-09-18T09:31:31.175Z</updated>
+    <updated>2023-09-19T07:42:52.823Z</updated>
     
-    <content type="html"><![CDATA[<p>收集一些有用的网站。</p><span id="more"></span><h1 id="杂项"><a class="markdownIt-Anchor" href="#杂项"></a> 杂项</h1><ul><li><a href="https://blog.cofess.com/2017/11/01/hexo-blog-theme-pure-usage-description.html">Hexo 博客主题 pure 使用说明 | Cofess - Web Developer &amp; Designer</a></li></ul><h1 id="java"><a class="markdownIt-Anchor" href="#java"></a> JAVA</h1><ul><li><a href="https://github.com/wuyouzhuguli/SpringAll">Spring All</a></li></ul><h1 id="刷题"><a class="markdownIt-Anchor" href="#刷题"></a> 刷题</h1><ul><li><a href="https://cloud.tencent.com/developer/article/1610135">HiveSQL 50</a></li><li><a href="https://cloud.tencent.com/developer/article/1614749">Pandas 120</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p>收集一些有用的网站。</p><span id="more"></span><h1 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h1><ul><li><p><a href="https://gitee.com/wingowen/wingowen/pages">gitee update</a></p></li><li><p><a href="https://blog.cofess.com/2017/11/01/hexo-blog-theme-pure-usage-description.html">Hexo 博客主题 pure 使用说明 | Cofess - Web Developer &amp; Designer</a></p></li></ul><h1 id="JAVA"><a href="#JAVA" class="headerlink" title="JAVA"></a>JAVA</h1><ul><li><a href="https://github.com/wuyouzhuguli/SpringAll">Spring All</a></li></ul><h1 id="刷题"><a href="#刷题" class="headerlink" title="刷题"></a>刷题</h1><ul><li><a href="https://cloud.tencent.com/developer/article/1610135">HiveSQL 50</a></li><li><a href="https://cloud.tencent.com/developer/article/1614749">Pandas 120</a></li></ul>]]></content>
     
     
     <summary type="html">&lt;p&gt;收集一些有用的网站。&lt;/p&gt;</summary>
