@@ -6,7 +6,7 @@
   <link href="https://wingowen.github.io/atom.xml" rel="self"/>
   
   <link href="https://wingowen.github.io/"/>
-  <updated>2023-09-20T05:45:49.754Z</updated>
+  <updated>2023-09-20T07:31:56.138Z</updated>
   <id>https://wingowen.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://wingowen.github.io/2023/09/20/%E6%9D%82%E9%A1%B9/Hexo/"/>
     <id>https://wingowen.github.io/2023/09/20/%E6%9D%82%E9%A1%B9/Hexo/</id>
     <published>2023-09-20T05:41:38.000Z</published>
-    <updated>2023-09-20T05:45:49.754Z</updated>
+    <updated>2023-09-20T07:31:56.138Z</updated>
     
     <content type="html"><![CDATA[<h1 id="文章置顶"><a class="markdownIt-Anchor" href="#文章置顶"></a> 文章置顶</h1><p>修改 <code>\node_modules\hexo-generator-index-pin-top\lib\generator.js</code></p><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ...</span></span><br><span class="line">  <span class="keyword">const</span> posts = locals.<span class="property">posts</span>.<span class="title function_">sort</span>(config.<span class="property">index_generator</span>.<span class="property">order_by</span>);</span><br><span class="line">  <span class="comment">// 添加以下根据 Top 排序代码</span></span><br><span class="line">  posts.<span class="property">data</span> = posts.<span class="property">data</span>.<span class="title function_">sort</span>(<span class="keyword">function</span> (<span class="params">a, b</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (a.<span class="property">top</span> &amp;&amp; b.<span class="property">top</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (a.<span class="property">top</span> == b.<span class="property">top</span>) <span class="keyword">return</span> b.<span class="property">date</span> - a.<span class="property">date</span>;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">return</span> b.<span class="property">top</span> - a.<span class="property">top</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (a.<span class="property">top</span> &amp;&amp; !b.<span class="property">top</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (!a.<span class="property">top</span> &amp;&amp; b.<span class="property">top</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">return</span> b.<span class="property">date</span> - a.<span class="property">date</span>; <span class="comment">// 都没定义按照文章日期降序排</span></span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="title function_">sort</span>(posts.<span class="property">data</span>, <span class="function">(<span class="params">a, b</span>) =&gt;</span> (b.<span class="property">sticky</span> || <span class="number">0</span>) - (a.<span class="property">sticky</span> || <span class="number">0</span>));</span><br><span class="line"></span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
     
@@ -36,8 +36,6 @@
     
     <category term="杂项" scheme="https://wingowen.github.io/categories/%E6%9D%82%E9%A1%B9/"/>
     
-    
-    <category term="Hexo" scheme="https://wingowen.github.io/tags/Hexo/"/>
     
   </entry>
   
@@ -236,10 +234,10 @@
   
   <entry>
     <title>网站收集</title>
-    <link href="https://wingowen.github.io/2022/08/29/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/"/>
-    <id>https://wingowen.github.io/2022/08/29/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/</id>
+    <link href="https://wingowen.github.io/2022/08/29/%E6%9D%82%E9%A1%B9/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/"/>
+    <id>https://wingowen.github.io/2022/08/29/%E6%9D%82%E9%A1%B9/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/</id>
     <published>2022-08-29T08:57:30.000Z</published>
-    <updated>2023-09-20T05:34:00.167Z</updated>
+    <updated>2023-09-20T07:31:44.348Z</updated>
     
     <content type="html"><![CDATA[<p>收集一些有用的网站。</p><span id="more"></span><h1 id="杂项"><a class="markdownIt-Anchor" href="#杂项"></a> 杂项</h1><ul><li><p><a href="https://gitee.com/wingowen/wingowen/pages">gitee update</a></p></li><li><p><a href="https://blog.cofess.com/2017/11/01/hexo-blog-theme-pure-usage-description.html">Hexo 博客主题 pure 使用说明 | Cofess - Web Developer &amp; Designer</a></p></li></ul><h1 id="java"><a class="markdownIt-Anchor" href="#java"></a> JAVA</h1><ul><li><a href="https://github.com/wuyouzhuguli/SpringAll">Spring All</a></li></ul><h1 id="刷题"><a class="markdownIt-Anchor" href="#刷题"></a> 刷题</h1><ul><li><a href="https://cloud.tencent.com/developer/article/1610135">HiveSQL 50</a></li><li><a href="https://cloud.tencent.com/developer/article/1614749">Pandas 120</a></li></ul>]]></content>
     
@@ -248,10 +246,8 @@
     
     
     
-    <category term="日常" scheme="https://wingowen.github.io/categories/%E6%97%A5%E5%B8%B8/"/>
+    <category term="杂项" scheme="https://wingowen.github.io/categories/%E6%9D%82%E9%A1%B9/"/>
     
-    
-    <category term="网站收集" scheme="https://wingowen.github.io/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/"/>
     
   </entry>
   
