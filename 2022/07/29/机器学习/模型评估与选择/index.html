@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>模型评估与选择 | WINGO BLOG</title>
+  <meta name="description" content="错误率和精度，误差，偏差和方差。 评估方法：留出法，交叉验证，自助法。 二分类任务性能度量：查准率，查全率，F1，ROC，AUC。 数据层面解决类别不平衡：欠采样，过采样，~结合。 算法层面解决类别不平衡：惩罚项。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="模型评估与选择">
+<meta property="og:url" content="https://wingowen.github.io/2022/07/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/index.html">
+<meta property="og:site_name" content="WINGO&#39;S BLOG">
+<meta property="og:description" content="错误率和精度，误差，偏差和方差。 评估方法：留出法，交叉验证，自助法。 二分类任务性能度量：查准率，查全率，F1，ROC，AUC。 数据层面解决类别不平衡：欠采样，过采样，~结合。 算法层面解决类别不平衡：惩罚项。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wingowen.github.io/img/%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/Untitled.png">
+<meta property="article:published_time" content="2022-07-29T10:24:58.000Z">
+<meta property="article:modified_time" content="2023-01-04T07:23:27.612Z">
+<meta property="article:author" content="Wingo Wen">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wingowen.github.io/img/%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/Untitled.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wingowen.github.io/2022/07/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/index.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    <link href="//cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.css" rel="stylesheet">
+  
+  
+  
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="WINGO'S BLOG" type="application/atom+xml">
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">WINGO.WEN</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>得失从缘 心无增减</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/">后台技术</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%97%A5%E5%B8%B8/">日常</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Flume/" style="font-size: 13px;">Flume</a> <a href="/tags/HBase/" style="font-size: 13px;">HBase</a> <a href="/tags/Hadoop/" style="font-size: 13px;">Hadoop</a> <a href="/tags/Hexo/" style="font-size: 13px;">Hexo</a> <a href="/tags/Hive/" style="font-size: 13.25px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Java/" style="font-size: 13px;">Java</a> <a href="/tags/Kafka/" style="font-size: 13px;">Kafka</a> <a href="/tags/Kudu/" style="font-size: 13px;">Kudu</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.25px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/sklearn/" style="font-size: 13px;">sklearn</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 13.75px;">机器学习</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%94%B6%E9%9B%86/" style="font-size: 13px;">网站收集</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E7%9B%B8%E5%85%B3/" style="font-size: 13px;">网络相关</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.5px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%8E%87%E5%92%8C%E7%B2%BE%E5%BA%A6"><span class="toc-number">1.</span> <span class="toc-text"> 错误率和精度</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%AF%E5%B7%AE"><span class="toc-number">2.</span> <span class="toc-text"> 误差</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%81%8F%E5%B7%AE%E5%92%8C%E6%96%B9%E5%B7%AE"><span class="toc-number">3.</span> <span class="toc-text"> 偏差和方差</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AF%84%E4%BC%B0%E6%96%B9%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text"> 评估方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%95%99%E5%87%BA%E6%B3%95"><span class="toc-number">4.1.</span> <span class="toc-text"> 留出法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81"><span class="toc-number">4.2.</span> <span class="toc-text"> 交叉验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A9%E6%B3%95"><span class="toc-number">4.3.</span> <span class="toc-text"> 自助法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.4.</span> <span class="toc-text"> 总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%BA%A6%E9%87%8F"><span class="toc-number">5.</span> <span class="toc-text"> 性能度量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E5%87%86%E7%8E%87-%E6%9F%A5%E5%85%A8%E7%8E%87-f1"><span class="toc-number">5.1.</span> <span class="toc-text"> 查准率、查全率、F1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#roc-%E4%B8%8E-auc-%E5%8E%9F%E7%90%86"><span class="toc-number">5.2.</span> <span class="toc-text"> ROC 与 AUC 原理</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AF%94%E8%BE%83%E6%A3%80%E9%AA%8Ctodo"><span class="toc-number">6.</span> <span class="toc-text"> 比较检验（TODO）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C"><span class="toc-number">6.1.</span> <span class="toc-text"> 假设检验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81-t-%E6%A3%80%E9%AA%8C"><span class="toc-number">6.1.1.</span> <span class="toc-text"> 交叉验证 t 检验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mcnemar-%E6%A3%80%E9%AA%8C"><span class="toc-number">6.1.2.</span> <span class="toc-text"> McNemar 检验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#friedman-%E6%A3%80%E9%AA%8C%E4%B8%8E-nemenyi-%E5%90%8E%E7%BB%AD%E6%A3%80%E9%AA%8C"><span class="toc-number">6.1.3.</span> <span class="toc-text"> Friedman 检验与 Nemenyi 后续检验</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E5%88%AB%E4%B8%8D%E5%B9%B3%E8%A1%A1"><span class="toc-number">7.</span> <span class="toc-text"> 类别不平衡</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%B1%82%E9%9D%A2%E8%A7%A3%E5%86%B3%E7%B1%BB%E5%88%AB%E4%B8%8D%E5%B9%B3%E8%A1%A1"><span class="toc-number">7.1.</span> <span class="toc-text"> 数据层面解决类别不平衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E5%B1%82%E9%9D%A2%E8%A7%A3%E5%86%B3%E7%B1%BB%E5%88%AB%E4%B8%8D%E5%B9%B3%E8%A1%A1"><span class="toc-number">7.2.</span> <span class="toc-text"> 算法层面解决类别不平衡</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-机器学习/模型评估与选择" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      模型评估与选择
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2022/07/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/" class="article-date">
+	  <time datetime="2022-07-29T10:24:58.000Z" itemprop="datePublished">2022-07-29</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a>
+  </span>
+
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2022/07/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>错误率和精度，误差，偏差和方差。</p>
+<p>评估方法：留出法，交叉验证，自助法。</p>
+<p>二分类任务性能度量：查准率，查全率，F1，ROC，AUC。</p>
+<p>数据层面解决类别不平衡：欠采样，过采样，~结合。</p>
+<p>算法层面解决类别不平衡：惩罚项。</p>
+<span id="more"></span>
+<h1 id="错误率和精度"><a class="markdownIt-Anchor" href="#错误率和精度"></a> 错误率和精度</h1>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 真实的数据标签</span></span><br><span class="line">real_label = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">1</span>])                                         \                              \   \</span><br><span class="line"><span class="comment"># 分类器的预测标签</span></span><br><span class="line">classifier_pred = np.array([<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>,  <span class="number">0</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">1</span>,  <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">compare_result = (real_label == classifier_pred)</span><br><span class="line">compare_result = compare_result.astype(np.<span class="built_in">int</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># m 为样本数量 b 为预测错误样本</span></span><br><span class="line">m = <span class="built_in">len</span>(real)</span><br><span class="line">b = m - np.<span class="built_in">sum</span>(cmp)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 错误率</span></span><br><span class="line">error_rate = (b / m)*<span class="number">100</span></span><br><span class="line"><span class="comment"># 精确度 acc</span></span><br><span class="line">accuracy = (<span class="number">1</span> - b / m)*<span class="number">100</span></span><br></pre></td></tr></table></figure>
+<h1 id="误差"><a class="markdownIt-Anchor" href="#误差"></a> 误差</h1>
+<p>模型在训练样本上的误差称为<strong>训练误差</strong>或<strong>经验误差</strong>；模型在新样本上的误差称为<strong>泛化误差。</strong></p>
+<p>过拟合模型：虽然训练误差接近 0，泛化误差非常大。</p>
+<p>欠拟合的模型无论是在训练集中还是在新样本上，表现都很差，即经验误差和泛化误差都很大。</p>
+<h1 id="偏差和方差"><a class="markdownIt-Anchor" href="#偏差和方差"></a> 偏差和方差</h1>
+<p>偏差-方差分解 bias-variance decomposition， 是解释学习算法泛化性能的一种重要工具。</p>
+<ul>
+<li>偏差 bias，与真实值的<strong>偏离程度</strong>；</li>
+<li>方差 variance，该随机变量在其期望值附近的<strong>波动程度</strong>。</li>
+</ul>
+<p><img src="/img/%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/Untitled.png" alt="Untitled" /></p>
+<h1 id="评估方法"><a class="markdownIt-Anchor" href="#评估方法"></a> 评估方法</h1>
+<p><strong>评估：对学习器的泛化误差进行评估并进而做出选择。</strong></p>
+<h2 id="留出法"><a class="markdownIt-Anchor" href="#留出法"></a> 留出法</h2>
+<p>以一定比例划分训练集和测试集。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"># 导入包</span><br><span class="line">import numpy as np</span><br><span class="line">from sklearn.model_selection import train_test_split</span><br><span class="line"></span><br><span class="line"># 加载数据集</span><br><span class="line">def load_pts(): </span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line">    return: 返回随机生成 200 个点的坐标</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line">    dots = 200  # 样本数</span><br><span class="line">    dim = 2 # 数据维度</span><br><span class="line">    X = np.random.randn(dots,dim) # 建立数据集，shape(200,2)</span><br><span class="line">    # 建立样本 X 的类别</span><br><span class="line">    Y = np.zeros(dots, dtype=&#x27;int&#x27;)      </span><br><span class="line">    for i in range(X.shape[0]):</span><br><span class="line">            Y[i] = 1           </span><br><span class="line">    return X, Y</span><br><span class="line"></span><br><span class="line"># 加载数据</span><br><span class="line">X,Y = load_pts()</span><br><span class="line"></span><br><span class="line"># 使用train_test_split划分训练集和测试集</span><br><span class="line">train_X, test_X, train_Y, test_Y = train_test_split(X, Y, test_size=0.2, random_state=0)</span><br></pre></td></tr></table></figure>
+<h2 id="交叉验证"><a class="markdownIt-Anchor" href="#交叉验证"></a> 交叉验证</h2>
+<p>交叉验证法 cross validation，先将数据集 D 划分为 k 个大小相似的互斥子集。</p>
+<p>![Untitled](/img/模型评估与选择/Untitled 1.png)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入包</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> KFold</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成数据集，随机生成40个点</span></span><br><span class="line">data = np.random.randn(<span class="number">40</span>,<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 交叉验证法</span></span><br><span class="line">kf = KFold(n_splits = <span class="number">4</span>, shuffle = <span class="literal">False</span>, random_state = <span class="literal">None</span>) </span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> train, test <span class="keyword">in</span> kf.split(data):</span><br><span class="line">    <span class="built_in">print</span>(train)</span><br><span class="line">    <span class="built_in">print</span>(test,<span class="string">&#x27;\n&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="自助法"><a class="markdownIt-Anchor" href="#自助法"></a> 自助法</h2>
+<p>有放回抽样，给定包含 m 个样本的数据集 D，我们对它进行采样产生数据集 D’ ：</p>
+<ul>
+<li>每次随机从 D 中挑选一个样本；</li>
+<li>将该样本拷贝放入 D’，然后再将该样本放回初始数据集 D 中；</li>
+<li>重复执行 m 次该过程；</li>
+<li>最后得到包含 m 个样本数据集 D’。</li>
+</ul>
+<p>由上述表达式可知，初始数据集与自助采样数据集 D1’，自助采样数据集 D2’ 的概率分布不一样，且自助法采样的数据集正负类别比例与原始数据集不同。因此用自助法采样的数据集代替初始数据集来构建模型存在估计偏差。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入包</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 任意设置一个数据集</span></span><br><span class="line">X = [<span class="number">1</span>,<span class="number">4</span>,<span class="number">3</span>,<span class="number">23</span>,<span class="number">4</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>,<span class="number">45</span>,<span class="number">67</span>,<span class="number">89</span>,<span class="number">34</span>,<span class="number">54</span>,<span class="number">76</span>,<span class="number">98</span>,<span class="number">43</span>,<span class="number">52</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过产生的随机数获得抽取样本的序号 </span></span><br><span class="line">bootstrapping = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(X)):</span><br><span class="line">    bootstrapping.append(np.random.randint(<span class="number">0</span>,<span class="built_in">len</span>(X),(<span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过序号获得原始数据集中的数据</span></span><br><span class="line">D_1 = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(X)):</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">int</span>(bootstrapping[i]))</span><br><span class="line">    D_1.append(X[<span class="built_in">int</span>(bootstrapping[i])])</span><br><span class="line">    </span><br><span class="line"><span class="built_in">print</span>(D_1)</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a class="markdownIt-Anchor" href="#总结"></a> 总结</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>采样方法</th>
+<th>与原始数据集的分布是否相同</th>
+<th>相比原始数据集的容量</th>
+<th>是否适用小数据集</th>
+<th>是否适用大数据集</th>
+<th>是否存在估计偏差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>留出法</td>
+<td>分层抽样</td>
+<td>否</td>
+<td>变小</td>
+<td>否</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>交叉验证法</td>
+<td>分层抽样</td>
+<td>否</td>
+<td>变小</td>
+<td>否</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>自助法</td>
+<td>放回抽样</td>
+<td>否</td>
+<td>不变</td>
+<td>是</td>
+<td>否</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<h1 id="性能度量"><a class="markdownIt-Anchor" href="#性能度量"></a> 性能度量</h1>
+<p>性能度量：对学习器的泛化性能进行评估，不仅需要有效可行的实验估计方法，还需要有衡量模型泛化能力的评价标准，这就是性能度量。</p>
+<p>性能度量反映了任务需求，在对比不同模型的能力时，使用不同的性能度量往往会导致不同的评判结果。这意味着模型的好坏是相对的，什么样的模型是好的? 这不仅取决于算法和数据，还决定于任务需求。</p>
+<p>回归任务常用性能度量：MSE mean square error，均方差。</p>
+<p>分类任务常用性能度量：acc accuracy，精度；错误率</p>
+<h2 id="查准率-查全率-f1"><a class="markdownIt-Anchor" href="#查准率-查全率-f1"></a> 查准率、查全率、F1</h2>
+<p>对于二分类问题，可将样例根据真实值与学习器预测类别组合划分为：</p>
+<ul>
+<li>真正例 true positive</li>
+<li>假正例 false positive</li>
+<li>真反例 true negative</li>
+<li>假反例 false negative</li>
+</ul>
+<p>![Untitled](/img/模型评估与选择/Untitled 2.png)</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mtext> Precision </mtext><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>P</mi></mrow></mfrac><mspace linebreak="newline"></mspace><mi>R</mi><mo stretchy="false">(</mo><mtext> Recall </mtext><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>N</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">P(\text { Precision })=\frac{T P}{T P+F P} \\R(\text { Recall })=\frac{T P}{T P+F N}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord text"><span class="mord"> Precision </span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.1296600000000003em;vertical-align:-0.7693300000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.36033em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693300000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span><span class="mspace newline"></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord text"><span class="mord"> Recall </span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.1296600000000003em;vertical-align:-0.7693300000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.36033em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693300000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>Recall，查全率、召回率：计算实际为正的样本中，预测正确的样本比例。</p>
+<p>Precision，查准率：在预测为正的样本中，实际为正的概率。</p>
+<p>P-R 曲线，BRP，Break Even Point：平衡单 P = R。</p>
+<p>![Untitled](/img/模型评估与选择/Untitled 3.png)</p>
+<p>由 P-R 曲线可以看出，查全率与准确率是成反比的，这里可以理解为为了获取所有正样本而牺牲了准确性，即广撒网。<br />
+BRP 还是过于简单，更常用的是 F1 度量。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>F</mi><mn>1</mn><mo>=</mo><mfrac><mrow><mn>2</mn><mo>×</mo><mi>P</mi><mo>×</mo><mi>R</mi></mrow><mrow><mi>P</mi><mo>+</mo><mi>R</mi></mrow></mfrac><mo>=</mo><mfrac><mrow><mn>2</mn><mi>T</mi><mi>P</mi></mrow><mrow><mi>n</mi><mo>+</mo><mi>T</mi><mi>P</mi><mo>−</mo><mi>T</mi><mi>N</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">F 1=\frac{2 \times P \times R}{P+R}=\frac{2 T P}{n+T P-T N}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.1296600000000003em;vertical-align:-0.7693300000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.36033em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693300000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.1296600000000003em;vertical-align:-0.7693300000000001em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.36033em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">2</span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693300000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>F1 的核心思想在于，在尽可能的提高 P 和 R 的同时，也希望两者之间的差异尽可能小。</p>
+<p>当对 P 和 R 有所偏向时，则需要 F1 更泛性的度 Fβ。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>F</mi><mi>β</mi></msub><mo>=</mo><mfrac><mrow><mrow><mo fence="true">(</mo><mn>1</mn><mo>+</mo><msup><mi>β</mi><mn>2</mn></msup><mo fence="true">)</mo></mrow><mo>×</mo><mi>P</mi><mo>×</mo><mi>R</mi></mrow><mrow><mrow><mo fence="true">(</mo><msup><mi>β</mi><mn>2</mn></msup><mo>×</mo><mi>P</mi><mo fence="true">)</mo></mrow><mo>+</mo><mi>R</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">F_{\beta}=\frac{\left(1+\beta^{2}\right) \times P \times R}{\left(\beta^{2} \times P\right)+R}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361079999999999em;"><span style="top:-2.5500000000000003em;margin-left:-0.13889em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05278em;">β</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:2.52601em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.59001em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.740108em;"><span style="top:-2.9890000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mclose delimcenter" style="top:0em;">)</span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.7400100000000003em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>β &gt; 1时更偏向 R，β &lt; 1 更偏向 P。</p>
+<p>如果使用了类似交叉验证法，我们会得到多个 confusion matrix：</p>
+<ul>
+<li>宏观 macroF1 对于每个 confusion matrix 先计算出P、R，然后求得平均并带入公式求 macroF1；</li>
+<li>微观 microF1 先求 confusion matrix 各元素的平均值，然后计算 P、R。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载数据集</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_data</span>(<span class="params">random_state=<span class="number">2021</span></span>): </span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    :返回值: GT_label: 数据集的真实标签，0表示非苹果，1表示苹果</span></span><br><span class="line"><span class="string">            Pred_Score: 模型对数据样本预测为苹果的分数，取值范围为[0,1]</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    noise_rate = <span class="number">0.1</span> <span class="comment"># 噪声比例</span></span><br><span class="line">    sample_num = <span class="number">4096</span>  <span class="comment"># 总样本数</span></span><br><span class="line">    noise_sample_num = <span class="built_in">int</span>(sample_num*noise_rate) <span class="comment"># 噪声样本数</span></span><br><span class="line">    np.random.seed(random_state)</span><br><span class="line">    Pred_Score = np.random.uniform(<span class="number">0</span>,<span class="number">1</span>,sample_num)</span><br><span class="line">    GT_label = (Pred_Score&gt;<span class="number">0.5</span>).astype(np.<span class="built_in">int</span>)</span><br><span class="line">    noise_ids = np.random.choice(a=sample_num, size=noise_sample_num, replace=<span class="literal">False</span>, p=<span class="literal">None</span>)</span><br><span class="line">    <span class="keyword">for</span> index <span class="keyword">in</span> noise_ids:</span><br><span class="line">        GT_label[index] = <span class="number">1</span> <span class="keyword">if</span> GT_label[index] == <span class="number">0</span> <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">return</span> GT_label, Pred_Score</span><br><span class="line"></span><br><span class="line">GT_label, Pred_Score = generate_data()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 请你补全以下代码，计算查准率与查全率</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_PR</span>(<span class="params">GT_label, Pred_Score, threshold, random_state=<span class="number">2021</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    计算错误率和精度</span></span><br><span class="line"><span class="string">    :GT_label: 数据集的真实标签，0表示非苹果，1表示苹果</span></span><br><span class="line"><span class="string">    :Pred_Score: 模型对数据样本预测为苹果的分数，取值范围为[0,1]</span></span><br><span class="line"><span class="string">    :threshold: 评估阈值</span></span><br><span class="line"><span class="string">    :random_state: 随机种子</span></span><br><span class="line"><span class="string">    :返回值: P: 查准率</span></span><br><span class="line"><span class="string">            R: 查全率</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    Pred_Label = <span class="built_in">list</span>(<span class="built_in">map</span>(<span class="keyword">lambda</span> x: <span class="number">1</span> <span class="keyword">if</span> x &gt; threshold <span class="keyword">else</span> <span class="number">0</span>, Pred_Score))</span><br><span class="line">    <span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> precision_score, recall_score</span><br><span class="line">    P = precision_score(GT_label, Pred_Label)</span><br><span class="line">    R = recall_score(GT_label, Pred_Label)</span><br><span class="line">    <span class="string">&quot;&quot;&quot; TODO &quot;&quot;&quot;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> P, R</span><br><span class="line">    </span><br><span class="line">P, R = get_PR(GT_label, Pred_Score, <span class="number">0.55</span>, random_state=<span class="number">2021</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;查准率P ：&#123;:.2f&#125;&quot;</span>.<span class="built_in">format</span>(P))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;查全率R ：&#123;:.2f&#125;&quot;</span>.<span class="built_in">format</span>(R))</span><br></pre></td></tr></table></figure>
+<h2 id="roc-与-auc-原理"><a class="markdownIt-Anchor" href="#roc-与-auc-原理"></a> ROC 与 AUC 原理</h2>
+<p>ROC 全称是受试者工作特征 Receiver Operating Characteristic) 。与 P-R 曲线不同的是，ROC使用了真正例率和假正例率。</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.24999999999999992em" columnalign="right left" columnspacing="0em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>T</mi><mi>P</mi><mi>R</mi><mo stretchy="false">(</mo><mtext> Precision </mtext><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mfrac><mrow><mi>T</mi><mi>P</mi></mrow><mrow><mi>T</mi><mi>P</mi><mo>+</mo><mi>F</mi><mi>N</mi></mrow></mfrac></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>F</mi><mi>P</mi><mi>R</mi><mo stretchy="false">(</mo><mtext> Precision </mtext><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mfrac><mrow><mi>F</mi><mi>P</mi></mrow><mrow><mi>F</mi><mi>P</mi><mo>+</mo><mi>T</mi><mi>N</mi></mrow></mfrac></mrow></mstyle></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{aligned}T P R(\text { Precision }) &amp;=\frac{T P}{T P+F N} \\F P R(\text { Precision }) &amp;=\frac{F P}{F P+T N}\end{aligned}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:4.85932em;vertical-align:-2.17966em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.67966em;"><span style="top:-4.67966em;"><span class="pstrut" style="height:3.3603300000000003em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord text"><span class="mord"> Precision </span></span><span class="mclose">)</span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.3603300000000003em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mord mathnormal" style="margin-right:0.00773em;">R</span><span class="mopen">(</span><span class="mord text"><span class="mord"> Precision </span></span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.17966em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.67966em;"><span style="top:-4.67966em;"><span class="pstrut" style="height:3.3603300000000003em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.36033em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693300000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:-2.25em;"><span class="pstrut" style="height:3.3603300000000003em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.36033em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord mathnormal" style="margin-right:0.13889em;">T</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">F</span><span class="mord mathnormal" style="margin-right:0.13889em;">P</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693300000000001em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:2.17966em;"><span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>TPR 真正率，真正样本与实际为正的样本的比率；</p>
+<p>FPR 假正率，加正样本与实际为负的样本的比率。</p>
+<p>若一个学习器的 ROC 曲线被另一个学习器的曲线完全包住，则可断言后者的性能优于前者； 若两  个学习器的 ROC 曲线发生交叉，则难以一般性地断言两者孰优孰劣。此时如果一定要进行比较，则较为合理的判据是比较 ROC 曲线下的面积，即 AUC  Area Under ROC Curve。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载数据集</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_pts</span>(): </span><br><span class="line">    dots = <span class="number">200</span>  <span class="comment"># 点数</span></span><br><span class="line">    X = np.random.randn(dots,<span class="number">2</span>) * <span class="number">15</span>  <span class="comment"># 建立数据集，shape(200,2)，坐标放大15倍</span></span><br><span class="line">    <span class="comment"># 建立 X 的类别</span></span><br><span class="line">    y = np.zeros(dots, dtype=<span class="string">&#x27;int&#x27;</span>)      </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(X.shape[<span class="number">0</span>]):</span><br><span class="line">        <span class="keyword">if</span> X[i,<span class="number">0</span>] &gt; -<span class="number">15</span> <span class="keyword">and</span> X[i,<span class="number">0</span>] &lt; <span class="number">15</span> <span class="keyword">and</span> X[i,<span class="number">1</span>] &gt; -<span class="number">15</span> <span class="keyword">and</span> X[i,<span class="number">1</span>] &lt; <span class="number">15</span>:  <span class="comment"># 矩形框内的样本都是目标类（正例）</span></span><br><span class="line">            y[i] = <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> <span class="number">0</span> == np.random.randint(i+<span class="number">1</span>) % <span class="number">10</span>:  <span class="comment"># 对数据随机地插入错误，20 个左右</span></span><br><span class="line">            y[i] = <span class="number">1</span> - y[i]  </span><br><span class="line">            </span><br><span class="line">    <span class="comment"># 数据集可视化          </span></span><br><span class="line">    plt.scatter(X[np.argwhere(y==<span class="number">0</span>).flatten(),<span class="number">0</span>], X[np.argwhere(y==<span class="number">0</span>).flatten(),<span class="number">1</span>],s = <span class="number">20</span>, color = <span class="string">&#x27;blue&#x27;</span>, edgecolor = <span class="string">&#x27;k&#x27;</span>)</span><br><span class="line">    plt.scatter(X[np.argwhere(y==<span class="number">1</span>).flatten(),<span class="number">0</span>], X[np.argwhere(y==<span class="number">1</span>).flatten(),<span class="number">1</span>],s = <span class="number">20</span>, color = <span class="string">&#x27;red&#x27;</span>, edgecolor = <span class="string">&#x27;k&#x27;</span>)</span><br><span class="line">    plt.xlim(-<span class="number">40</span>,<span class="number">40</span>)</span><br><span class="line">    plt.ylim(-<span class="number">40</span>,<span class="number">40</span>)</span><br><span class="line">    plt.grid(<span class="literal">False</span>)</span><br><span class="line">    plt.tick_params(</span><br><span class="line">    axis=<span class="string">&#x27;x&#x27;</span>,</span><br><span class="line">    which=<span class="string">&#x27;both&#x27;</span>,</span><br><span class="line">    bottom=<span class="literal">False</span>,</span><br><span class="line">    top=<span class="literal">False</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> X, y</span><br><span class="line"></span><br><span class="line">X, y = load_pts()</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment">### 训练模型 ###</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> GradientBoostingClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将数据集拆分成训练集和测试集</span></span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=<span class="number">0.2</span>)  </span><br><span class="line"></span><br><span class="line"><span class="comment"># 建立模型 </span></span><br><span class="line">clf1 = DecisionTreeClassifier(max_depth=<span class="number">5</span>, min_samples_leaf=<span class="number">4</span>,min_samples_split=<span class="number">4</span>)</span><br><span class="line">clf2 = GradientBoostingClassifier(max_depth=<span class="number">8</span>, min_samples_leaf=<span class="number">10</span>, min_samples_split=<span class="number">10</span>)</span><br><span class="line">clf3 = SVC(kernel=<span class="string">&#x27;rbf&#x27;</span>, gamma=<span class="number">0.001</span>, probability=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 训练模型</span></span><br><span class="line">clf1.fit(X_train, y_train)</span><br><span class="line">clf2.fit(X_train, y_train)</span><br><span class="line">clf3.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment">### 评估模型 ###</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_curve</span><br><span class="line"></span><br><span class="line"><span class="comment"># 模型预测</span></span><br><span class="line">y_score1 = clf1.predict_proba(X_test)</span><br><span class="line">y_score2 = clf2.predict_proba(X_test)</span><br><span class="line">y_score3 = clf3.predict_proba(X_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获得 FPR、TPR 值</span></span><br><span class="line">fpr1, tpr1, _ = roc_curve(y_test, y_score1[:,<span class="number">1</span>])</span><br><span class="line">fpr2, tpr2, _ = roc_curve(y_test, y_score2[:,<span class="number">1</span>])</span><br><span class="line">fpr3, tpr3, _ = roc_curve(y_test, y_score3[:,<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">### 绘制 ROC 曲线 ###</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> auc</span><br><span class="line"></span><br><span class="line">plt.figure()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 绘制 ROC 函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">plot_roc_curve</span>(<span class="params">fpr, tpr, c, name</span>):</span><br><span class="line">    lw = <span class="number">2</span></span><br><span class="line">    roc_auc = auc(fpr,tpr)</span><br><span class="line">    plt.plot(fpr, tpr, color=c,lw=lw, </span><br><span class="line">             label= name +<span class="string">&#x27; (area = %0.2f)&#x27;</span> % roc_auc)</span><br><span class="line">    plt.plot([<span class="number">0</span>,<span class="number">1</span>], [<span class="number">0</span>,<span class="number">1</span>], color=<span class="string">&#x27;navy&#x27;</span>, lw=lw, linestyle=<span class="string">&#x27;--&#x27;</span>)</span><br><span class="line">    plt.xlim([<span class="number">0</span>, <span class="number">1.0</span>])</span><br><span class="line">    plt.ylim([<span class="number">0</span>, <span class="number">1.05</span>])</span><br><span class="line">    plt.xlabel(<span class="string">&#x27;False Positive Rate&#x27;</span>)</span><br><span class="line">    plt.ylabel(<span class="string">&#x27;True Positive Rate&#x27;</span>)</span><br><span class="line">    <span class="comment">#plt.title(&#x27;&#x27;)</span></span><br><span class="line">    plt.legend(loc=<span class="string">&quot;lower right&quot;</span>)</span><br><span class="line">    </span><br><span class="line">plot_roc_curve(fpr1, tpr1, <span class="string">&#x27;red&#x27;</span>,<span class="string">&#x27;DecisionTreeClassifier &#x27;</span>)   </span><br><span class="line">plot_roc_curve(fpr2, tpr2, <span class="string">&#x27;navy&#x27;</span>,<span class="string">&#x27;GradientBoostingClassifier &#x27;</span>)   </span><br><span class="line">plot_roc_curve(fpr3, tpr3, <span class="string">&#x27;green&#x27;</span>,<span class="string">&#x27;SVC &#x27;</span>) </span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<h1 id="比较检验todo"><a class="markdownIt-Anchor" href="#比较检验todo"></a> 比较检验（TODO）</h1>
+<p>模型性能比较的重要因素：</p>
+<ul>
+<li>实验评估得到的性能不等于泛化性能；</li>
+<li>测试集上的性能与测试集本身的选择有很大关系；</li>
+<li>很多机器学习算法本身有一定的随机性。</li>
+</ul>
+<p>统计假设检验为我们进行学习器性能比较提供了重要依据。基于假设检验结果我们可推断出：哪个学习器更优秀，并且成立的把我有多大。</p>
+<h2 id="假设检验"><a class="markdownIt-Anchor" href="#假设检验"></a> 假设检验</h2>
+<p>由样本推测总体的方法。</p>
+<h3 id="交叉验证-t-检验"><a class="markdownIt-Anchor" href="#交叉验证-t-检验"></a> 交叉验证 t 检验</h3>
+<h3 id="mcnemar-检验"><a class="markdownIt-Anchor" href="#mcnemar-检验"></a> McNemar 检验</h3>
+<h3 id="friedman-检验与-nemenyi-后续检验"><a class="markdownIt-Anchor" href="#friedman-检验与-nemenyi-后续检验"></a> Friedman 检验与 Nemenyi 后续检验</h3>
+<h1 id="类别不平衡"><a class="markdownIt-Anchor" href="#类别不平衡"></a> 类别不平衡</h1>
+<p>在分类任务中，当不同类别的训练样本数量差别很大时，训练得到的模型往往泛化性很差 ，这就是类别不平衡。如在风控系统识别中，欺诈的样本应该是很少部分。</p>
+<p>如果类别不平衡比例超过 4:1，那么其分类器会大大地因为数据不平衡性而无法满足分类要求的。</p>
+<p>解决不平衡分类问题的策略可以分为两大类：</p>
+<ul>
+<li>从数据层面入手 , 通过改变训练集样本分布降低不平衡程度；</li>
+<li>从算法层面入手 , 根据算法在解决不平衡问题时的缺陷，适当地修改算法使之适应不平衡分类问题。</li>
+</ul>
+<h2 id="数据层面解决类别不平衡"><a class="markdownIt-Anchor" href="#数据层面解决类别不平衡"></a> 数据层面解决类别不平衡</h2>
+<p><strong>扩大数据样本</strong>。</p>
+<p><strong>重采样</strong>：通过过增加稀有类训练样本数的过采样和减少大类样本数的欠采样使不平衡的样本分布变得比较平衡 ，从而提高分类器对稀有类的识别率。</p>
+<ul>
+<li>
+<p>过采样：复制稀有样本；</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入包</span></span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_classification</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="keyword">from</span> imblearn.over_sampling <span class="keyword">import</span> RandomOverSampler</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成样本集，用于分类算法：3 类，5000 个样本，特征维度为 2</span></span><br><span class="line">X, y = make_classification(n_samples=<span class="number">5000</span>, n_features=<span class="number">2</span>, n_informative=<span class="number">2</span>,</span><br><span class="line">                           n_redundant=<span class="number">0</span>, n_repeated=<span class="number">0</span>, n_classes=<span class="number">3</span>,</span><br><span class="line">                           n_clusters_per_class=<span class="number">1</span>,</span><br><span class="line">                           weights=[<span class="number">0.01</span>, <span class="number">0.05</span>, <span class="number">0.94</span>],</span><br><span class="line">                           class_sep=<span class="number">0.8</span>, random_state=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印每个类别样本数</span></span><br><span class="line"><span class="built_in">print</span>(Counter(y))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 过采样</span></span><br><span class="line">ros = RandomOverSampler(random_state=<span class="number">0</span>)</span><br><span class="line">X_resampled, y_resampled = ros.fit_resample(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印过采样后每个类别样本数</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(Counter(y_resampled).items()))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成新的稀有样本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入包</span></span><br><span class="line"><span class="keyword">from</span> imblearn.over_sampling <span class="keyword">import</span> SMOTE</span><br><span class="line"></span><br><span class="line"><span class="comment"># 过采样</span></span><br><span class="line">sm = SMOTE(random_state=<span class="number">42</span>)</span><br><span class="line">X_res, y_res = sm.fit_resample(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印过采样后每个类别样本数</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Resampled dataset shape %s&#x27;</span> % Counter(y_res))</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>欠采样：保存所有稀有类样本，并在丰富类别中随机选择与稀有类别样本相等数量的样本。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入包</span></span><br><span class="line"><span class="keyword">from</span> imblearn.under_sampling <span class="keyword">import</span> RandomUnderSampler</span><br><span class="line"></span><br><span class="line"><span class="comment"># 欠采样</span></span><br><span class="line">rus = RandomUnderSampler(random_state=<span class="number">0</span>)</span><br><span class="line">X_resampled, y_resampled = rus.fit_resample(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印欠采样后每个类别样本数</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(Counter(y_resampled).items()))</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>过采样与欠采样结合：在之前的SMOTE方法中, 生成无重复的新的稀有类样本, 也很容易生成一些噪音数据。</p>
+<p>因此, 在过采样之后需要对样本进行清洗。常见的有两种方法：SMOTETomek、SMOTEENN。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 导入包</span></span><br><span class="line"><span class="keyword">from</span> imblearn.combine <span class="keyword">import</span> SMOTEENN</span><br><span class="line"><span class="comment"># 过采样与欠采样结合</span></span><br><span class="line">smote_enn = SMOTEENN(random_state=<span class="number">0</span>)</span><br><span class="line">X_resampled, y_resampled = smote_enn.fit_resample(X, y)</span><br><span class="line"><span class="comment"># 打印采样后每个类别样本数</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">sorted</span>(Counter(y_resampled).items()))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="算法层面解决类别不平衡"><a class="markdownIt-Anchor" href="#算法层面解决类别不平衡"></a> 算法层面解决类别不平衡</h2>
+<p><strong>惩罚项方法</strong>：在大部分不平衡分类问题中，稀有类是分类的重点，在这种情况下正确识别出稀有类的样本比识别大类的样本更有价值，反过来说，<strong>错分稀有类的样本需要付出更大的代价</strong>。</p>
+<p>通过设计一个代价函数来惩罚稀有类别的错误分类而不是分类丰富类别，可以设计出许多自然泛化为稀有类别的模型。</p>
+<p>例如，调整 SVM 以惩罚稀有类别的错误分类。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># LABEL 0 4000</span></span><br><span class="line"><span class="comment"># LABEL 1 200</span></span><br><span class="line"><span class="comment"># 导入相关包</span></span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加惩罚项</span></span><br><span class="line">clf = SVC(C=<span class="number">0.8</span>, probability=<span class="literal">True</span>, class_weight=&#123;<span class="number">0</span>:<span class="number">0.25</span>, <span class="number">1</span>:<span class="number">0.75</span>&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>特征选择方法</strong></p>
+<p>样本数量分布很不平衡时，特征的分布同样也会不平衡。 大类中经常出现的特征也许在稀有类中根本不出现，这样的特征是冗余的。</p>
+<p>选取最具有区分能力的特征，有利于提高稀有类的识别率。特征选择比较不错的方法是决策树，如 C4.5、C5.0、CART 和随机森林。</p>
+
+      
+    </div>
+    <!-- <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wingowen.github.io/2022/07/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0%E4%B8%8E%E9%80%89%E6%8B%A9/" title="模型评估与选择" target="_blank" rel="external">https://wingowen.github.io/2022/07/29/机器学习/模型评估与选择/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">WINGO.WEN</span><small class="ml-1x"></small></a></h3>
+        <div>一个疯子。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div> -->
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2022/07/30/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90/" title="计算机组成"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2022/07/29/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E8%B4%9D%E5%8F%B6%E6%96%AF%E7%AE%97%E6%B3%95/" title="贝叶斯算法"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	<!-- Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>. -->
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>
