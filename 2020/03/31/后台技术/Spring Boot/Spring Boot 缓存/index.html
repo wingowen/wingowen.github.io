@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://wingowen.github.io/img/2020/04/Redis/SoundCode01.png">
 <meta property="og:image" content="https://wingowen.github.io/img/2020/04/Redis/SoundCode02.png">
 <meta property="article:published_time" content="2020-03-31T01:59:45.000Z">
-<meta property="article:modified_time" content="2023-09-20T07:00:03.774Z">
+<meta property="article:modified_time" content="2023-09-20T07:13:09.117Z">
 <meta property="article:author" content="Wingo Wen">
 <meta property="article:tag" content="Spring Boot">
 <meta property="article:tag" content="Cache">
@@ -202,6 +202,15 @@
 
   
   
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#jrs107"><span class="toc-number">1.</span> <span class="toc-text"> JRS107</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#spring-%E7%BC%93%E5%AD%98%E6%8A%BD%E8%B1%A1"><span class="toc-number">2.</span> <span class="toc-text"> Spring 缓存抽象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text"> 注解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-number">3.1.</span> <span class="toc-text"> 基本流程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E8%A7%A3%E8%AF%A6%E8%A7%A3"><span class="toc-number">3.2.</span> <span class="toc-text"> 注解详解</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#template"><span class="toc-number">4.</span> <span class="toc-text"> Template</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C"><span class="toc-number">4.1.</span> <span class="toc-text"> 数据操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis-%E5%AE%9E%E7%8E%B0%E7%BC%93%E5%AD%98"><span class="toc-number">5.</span> <span class="toc-text"> Redis 实现缓存</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A5%E9%97%A8%E5%9F%BA%E7%A1%80"><span class="toc-number">5.1.</span> <span class="toc-text"> 入门基础</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-number">5.2.</span> <span class="toc-text"> 代码示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#lettuce"><span class="toc-number">6.</span> <span class="toc-text"> Lettuce</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E5%8E%9F%E7%90%86"><span class="toc-number">7.</span> <span class="toc-text"> 缓存原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis-%E9%85%8D%E7%BD%AE"><span class="toc-number">8.</span> <span class="toc-text"> Redis 配置</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
 <main class="main" role="main">
   <div class="content">
   <article id="post-后台技术/Spring Boot/Spring Boot 缓存" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
@@ -421,6 +430,14 @@ Hash 存储的是<code>key-value</code>结构，<code>key</code>必须是<code>s
       <a href="/2020/03/12/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/%E5%BC%80%E5%8F%91%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E7%B1%BB/" title="开发常用工具类"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
     
   </ul>
   

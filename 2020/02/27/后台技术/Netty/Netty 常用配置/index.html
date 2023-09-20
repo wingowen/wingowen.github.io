@@ -26,7 +26,7 @@
 <meta property="og:description" content="在使用 Netty 的过程中会对 serverBootStrap 的 option 和 childOption 进行自定义的一些配置，具体就是使用ChannelOption 里面声明的常量进行配置，在此介绍一下这些常量。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-27T08:35:34.000Z">
-<meta property="article:modified_time" content="2023-09-20T06:44:49.018Z">
+<meta property="article:modified_time" content="2023-09-20T07:13:34.115Z">
 <meta property="article:author" content="Wingo Wen">
 <meta property="article:tag" content="Netty">
 <meta name="twitter:card" content="summary">
@@ -197,6 +197,15 @@
 
   
   
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#channeloption"><span class="toc-number">1.</span> <span class="toc-text"> ChannelOption</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#codec"><span class="toc-number">2.</span> <span class="toc-text"> Codec</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#http-%E6%9C%8D%E5%8A%A1"><span class="toc-number">2.1.</span> <span class="toc-text"> Http 服务</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
 <main class="main" role="main">
   <div class="content">
   <article id="post-后台技术/Netty/Netty 常用配置" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
@@ -241,14 +250,17 @@
       
         <p>在使用 Netty 的过程中会对 serverBootStrap 的 option 和 childOption 进行自定义的一些配置，具体就是使用ChannelOption 里面声明的常量进行配置，在此介绍一下这些常量。</p>
 <span id="more"></span>
-<h3 id="ChannelOption"><a href="#ChannelOption" class="headerlink" title="ChannelOption"></a>ChannelOption</h3><blockquote>
+<h3 id="channeloption"><a class="markdownIt-Anchor" href="#channeloption"></a> ChannelOption</h3>
+<blockquote>
 <ul>
-<li>服务端：<ul>
+<li>服务端：
+<ul>
 <li>option() 用于设置 ServerChannel 的选项，负责监听和接收连接；</li>
 <li>childOption()：用于设置 SocketChannel，负责处理 I/O 操作。</li>
 </ul>
 </li>
-<li>客户端：<ul>
+<li>客户端：
+<ul>
 <li>没有 childOption()。</li>
 </ul>
 </li>
@@ -264,7 +276,9 @@
 <p>TCP_NODELAY 对应于 socket 选项中的 TCP_NODELAY，该参数的使用和 Nagle 算法有关，Nagle 算法是将小的数据包组装为更大的帧进行发送，而不会来一个数据包发送一次，目的是为了提高每次发送的效率，因此在数据包没有组成足够大的帧时，就会延迟该数据包的发送，虽然提高了网络负载却造成了延时，TCP_NODELAY 参数设置为 true，就可以禁用 Nagle 算法，即使用小数据包即时传输。与 TCP_NODELAY 对应的就是 TCP_CORK，该选项会等到发送的数据量最大的时候，一次性发送，适合进行文件传输。</p>
 <p><strong>ChannelOption.SO_SNDBUF 和 ChannelOption.SO_RCVBUF</strong></p>
 <p>SO_SNDBUF 和 SO_RCVBUF 对应 Socket 中的 SO_SNDBUF 和 SO_RCVBUF 参数，即设置发送缓冲区和接收缓冲区的大小，发送缓冲区用于保存发送数据，直到发送成功，接收缓冲区用于保存网络协议站内收到的数据，直到程序读取成功。</p>
-<h3 id="Codec"><a href="#Codec" class="headerlink" title="Codec"></a>Codec</h3><h4 id="Http-服务"><a href="#Http-服务" class="headerlink" title="Http 服务"></a>Http 服务</h4><p><strong>HttpServerCodec</strong></p>
+<h3 id="codec"><a class="markdownIt-Anchor" href="#codec"></a> Codec</h3>
+<h4 id="http-服务"><a class="markdownIt-Anchor" href="#http-服务"></a> Http 服务</h4>
+<p><strong>HttpServerCodec</strong></p>
 <p>将二进制报文转为 HTTP 文本报文。</p>
 <p><strong>HttpObjectAggregator(512*1024)</strong></p>
 <p>合并分批次过来的 HTTP 报文，合并后 Handler 拿到的将是一个完整的 HTTP 报文。</p>
@@ -330,6 +344,14 @@
       <a href="/2020/02/17/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/WebSocket/" title="WebSocket"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
     
   </ul>
   

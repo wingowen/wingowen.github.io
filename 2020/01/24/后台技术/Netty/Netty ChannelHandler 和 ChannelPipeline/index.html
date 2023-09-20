@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://wingowen.github.io/img/2020/01/Netty/Channel%28Pipeline%29Spread.PNG">
 <meta property="og:image" content="https://wingowen.github.io/img/2020/01/Netty/ChannelHandlerContextSpread.PNG">
 <meta property="article:published_time" content="2020-01-24T14:09:35.000Z">
-<meta property="article:modified_time" content="2023-09-20T07:00:03.842Z">
+<meta property="article:modified_time" content="2023-09-20T07:13:50.680Z">
 <meta property="article:author" content="Wingo Wen">
 <meta property="article:tag" content="Netty">
 <meta name="twitter:card" content="summary">
@@ -203,6 +203,15 @@
 
   
   
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#channelhandler-%E5%AE%B6%E6%97%8F"><span class="toc-number">1.</span> <span class="toc-text"> ChannelHandler 家族</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#channel-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.1.</span> <span class="toc-text"> Channel 的生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#channelhandler-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.2.</span> <span class="toc-text"> ChannelHandler 的生命周期</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#channelinboundhandler-%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.3.</span> <span class="toc-text"> ChannelInboundHandler 接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#channeloutboundhandler-%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.4.</span> <span class="toc-text"> ChannelOutboundHandler 接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#channelhandler-%E9%80%82%E9%85%8D%E5%99%A8"><span class="toc-number">1.5.</span> <span class="toc-text"> ChannelHandler 适配器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E7%AE%A1%E7%90%86"><span class="toc-number">1.6.</span> <span class="toc-text"> 资源管理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#channelpipeline-%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.</span> <span class="toc-text"> ChannelPipeline 接口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9-channelpipeline"><span class="toc-number">2.1.</span> <span class="toc-text"> 修改 ChannelPipeline</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E4%BA%8B%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text"> 触发事件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">2.3.</span> <span class="toc-text"> 小结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#channelhandlercontext-%E6%8E%A5%E5%8F%A3"><span class="toc-number">3.</span> <span class="toc-text"> ChannelHandlerContext 接口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-channelhandlercontext"><span class="toc-number">3.1.</span> <span class="toc-text"> 使用 ChannelHandlerContext</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text"> 高级用法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text"> 异常处理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%85%A5%E7%AB%99%E5%BC%82%E5%B8%B8"><span class="toc-number">4.1.</span> <span class="toc-text"> 处理入站异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%87%BA%E7%AB%99%E5%BC%82%E5%B8%B8"><span class="toc-number">4.2.</span> <span class="toc-text"> 处理出站异常</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
 <main class="main" role="main">
   <div class="content">
   <article id="post-后台技术/Netty/Netty ChannelHandler 和 ChannelPipeline" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
@@ -415,6 +424,14 @@
       <a href="/2020/01/24/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20ByteBuf/" title="Netty ByteBuf"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
     
   </ul>
   

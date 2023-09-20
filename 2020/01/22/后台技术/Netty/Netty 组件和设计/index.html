@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://wingowen.github.io/img/2020/01/Netty/ChannelPipeline.PNG">
 <meta property="og:image" content="https://wingowen.github.io/img/2020/01/Netty/ServerBootstrapEventLoopGroup.PNG">
 <meta property="article:published_time" content="2020-01-22T06:09:03.000Z">
-<meta property="article:modified_time" content="2023-09-20T07:00:03.842Z">
+<meta property="article:modified_time" content="2023-09-20T07:13:45.922Z">
 <meta property="article:author" content="Wingo Wen">
 <meta property="article:tag" content="Netty">
 <meta name="twitter:card" content="summary">
@@ -201,6 +201,15 @@
 
   
   
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#channel-eventloop-%E5%92%8C-channelfuture"><span class="toc-number">1.</span> <span class="toc-text"> Channel、EventLoop 和 ChannelFuture</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#channel-%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.1.</span> <span class="toc-text"> Channel 接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#evenloop-%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.2.</span> <span class="toc-text"> EvenLoop 接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#channelfuture-%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.3.</span> <span class="toc-text"> channelFuture 接口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#channelhandler-%E5%92%8C-channelpipeline"><span class="toc-number">2.</span> <span class="toc-text"> ChannelHandler 和 ChannelPipeline</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#channelhandler-%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.1.</span> <span class="toc-text"> ChannelHandler 接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#channelpipeline-%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.2.</span> <span class="toc-text"> ChannelPipeline 接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E7%A0%81%E5%99%A8%E5%92%8C%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="toc-number">2.3.</span> <span class="toc-text"> 编码器和解码器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E7%B1%BB-simplechannelinboundhandler"><span class="toc-number">2.4.</span> <span class="toc-text"> 抽象类 SimpleChannelInboundHandler</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E5%AF%BC"><span class="toc-number">3.</span> <span class="toc-text"> 引导</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
 <main class="main" role="main">
   <div class="content">
   <article id="post-后台技术/Netty/Netty 组件和设计" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
@@ -370,6 +379,14 @@
       <a href="/2020/01/21/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F/" title="一个简单的 Netty 应用程序"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
     
   </ul>
   

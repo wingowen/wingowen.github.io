@@ -29,7 +29,7 @@
 <meta property="og:image" content="https://wingowen.github.io/img/2020/01//Netty/ByteBufInner.PNG">
 <meta property="og:image" content="https://wingowen.github.io/img/2020/01//Netty/ByteBufInner2.PNG">
 <meta property="article:published_time" content="2020-01-24T03:29:09.000Z">
-<meta property="article:modified_time" content="2023-09-20T07:00:03.842Z">
+<meta property="article:modified_time" content="2023-09-20T07:13:48.288Z">
 <meta property="article:author" content="Wingo Wen">
 <meta property="article:tag" content="Netty">
 <meta name="twitter:card" content="summary">
@@ -201,6 +201,15 @@
 
   
   
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#bytebuf-%E7%9A%84-api"><span class="toc-number">1.</span> <span class="toc-text"> ByteBuf 的 API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bytebuf-%E7%B1%BB"><span class="toc-number">2.</span> <span class="toc-text"> ByteBuf 类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#how"><span class="toc-number">2.1.</span> <span class="toc-text"> How</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mode"><span class="toc-number">2.2.</span> <span class="toc-text"> Mode</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A0%86%E7%BC%93%E5%86%B2%E5%8C%BA"><span class="toc-number">2.2.1.</span> <span class="toc-text"> 堆缓冲区</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E7%BC%93%E5%86%B2%E5%8C%BAupdating"><span class="toc-number">2.2.2.</span> <span class="toc-text"> 直接缓冲区（Updating）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%8D%E5%90%88%E7%BC%93%E5%86%B2%E5%99%A8updating"><span class="toc-number">2.2.3.</span> <span class="toc-text"> 复合缓冲器（Updating）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E8%8A%82%E7%BA%A7%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text"> 字节级操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9A%8F%E6%9C%BA%E8%AE%BF%E9%97%AE%E7%B4%A2%E5%BC%95"><span class="toc-number">3.1.</span> <span class="toc-text"> 随机访问索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%BA%E5%BA%8F%E8%AE%BF%E9%97%AE%E7%B4%A2%E5%BC%95"><span class="toc-number">3.2.</span> <span class="toc-text"> 顺序访问索引</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%AF%E4%B8%A2%E5%BC%83%E5%AD%97%E8%8A%82"><span class="toc-number">3.2.1.</span> <span class="toc-text"> 可丢弃字节</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%AF%E8%AF%BB%E5%AD%97%E8%8A%82"><span class="toc-number">3.2.2.</span> <span class="toc-text"> 可读字节</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%AF%E5%86%99%E5%AD%97%E8%8A%82"><span class="toc-number">3.2.3.</span> <span class="toc-text"> 可写字节</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E7%AE%A1%E7%90%86"><span class="toc-number">3.3.</span> <span class="toc-text"> 索引管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%93%8D%E4%BD%9Cupdating"><span class="toc-number">3.4.</span> <span class="toc-text"> 查找操作（Updating）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B4%BE%E7%94%9F%E7%BC%93%E5%86%B2%E5%8C%BA"><span class="toc-number">3.5.</span> <span class="toc-text"> 派生缓冲区</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E6%93%8D%E4%BD%9C"><span class="toc-number">3.6.</span> <span class="toc-text"> 读写操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bytebufholder-%E6%8E%A5%E5%8F%A3"><span class="toc-number">4.</span> <span class="toc-text"> ByteBufHolder  接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bytebuf-%E5%88%86%E9%85%8D"><span class="toc-number">5.</span> <span class="toc-text"> ByteBuf  分配</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%89%E9%9C%80%E5%88%86%E9%85%8Dbytebufallocator-%E6%8E%A5%E5%8F%A3"><span class="toc-number">5.1.</span> <span class="toc-text"> 按需分配：ByteBufAllocator 接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#unpooled-%E7%BC%93%E5%86%B2%E6%B1%A0"><span class="toc-number">5.2.</span> <span class="toc-text"> Unpooled 缓冲池</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#bytebufutil-%E7%B1%BB"><span class="toc-number">5.3.</span> <span class="toc-text"> ByteBufUtil 类</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text"> 引用计数</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
 <main class="main" role="main">
   <div class="content">
   <article id="post-后台技术/Netty/Netty ByteBuf" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
@@ -375,6 +384,14 @@
       <a href="/2020/01/22/%E5%90%8E%E5%8F%B0%E6%8A%80%E6%9C%AF/Netty/Netty%20%E4%BC%A0%E8%BE%93/" title="Netty 传输"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
     
   </ul>
   
