@@ -17,20 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>WINGO BLOG</title>
-  <meta name="description" content="人生观是对人生的总看法 社会属性是人的本质属性 个人与社会的关系问题是认识和处理人生问题的重要着眼点和出发点 个人与社会的关系，最根本的是个人利益与社会利益的关系 社会利益不是个人利益的简单相加，而是所有人利益的有机统一。 社会利益体现了作为社会成员的个人的根本利益和长远利益，是个人利益得以实现的前提和基础，同时它也保障着个人利益的实现。人的社会性决定了人只有在推动社会进步的过程中，才能实现自我">
+  <title>数据仓库 | WINGO BLOG</title>
+  <meta name="description" content="2023-09-26 修改脚本，pg_exdata 验数时间需要精确到毫秒 pg_exdata 库的文件位置：resources&#x2F;table_name&#x2F;pg_exdata.csv 风控杂项&amp;数据迁移计划 (qq.com) mongo 表加时区算子@jerry 获取对应的表，以及字段 合并表 算子处理 部分 mongo 表，需要 steven 手动处理发布后，才能修改算子（手动加算子） 程序">
 <meta property="og:type" content="article">
-<meta property="og:title" content="WINGO&#39;S BLOG">
-<meta property="og:url" content="https://wingowen.github.io/2023/09/26/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E6%80%9D%E4%BF%AE/index.html">
+<meta property="og:title" content="数据仓库">
+<meta property="og:url" content="https://wingowen.github.io/2023/09/28/%E6%9D%82%E9%A1%B9/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/index.html">
 <meta property="og:site_name" content="WINGO&#39;S BLOG">
-<meta property="og:description" content="人生观是对人生的总看法 社会属性是人的本质属性 个人与社会的关系问题是认识和处理人生问题的重要着眼点和出发点 个人与社会的关系，最根本的是个人利益与社会利益的关系 社会利益不是个人利益的简单相加，而是所有人利益的有机统一。 社会利益体现了作为社会成员的个人的根本利益和长远利益，是个人利益得以实现的前提和基础，同时它也保障着个人利益的实现。人的社会性决定了人只有在推动社会进步的过程中，才能实现自我">
+<meta property="og:description" content="2023-09-26 修改脚本，pg_exdata 验数时间需要精确到毫秒 pg_exdata 库的文件位置：resources&#x2F;table_name&#x2F;pg_exdata.csv 风控杂项&amp;数据迁移计划 (qq.com) mongo 表加时区算子@jerry 获取对应的表，以及字段 合并表 算子处理 部分 mongo 表，需要 steven 手动处理发布后，才能修改算子（手动加算子） 程序">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-09-26T09:03:16.730Z">
-<meta property="article:modified_time" content="2023-09-28T02:20:16.468Z">
+<meta property="article:published_time" content="2023-09-28T02:26:49.000Z">
+<meta property="article:modified_time" content="2023-09-28T02:27:09.834Z">
 <meta property="article:author" content="Wingo Wen">
+<meta property="article:tag" content="工作">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://wingowen.github.io/2023/09/26/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E6%80%9D%E4%BF%AE/index.html">
+  <link rel="canonical" href="https://wingowen.github.io/2023/09/28/%E6%9D%82%E9%A1%B9/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/index.html">
   
   
     <link rel="icon" href="/favicon.png" type="image/x-icon">
@@ -166,7 +167,7 @@
   <div class="widget">
     <h3 class="widget-title">分类</h3>
     <div class="widget-body">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">5</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -176,7 +177,7 @@
   <div class="widget">
     <h3 class="widget-title">标签云</h3>
     <div class="widget-body tagcloud">
-      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Flume/" style="font-size: 13px;">Flume</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/HBase/" style="font-size: 13px;">HBase</a> <a href="/tags/Hadoop/" style="font-size: 13px;">Hadoop</a> <a href="/tags/Hive/" style="font-size: 13.25px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Kafka/" style="font-size: 13px;">Kafka</a> <a href="/tags/Kudu/" style="font-size: 13px;">Kudu</a> <a href="/tags/Linux/" style="font-size: 13px;">Linux</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.25px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/MySQL/" style="font-size: 13px;">MySQL</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/demo/" style="font-size: 13.5px;">demo</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/peewee/" style="font-size: 13px;">peewee</a> <a href="/tags/sklearn/" style="font-size: 13px;">sklearn</a> <a href="/tags/%E7%88%AC%E8%99%AB/" style="font-size: 13px;">爬虫</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.75px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.75px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 13px;">设计模式</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
+      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Flume/" style="font-size: 13px;">Flume</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/HBase/" style="font-size: 13px;">HBase</a> <a href="/tags/Hadoop/" style="font-size: 13px;">Hadoop</a> <a href="/tags/Hive/" style="font-size: 13.2px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Kafka/" style="font-size: 13px;">Kafka</a> <a href="/tags/Kudu/" style="font-size: 13.2px;">Kudu</a> <a href="/tags/Linux/" style="font-size: 13px;">Linux</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.2px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/MySQL/" style="font-size: 13px;">MySQL</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/demo/" style="font-size: 13.4px;">demo</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/peewee/" style="font-size: 13px;">peewee</a> <a href="/tags/sklearn/" style="font-size: 13px;">sklearn</a> <a href="/tags/%E5%B7%A5%E4%BD%9C/" style="font-size: 13px;">工作</a> <a href="/tags/%E7%88%AC%E8%99%AB/" style="font-size: 13px;">爬虫</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.6px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.8px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 13px;">设计模式</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
     </div>
   </div>
 
@@ -196,79 +197,66 @@
 
   
   
+  <aside class="sidebar sidebar-toc collapse   in  " id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      
+    </nav>
+  </div>
+</aside>
+
 <main class="main" role="main">
   <div class="content">
-  <article id="post-基础科学/思修" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-杂项/数据仓库" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      数据仓库
+    </h1>
+  
+
       
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2023/09/26/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E6%80%9D%E4%BF%AE/" class="article-date">
-	  <time datetime="2023-09-26T09:03:16.730Z" itemprop="datePublished">2023-09-26</time>
+	<a href="/2023/09/28/%E6%9D%82%E9%A1%B9/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" class="article-date">
+	  <time datetime="2023-09-28T02:26:49.000Z" itemprop="datePublished">2023-09-28</time>
 	</a>
 </span>
         
         
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/%E5%B7%A5%E4%BD%9C/" rel="tag">工作</a>
+  </span>
+
 
         
 
-        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/09/26/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E6%80%9D%E4%BF%AE/#comments" class="article-comment-link">评论</a></span> -->
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/09/28/%E6%9D%82%E9%A1%B9/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/#comments" class="article-comment-link">评论</a></span> -->
         
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h1 id="人生观是对人生的总看法"><a class="markdownIt-Anchor" href="#人生观是对人生的总看法"></a> 人生观是对人生的总看法</h1>
-<p>社会属性是人的本质属性</p>
-<p>个人与社会的关系问题是认识和处理人生问题的重要着眼点和出发点<br />
-个人与社会的关系，最根本的是个人利益与社会利益的关系 社会利益不是个人利益的简单相加，而是所有人利益的有机统一。<br />
-社会利益体现了作为社会成员的个人的根本利益和长远利益，是个人利益得以实现的前提和基础，同时它也保障着个人利益的实现。人的社会性决定了人只有在推动社会进步的过程中，才能实现自我的发展。</p>
-<p>人生观</p>
-<ul>
-<li>人生目的</li>
-<li>人生态度</li>
-<li>人生价值：自我价值、社会价值</li>
-</ul>
-<p>人生的自我价值是个体生存和发展的必要条件，人生的自我价值的实现是个体为社会创造更大价值的前提。人生社会价值的实现是个体自我完善、全面发展的保障。没有社会价值，人生的自我价值就无法存在。</p>
-<p>人生目的决定着人们对待实际生活的态度和对人生价值的评判，人生态度影响着人们对人生目的的持守和人生价值的实现，人生价值制约着人们对人生目的和人生态度的选择</p>
-<p>世界观是人们对生活在其中的世界以及人与世界的关系的总体看法和根本观点<br />
-人生观是人们关于人生目的、人生态度、人生价值等问题的总观点和总看法<br />
-世界观决定人生观，人生观又对世界观的巩固、发展和变化起着重要作用<br />
-价值观是人们关于价值的根本观点，对人人生观的形成和发展有重要的引导作用</p>
-<p>评价人生价值的根本尺度：看一个人的实践活动是否符合社会发展的客观规律，是否促进了历史的进步 (历史标准)<br />
-在今天，衡量人生价值的标准，最重要的就是看一个人是否用自己的劳动和聪明才智为国家和社会真诚奉献，为人民群众尽心尽力服务</p>
-<h2 id="追求远大理想坚定崇高信念"><a class="markdownIt-Anchor" href="#追求远大理想坚定崇高信念"></a> 追求远大理想坚定崇高信念</h2>
-<p>理想的特征</p>
-<ul>
-<li>超越性</li>
-<li>实践性</li>
-<li>时代性</li>
-</ul>
-<p>信念的特征</p>
-<ul>
-<li>执着性</li>
-<li>支撑性</li>
-<li>多样性：信仰是最高层次的信念；信仰有盲目和科学之分</li>
-</ul>
-<p>理想是信念所指的对象，信念则是理想实现的保障。离开理想，信念无从产生；离开信念，理想寸步难行。也正因如此，人们常将理想与信念合称为理想信念</p>
-<p>理想与现实是对立统一的，相互包含</p>
-<p>个人理想以社会理想为指引；社会理想是个人理想的汇聚和升华</p>
-<h2 id="弘扬中国精神"><a class="markdownIt-Anchor" href="#弘扬中国精神"></a> 弘扬中国精神</h2>
-<p>中国精神是凝心聚力的兴国之魂、强国之魂，是实现中华民族伟大复兴不可或缺的精神支撑</p>
-<ul>
-<li>重精神</li>
-<li>重理想</li>
-<li>重道德、重人格</li>
-</ul>
-<p>中国精神的丰富内涵</p>
-<ul>
-<li>伟大创造精神：科技文艺作品、伟大工程等</li>
-<li>伟大奋斗精神：开垦、开拓、开发、治理</li>
-<li>伟大团结精神：团结一心，众志成城</li>
-<li>伟大梦想精神：神话故事</li>
-</ul>
+        <p>2023-09-26</p>
+<p>修改脚本，pg_exdata 验数时间需要精确到毫秒<br />
+pg_exdata 库的文件位置：resources/table_name/pg_exdata.csv<br />
+<a target="_blank" rel="noopener" href="https://doc.weixin.qq.com/sheet/e3_AAMAewZxAG8kitIMXfvSL6ru1Q4hE?scode=ALIAFQdSAAYEXSx42wAAMAewZxAG8">风控杂项&amp;数据迁移计划 (qq.com)</a></p>
+<p>mongo 表加时区算子@jerry 获取对应的表，以及字段<br />
+合并表 算子处理<br />
+部分 mongo 表，需要 steven 手动处理发布后，才能修改算子（手动加算子）<br />
+程序：function/datalake/data_sync_task.py  →</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给 pg 库表，相关的字段加8H</span></span><br><span class="line">file_name = ConfigUtils.get_root_path() + <span class="string">&#x27;/resources/table_name/mongo_timestamp_add8H.csv&#x27;</span></span><br><span class="line">target_source_db = <span class="string">&#x27;dw_ods_datalake_universal&#x27;</span></span><br><span class="line">add_timezone(file_name, target_source_db)</span><br></pre></td></tr></table></figure>
+<p>business_50 库的 Mongo 任务，开启增量任务<br />
+可以开几张，目的是看时间时区是否正确（同步一段时间，抽数看看）<br />
+程序：function/datalake/data_sync_task.py</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 开启或者关闭任务</span></span><br><span class="line">task_open_or_close(target_table=<span class="string">&quot;datalake_universal&quot;</span>, open_task=<span class="literal">True</span>, sync_mode=<span class="literal">None</span>, limit=<span class="number">500</span>,</span><br><span class="line">                   open_as_sync_mode=<span class="number">2</span>,</span><br><span class="line">                   table_list=include,</span><br><span class="line">                   old_db_type=<span class="string">&#x27;postgresql&#x27;</span>,</span><br><span class="line">                   target_global_uniq_str=<span class="string">&#x27;dw_ods_datalake_universal&#x27;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p><s>finance_reconciliation_partner_reconciliation_data 发布不成功，跟进下</s></p>
 
       
     </div>
@@ -278,7 +266,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://wingowen.github.io/2023/09/26/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E6%80%9D%E4%BF%AE/" title="" target="_blank" rel="external">https://wingowen.github.io/2023/09/26/基础科学/思修/</a>
+      <a href="https://wingowen.github.io/2023/09/28/%E6%9D%82%E9%A1%B9/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" title="数据仓库" target="_blank" rel="external">https://wingowen.github.io/2023/09/28/杂项/数据仓库/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -322,11 +310,23 @@
   
   <ul class="pager pull-left">
     
-    
-    <li class="next">
-      <a href="/2023/09/26/%E6%9D%82%E9%A1%B9/%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93/" title="(no title)"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    <li class="prev">
+      <a href="/2023/09/28/%E5%A4%A7%E6%95%B0%E6%8D%AE/Kudu/" title="Kudu"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
     </li>
     
+    
+    <li class="next">
+      <a href="/2023/09/28/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E6%80%9D%E4%BF%AE/" title="思修"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn " data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">    <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
     
   </ul>
   
