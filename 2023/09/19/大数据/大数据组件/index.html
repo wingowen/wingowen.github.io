@@ -18,22 +18,22 @@
   
   
   <title>大数据组件 | WINGO BLOG</title>
-  <meta name="description" content="简单描述组件之间的关系文件系统：HDFS数据库存储：HBase、Kudu查询引擎：Hive、Impala">
+  <meta name="description" content="简单描述组件之间的关系 文件系统：HDFS 数据库存储：HBase、Kudu 查询引擎：Hive、Impala">
 <meta property="og:type" content="article">
 <meta property="og:title" content="大数据组件">
 <meta property="og:url" content="https://wingowen.github.io/2023/09/19/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%BB%84%E4%BB%B6/index.html">
 <meta property="og:site_name" content="WINGO&#39;S BLOG">
-<meta property="og:description" content="简单描述组件之间的关系文件系统：HDFS数据库存储：HBase、Kudu查询引擎：Hive、Impala">
+<meta property="og:description" content="简单描述组件之间的关系 文件系统：HDFS 数据库存储：HBase、Kudu 查询引擎：Hive、Impala">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://wingowen.github.io/img/2023-09/Hive架构.jpeg">
+<meta property="og:image" content="https://wingowen.github.io/img/2023-09/Hive%E6%9E%B6%E6%9E%84.jpeg">
 <meta property="article:published_time" content="2023-09-19T09:11:59.000Z">
-<meta property="article:modified_time" content="2023-09-20T06:20:59.054Z">
+<meta property="article:modified_time" content="2023-09-21T02:02:24.104Z">
 <meta property="article:author" content="Wingo Wen">
 <meta property="article:tag" content="Hive">
 <meta property="article:tag" content="Kudu">
 <meta property="article:tag" content="Impala">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://wingowen.github.io/img/2023-09/Hive架构.jpeg">
+<meta name="twitter:image" content="https://wingowen.github.io/img/2023-09/Hive%E6%9E%B6%E6%9E%84.jpeg">
   <!-- Canonical links -->
   <link rel="canonical" href="https://wingowen.github.io/2023/09/19/%E5%A4%A7%E6%95%B0%E6%8D%AE/%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%BB%84%E4%BB%B6/index.html">
   
@@ -171,7 +171,7 @@
   <div class="widget">
     <h3 class="widget-title">分类</h3>
     <div class="widget-body">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">5</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">5</span></li></ul>
     </div>
   </div>
 
@@ -181,7 +181,7 @@
   <div class="widget">
     <h3 class="widget-title">标签云</h3>
     <div class="widget-body tagcloud">
-      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Flume/" style="font-size: 13px;">Flume</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/HBase/" style="font-size: 13px;">HBase</a> <a href="/tags/Hadoop/" style="font-size: 13px;">Hadoop</a> <a href="/tags/Hive/" style="font-size: 13.25px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Kafka/" style="font-size: 13px;">Kafka</a> <a href="/tags/Kudu/" style="font-size: 13px;">Kudu</a> <a href="/tags/Linux/" style="font-size: 13px;">Linux</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.25px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/MySQL/" style="font-size: 13px;">MySQL</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/demo/" style="font-size: 13.5px;">demo</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/peewee/" style="font-size: 13px;">peewee</a> <a href="/tags/sklearn/" style="font-size: 13px;">sklearn</a> <a href="/tags/%E7%88%AC%E8%99%AB/" style="font-size: 13px;">爬虫</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.75px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.5px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 13px;">设计模式</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
+      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Flume/" style="font-size: 13px;">Flume</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/HBase/" style="font-size: 13px;">HBase</a> <a href="/tags/Hadoop/" style="font-size: 13px;">Hadoop</a> <a href="/tags/Hive/" style="font-size: 13.25px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Kafka/" style="font-size: 13px;">Kafka</a> <a href="/tags/Kudu/" style="font-size: 13px;">Kudu</a> <a href="/tags/Linux/" style="font-size: 13px;">Linux</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.25px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/MySQL/" style="font-size: 13px;">MySQL</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/demo/" style="font-size: 13.5px;">demo</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/peewee/" style="font-size: 13px;">peewee</a> <a href="/tags/sklearn/" style="font-size: 13px;">sklearn</a> <a href="/tags/%E7%88%AC%E8%99%AB/" style="font-size: 13px;">爬虫</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.75px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.75px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 13px;">设计模式</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
     </div>
   </div>
 
@@ -190,7 +190,7 @@
   <div class="widget">
     <h3 class="widget-title">归档</h3>
     <div class="widget-body">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">9</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">9</span></li></ul>
     </div>
   </div>
 
@@ -205,7 +205,7 @@
   <div class="slimContent">
     <nav id="toc" class="article-toc">
       <h3 class="toc-title">文章目录</h3>
-      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Hive"><span class="toc-number">1.</span> <span class="toc-text">Hive</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Hase"><span class="toc-number">2.</span> <span class="toc-text">Hase</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Impala"><span class="toc-number">3.</span> <span class="toc-text">Impala</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#kudu"><span class="toc-number">4.</span> <span class="toc-text">kudu</span></a></li></ol>
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#hive"><span class="toc-number">1.</span> <span class="toc-text"> Hive</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#hase"><span class="toc-number">2.</span> <span class="toc-text"> Hase</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#impala"><span class="toc-number">3.</span> <span class="toc-text"> Impala</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#kudu"><span class="toc-number">4.</span> <span class="toc-text"> kudu</span></a></li></ol>
     </nav>
   </div>
 </aside>
@@ -252,31 +252,39 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <p>简单描述组件之间的关系<br>文件系统：HDFS<br>数据库存储：HBase、Kudu<br>查询引擎：Hive、Impala</p>
+        <p>简单描述组件之间的关系<br />
+文件系统：HDFS<br />
+数据库存储：HBase、Kudu<br />
+查询引擎：Hive、Impala</p>
 <span id="more"></span>
-<h1 id="Hive"><a href="#Hive" class="headerlink" title="Hive"></a>Hive</h1><p><img src="/img/2023-09/Hive架构.jpeg" alt="Hive 架构"></p>
+<h1 id="hive"><a class="markdownIt-Anchor" href="#hive"></a> Hive</h1>
+<p><img src="/img/2023-09/Hive%E6%9E%B6%E6%9E%84.jpeg" alt="Hive 架构" /></p>
 <ul>
 <li>Hive 存储的是纯逻辑表，即表的元数据</li>
 <li>Hive 本身不存储数据，完全依赖于 HDFS 和 MapReduce，将结构化的数据文件映射为一张张数据库表</li>
 <li>Hive 基于 MapReduce 处理数据，基于行模式处理 OLTP &amp; OLAP</li>
 </ul>
-<h1 id="Hase"><a href="#Hase" class="headerlink" title="Hase"></a>Hase</h1><ul>
+<h1 id="hase"><a class="markdownIt-Anchor" href="#hase"></a> Hase</h1>
+<ul>
 <li>Google‘s Big Table 的开源实现</li>
 <li>NoSQL 分布式 KV 数据库</li>
 <li>Hbase 存储的是物理表，适合存放非结构化数据</li>
 <li>Hbase 基于列模式处理数据，适合海量数据的随机访问 OLTP</li>
 <li>底层存储引擎是基于 LSM-Tree 数据结构设计的。写入数据时会先写 WAL 日志，再将数据写到写缓存 MemStore中，等写缓存达到一定规模后或满足其他触发条件才会 flush 刷写到磁盘，每一次刷写磁盘都会生成新的 HFile 文件，HBase 会定期执行 compaction 操作以合并 HFile</li>
 <li>读取数据时会依次从 BlockCache、MemStore 以及 HFile 中 seek 数据，再加上一些其他设计比如布隆过滤器、索引等</li>
-<li>Spark 在线数据分析<ul>
+<li>Spark 在线数据分析
+<ul>
 <li>HbaseClient 直接访问 Hbase</li>
 <li>Spark 引入 Hbase Connector 后通过 Spark SQL / DDL 直接操作数据</li>
 </ul>
 </li>
-<li>Hive 在线数据分析<ul>
+<li>Hive 在线数据分析
+<ul>
 <li>建 Hbase 外表然后进行 SQL 查询</li>
 </ul>
 </li>
-<li>离线处理<ul>
+<li>离线处理
+<ul>
 <li>通过 LTS 导出到 HDFS，存储为 Parquet 格式，使用 Spark 进行分析</li>
 <li>通过 LTS 增量订阅 Hbase 数据，写入到 Kafka，使用 Spark Streaming 对 Kafka 进行流式计算</li>
 </ul>
@@ -285,10 +293,13 @@
 <blockquote>
 <p>WAL（Write-Ahead Logging）是一种数据库系统中常用的日志记录技术，用于确保数据的持久性和一致性。WAL日志是在对数据库进行修改之前，首先将修改操作记录到日志中，然后再将修改应用到数据库文件中。</p>
 </blockquote>
-<h1 id="Impala"><a href="#Impala" class="headerlink" title="Impala"></a>Impala</h1><ul>
+<h1 id="impala"><a class="markdownIt-Anchor" href="#impala"></a> Impala</h1>
+<ul>
 <li>使用分布式查询引擎（由 Query Planner、Query Coordinator 和 Query Exec Engine 三部分组成），可以直接从 HDFS 或 Hase 中进行实时交互式 SQL 查询</li>
 </ul>
-<h1 id="kudu"><a href="#kudu" class="headerlink" title="kudu"></a>kudu</h1><ul>
+<h1 id="kudu"><a class="markdownIt-Anchor" href="#kudu"></a> kudu</h1>
+<p>[[Kudu]]</p>
+<ul>
 <li>同时提供低延迟的随机读写和高效的数据分析能力，是一个融合 HDFS 和 HBase 的功能的新组件，</li>
 </ul>
 
