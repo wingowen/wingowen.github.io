@@ -25,14 +25,14 @@
 <meta property="og:site_name" content="WINGO&#39;S BLOG">
 <meta property="og:description" content="单进程多线程 SQL 解析器 &gt; SQL 查询优化器 &gt; 执行器 &gt; 存储引擎 SQL Select 语句完整的执行顺序：  from 子句组装来自不同数据源的数据； where 子句基于指定的条件对记录行进行筛选； group by 子句将数据划分为多个分组； 使用聚集函数进行计算； 使用 having 子句筛选分组； 计算所有的表达式； select 的字段； 使用 orde">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://wingowen.github.io/img/2023-09/MySQL-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png">
+<meta property="og:image" content="https://wingowen.github.io/2023/09/20/img/2023-09/MySQL-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png">
 <meta property="og:image" content="https://wingowen.github.io/img/2023-09/Innodb-%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B.png">
 <meta property="article:published_time" content="2023-09-20T01:53:41.000Z">
-<meta property="article:modified_time" content="2023-09-20T03:45:37.292Z">
+<meta property="article:modified_time" content="2023-10-24T02:02:35.401Z">
 <meta property="article:author" content="Wingo Wen">
 <meta property="article:tag" content="InooDB">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://wingowen.github.io/img/2023-09/MySQL-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png">
+<meta name="twitter:image" content="https://wingowen.github.io/2023/09/20/img/2023-09/MySQL-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png">
   <!-- Canonical links -->
   <link rel="canonical" href="https://wingowen.github.io/2023/09/20/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/index.html">
   
@@ -264,7 +264,7 @@
 <li>select 的字段；</li>
 <li>使用 order by 对结果集进行排序。</li>
 </ol>
-<p><img src="/img/2023-09/MySQL-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="结构体系" /></p>
+<p><img src="../../img/2023-09/MySQL-%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84.png" alt="结构体系" /></p>
 <h1 id="innodb-存储引擎"><a class="markdownIt-Anchor" href="#innodb-存储引擎"></a> InnoDB 存储引擎</h1>
 <p>unzip 单页 16k。</p>
 <p>支持事务，设计目标主要面向在线事务处理 OLAP 应用。其特点是行锁设计、支持外间，并支持类似于 Oracle 的非锁定读，即默认读取操作不会产生锁。</p>
