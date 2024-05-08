@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>WINGO BLOG</title>
+  <meta name="description" content="进程的概念 为了描述程序动态执行的性质以便更好支持和管理多道程序的并发执行，引入进程的概念。 传统操作系统中的进程定义为：“进程是进程实体的运行过程，是系统进行资源分配和调度的一个独立单位。” 进程的特征  动态性 并发性 独立性 异步性   进程的组成 进程控制块 Precess Control Block - PCB。PCB 时进程实体的一部分，是进程存在的唯一标志。 进程创建时，操作系统为它">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WINGO&#39;S BLOG">
+<meta property="og:url" content="https://wingowen.github.io/2024/04/19/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/index.html">
+<meta property="og:site_name" content="WINGO&#39;S BLOG">
+<meta property="og:description" content="进程的概念 为了描述程序动态执行的性质以便更好支持和管理多道程序的并发执行，引入进程的概念。 传统操作系统中的进程定义为：“进程是进程实体的运行过程，是系统进行资源分配和调度的一个独立单位。” 进程的特征  动态性 并发性 独立性 异步性   进程的组成 进程控制块 Precess Control Block - PCB。PCB 时进程实体的一部分，是进程存在的唯一标志。 进程创建时，操作系统为它">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-04-19T07:15:40.155Z">
+<meta property="article:modified_time" content="2024-05-06T09:55:44.607Z">
+<meta property="article:author" content="Wingo Wen">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wingowen.github.io/2024/04/19/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/index.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.1.0"><link rel="alternate" href="/atom.xml" title="WINGO'S BLOG" type="application/atom+xml">
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">WINGO.WEN</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md"></h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>得失从缘 心无增减</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">26</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/">基础科学</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E9%A1%B9/">杂项</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6/">计算机科学</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">5</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Aysnc/" style="font-size: 13px;">Aysnc</a> <a href="/tags/Cache/" style="font-size: 13px;">Cache</a> <a href="/tags/Druid/" style="font-size: 13px;">Druid</a> <a href="/tags/Dubbo/" style="font-size: 13px;">Dubbo</a> <a href="/tags/ElasticSearch/" style="font-size: 13px;">ElasticSearch</a> <a href="/tags/Email/" style="font-size: 13px;">Email</a> <a href="/tags/Flume/" style="font-size: 13px;">Flume</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/HBase/" style="font-size: 13px;">HBase</a> <a href="/tags/Hadoop/" style="font-size: 13px;">Hadoop</a> <a href="/tags/Hive/" style="font-size: 13.2px;">Hive</a> <a href="/tags/Impala/" style="font-size: 13px;">Impala</a> <a href="/tags/InooDB/" style="font-size: 13px;">InooDB</a> <a href="/tags/JDBC/" style="font-size: 13px;">JDBC</a> <a href="/tags/JPA/" style="font-size: 13px;">JPA</a> <a href="/tags/Kafka/" style="font-size: 13px;">Kafka</a> <a href="/tags/Kudu/" style="font-size: 13.2px;">Kudu</a> <a href="/tags/Linux/" style="font-size: 13px;">Linux</a> <a href="/tags/Log/" style="font-size: 13px;">Log</a> <a href="/tags/MQ/" style="font-size: 13.2px;">MQ</a> <a href="/tags/MyBatis/" style="font-size: 13px;">MyBatis</a> <a href="/tags/MySQL/" style="font-size: 13px;">MySQL</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/Pandas/" style="font-size: 13px;">Pandas</a> <a href="/tags/SQL/" style="font-size: 13px;">SQL</a> <a href="/tags/Scheduled/" style="font-size: 13px;">Scheduled</a> <a href="/tags/Security/" style="font-size: 13px;">Security</a> <a href="/tags/Shiro/" style="font-size: 13px;">Shiro</a> <a href="/tags/Spring-Boot/" style="font-size: 14px;">Spring Boot</a> <a href="/tags/Web/" style="font-size: 13px;">Web</a> <a href="/tags/WebSocket/" style="font-size: 13px;">WebSocket</a> <a href="/tags/demo/" style="font-size: 13.4px;">demo</a> <a href="/tags/gRPC/" style="font-size: 13px;">gRPC</a> <a href="/tags/peewee/" style="font-size: 13px;">peewee</a> <a href="/tags/sklearn/" style="font-size: 13px;">sklearn</a> <a href="/tags/%E5%B7%A5%E4%BD%9C/" style="font-size: 13px;">工作</a> <a href="/tags/%E7%88%AC%E8%99%AB/" style="font-size: 13px;">爬虫</a> <a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 13.6px;">算法</a> <a href="/tags/%E7%BD%91%E7%BB%9C/" style="font-size: 13px;">网络</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 13.8px;">考研</a> <a href="/tags/%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4/" style="font-size: 13px;">脚本命令</a> <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" style="font-size: 13px;">设计模式</a> <a href="/tags/%E9%83%A8%E7%BD%B2/" style="font-size: 13px;">部署</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">五月 2024</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/04/">四月 2024</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/09/">九月 2023</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">一月 2023</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">九月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">三月 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">二月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">一月 2020</a><span class="archive-list-count">9</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-基础科学/进程与线程" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2024/04/19/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" class="article-date">
+	  <time datetime="2024-04-19T07:15:40.155Z" itemprop="datePublished">2024-04-19</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <!-- <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2024/04/19/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/#comments" class="article-comment-link">评论</a></span> -->
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p><strong>进程的概念</strong></p>
+<p>为了描述程序动态执行的性质以便更好支持和管理多道程序的并发执行，引入进程的概念。</p>
+<p>传统操作系统中的进程定义为：“进程是进程实体的运行过程，是系统进行资源分配和调度的一个独立单位。”</p>
+<p><strong>进程的特征</strong></p>
+<ul>
+<li>动态性</li>
+<li>并发性</li>
+<li>独立性</li>
+<li>异步性</li>
+</ul>
+<h1 id="进程的组成"><a class="markdownIt-Anchor" href="#进程的组成"></a> 进程的组成</h1>
+<p><mark>进程控制块</mark></p>
+<p>Precess Control Block - PCB。PCB 时进程实体的一部分，是进程存在的唯一标志。</p>
+<p>进程创建时，操作系统为它新建一个 PCB，该结构之后常驻内存，任意时刻都可以存取，并在进程结束时删除。</p>
+<p>PCB 通常包含的内容</p>
+<ul>
+<li>进程描述信息。唯一进程标识符 PID、用户标识符 UID。</li>
+<li>进程控制和管理信息。进程状态信息、进程优先级信息。</li>
+<li>资源分配清单。地址空间使用情况，打开的文件列表和使用的 IO 设备信息。</li>
+<li>处理机相关信息。CPU 上下文，主要指寄存器中的值。</li>
+</ul>
+<p><mark>程序段</mark>。能被进程调度程序调度到 CPU 执行的程序代码段。</p>
+<p><mark>数据段</mark>。</p>
+<p><strong>进程的状态与转换</strong></p>
+<ul>
+<li>运行态。</li>
+<li>就绪态。进程获得了除 CPU 之外的一切所需资源。</li>
+<li>阻塞态。进程正在等待某一事件而暂停运行。</li>
+<li>创建态。申请 PCB，分配资源，如内存不足则处于创建态。</li>
+<li>终止态。程序需要结束运行时，进程被置为终止态，等待进一步处理资源释放和回收等工作。</li>
+</ul>
+<p>前三种是基本状态。</p>
+<p>![[02-IMAGES/进程与线程.png | 400]]</p>
+<h1 id="进程控制"><a class="markdownIt-Anchor" href="#进程控制"></a> 进程控制</h1>
+<p><mark>进程的创建</mark></p>
+<p>父子进程。允许一个进程创建另一个进程。子进程可以继承父进程所拥有的资源。当子进程被撤销时，资源归还父进程，撤销父进程时，通常也会撤销其所有的子进程。</p>
+<p>创建新进程时的操作：</p>
+<ul>
+<li>分配一个唯一的进程标识号，申请一个空白 PCB（有限资源）。若 PCB 申请失败，则创建失败。</li>
+<li>为进程分配其运行所需资源。若资源不足，则处于创建态。</li>
+<li>初始化 PCB。包括初始化标志信息、初始化 CPU 状态信息和初始化 CPU 控制信息，以及设置进程优先级等。</li>
+<li>若就绪队列能够接纳新进程，则将新进程插入就绪队列，等待被调度运行。</li>
+</ul>
+<p><mark>进程的终止</mark></p>
+<p>引起进程终止的事件：</p>
+<ul>
+<li>正常结束。</li>
+<li>异常结束。</li>
+<li>外界干预。</li>
+</ul>
+<p>终止进程时的操作（终止原语）：</p>
+<ul>
+<li>根据 PID 获取 PCB。</li>
+<li>若进程处于运行态则立即终止，将 CPU 分配给其他进程。</li>
+<li>若有子孙进程，则将子孙进程终止。</li>
+<li>归还所拥有资源。</li>
+<li>将 PCB 从所在队列中删除。</li>
+</ul>
+<p><mark>进程的阻塞和唤醒</mark></p>
+<p>阻塞原语的执行过程：</p>
+<ul>
+<li>通过要阻塞的 PID 获取对应的 PCB。</li>
+<li>若进程为运行态，则保护其现场，将其状态转为阻塞态，停止运行。</li>
+<li>将该 PCB 插入相应事件的等待队列，将 CPU 资源调度给其他就绪进程。</li>
+</ul>
+<p>唤醒原语的执行过程：</p>
+<ul>
+<li>等待队列中找到 PCB。</li>
+<li>移出，置为就绪态。</li>
+<li>PCB 插入就绪队列，等待调度程序调度。</li>
+</ul>
+<h1 id="进程的通信"><a class="markdownIt-Anchor" href="#进程的通信"></a> 进程的通信</h1>
+<p>PV 操作是低级通信方式，后续讨论。这里先了解高级通信方法。</p>
+<p><mark>共享存储</mark></p>
+<p>对共享空间进行 IO 操作需要使用同步互斥工具进行控制。</p>
+<p>低级方式的共享基于数据结构共享，高级则是基于存储区共享。</p>
+<p>进程运行期间一般不能访问其他进程的空间，想让两个进程共享空间，必须经过特殊的系统调用实现，而进程内的线程是自然共享进程空间的。</p>
+<p><mark>消息传递</mark>，使用最广泛。</p>
+<p>以格式化的 Message 为单位，通过操作系统提供的发送信息和接收信息两个原语进行数据交换。</p>
+<p>直接通信：消息缓冲队列。间接通信：信箱（某个中间实体）。</p>
+<p><mark>管道通信</mark></p>
+<p>Pipe 文件，先进先出，只要不满就能写入，只要不空就能读出。</p>
+<p>必须提供三方面的协调能力。</p>
+<ul>
+<li>互斥。</li>
+<li>同步。</li>
+<li>确定对方存在。</li>
+</ul>
+<p>管道只能由创建进程所访问，子进程会继承父进程打开的文件，即子进程可用其与父进程通信。</p>
+<p>单管道单向通信，双向通信需要两个管道。</p>
+<h1 id="线程和多线程模型"><a class="markdownIt-Anchor" href="#线程和多线程模型"></a> 线程和多线程模型</h1>
+<p>引入线程减小程序在并发执行时所付出的时空开销，提高操作系统的并发性能。</p>
+<p>线程是系统调度的基本单位，同属一个进程的线程共享进程所拥有的全部资源。一个线程可以创建和撤销另一个线程。</p>
+<p>引入线程后，线程作为 CPU 的分配单元，进程作为除 CPU 外的系统资源的分配单元。</p>
+<p>TCB 以及三种基本状态：执行态、阻塞态、就绪态。</p>
+<p><strong>线程的实现</strong></p>
+<ul>
+<li>User-Level Thread ULT， 用户级线程。</li>
+<li>Kernel-Level Thread KLT，内核级线程。</li>
+<li>组合方式。</li>
+</ul>
+<p>多线程模型</p>
+<ul>
+<li>多对一模型</li>
+<li>一对一模型</li>
+<li>多对多模型。ULT &gt;= KLT。</li>
+</ul>
+
+      
+    </div>
+    <!-- <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wingowen.github.io/2024/04/19/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" title="" target="_blank" rel="external">https://wingowen.github.io/2024/04/19/基础科学/进程与线程/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="" target="_blank"><span class="text-dark">WINGO.WEN</span><small class="ml-1x"></small></a></h3>
+        <div>一个疯子。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div> -->
+  </article>
+  
+    
+  <section id="comments">
+  	
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2024/05/06/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/CPU%20%E8%B0%83%E5%BA%A6/" title="(no title)"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2024/04/17/%E5%9F%BA%E7%A1%80%E7%A7%91%E5%AD%A6/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="(no title)"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	<!-- Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>. -->
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+
+
+
+
+
+
+</body>
+</html>
